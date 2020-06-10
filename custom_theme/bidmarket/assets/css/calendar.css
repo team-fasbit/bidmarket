@@ -1,0 +1,38 @@
+#calendar {
+	max-width: auto;
+	margin: 0 auto;
+	background-color: #ffffff;
+	position: relative;
+	top:50px;
+	left:50px;
+}
+#container_c{
+	position: static;
+}
+#container_calendar{
+	max-width: 800px;
+	position: relative;
+}
+#cont_confirm{
+	background-color: #ffffff;
+	position: static;
+	width: 800px;
+}
+.error{
+	border-top: 1px, #cc0000;
+	border-bottom: 1px, #cc0000;
+	border-left: 1px,#cc0000;
+	border-right: 1px,#cc0000;
+}
+.success{
+	border-top: 1px, #02691f;
+	border-bottom: 1px, #02691f;
+	border-left: 1px,#02691f;
+	border-right: 1px,#02691f;
+}
+.input-form{
+	border-top: 1px, #cccccc;
+	border-bottom: 1px, #cccccc;
+	border-left: 1px,#cccccc;
+	border-right: 1px,#cccccc;
+}
