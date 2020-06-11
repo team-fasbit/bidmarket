@@ -20,7 +20,7 @@ if ( have_posts() ) : the_post(); ?>
            </div>
            <address>Por <?php the_author_posts_link() ?></address>
 <?php else : ?>
-  <p><?php _e('Ups!, esta entrada no existe.'); ?></p>
+  <p><?php _e('Ups!, page not found.'); ?></p>
 <?php endif;
 ?>
           </div>

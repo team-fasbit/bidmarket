@@ -76,7 +76,19 @@
       $table_contractors= $wpdb->prefix . "contractors";
       $results_contractors = $wpdb->get_results("SELECT * FROM $table_contractors order by company;");      
       include('templates/general_settings.php');
-    }     
+    }  
+   function view_all_owners(){
+      global $wpdb;    
+      $table_owner= $wpdb->prefix . "owner";
+      $results_owner = $wpdb->get_results("SELECT * FROM $table_owner ORDER BY customerid;");     
+      include('templates/view_all_owners_template.php');
+   }
+   function log_in(){
+      include('templates/login_template.php');
+   }   
+   function sign_up(){      
+      include('templates/signup_template.php');
+   }          
    function owner_home(){
       global $wpdb;    
       $customerid=random_int(0, 9999999);
@@ -320,6 +332,12 @@
    function type_of_content_html() {
         return 'text/html';
    }
+   add_shortcode( 'cr_view_all_owners', 'view_all_owners_shortcode' );
+   function view_all_owners_shortcode() {
+       ob_start();
+       view_all_owners();
+       return ob_get_clean();
+   }   
    add_shortcode( 'cr_owner_home', 'owner_home_shortcode' );
    function owner_home_shortcode() {
        ob_start();
@@ -332,6 +350,18 @@
        view_owner();
        return ob_get_clean();
    }
+   add_shortcode( 'cr_log_in', 'log_in_shortcode' );
+   function log_in_shortcode() {
+       ob_start();
+       log_in();
+       return ob_get_clean();
+   }    
+   add_shortcode( 'cr_signup', 'signup_shortcode' );
+   function signup_shortcode() {
+       ob_start();
+       sign_up();
+       return ob_get_clean();
+   }   
    add_shortcode( 'cr_contractors_home', 'contractors_home_shortcode' );
    function contractors_home_shortcode() {
        ob_start();
@@ -345,11 +375,11 @@
        return ob_get_clean();
    }
 
-  function bidmarket_add_menu(){   
+   function bidmarket_add_menu(){   
       if (function_exists('add_options_page')) {
          add_options_page('Bid Market - General Settings', 'Bid Market general settings', 8, basename(__FILE__), 'bidmarket_general_settings');
       }
-  } 
+   } 
    if (function_exists('add_action')) {
       add_action('admin_menu', 'bidmarket_add_menu');
    }     
@@ -362,8 +392,11 @@
    add_action('wp_ajax_save_contractors', 'save_contractors');
    add_action('wp_ajax_delete_contractors', 'delete_contractors');
    add_action('wp_ajax_update_contractors', 'update_contractors' );
+   add_action('wp_ajax_signup_form', 'signup_form' );   
    add_action('wp_ajax_nopriv_save_contractors', 'save_contractors');
    add_action('wp_ajax_nopriv_delete_contractors', 'delete_contractors');   
-   add_action( 'wp_ajax_nopriv_update_contractors', 'update_contractors' );   
+   add_action( 'wp_ajax_nopriv_update_contractors', 'update_contractors' );
+   add_action( 'wp_ajax_nopriv_signup_form', 'signup_form' );
    add_action('activate_bidmarket/bidmarket.php','bidmarket_install');
    add_action('deactivate_bidmarket/bidmarket.php', 'bidmarket_uninstall');
+//signup_form

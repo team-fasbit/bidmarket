@@ -30,11 +30,15 @@ function bootstrap_styles() {
    wp_enqueue_style( 'fonts_awesome',get_template_directory_uri() .'/lib/font-awesome/css/font-awesome.min.css');
    wp_enqueue_style( 'animate',get_template_directory_uri() .'/lib/animate/animate.min.css');
    wp_enqueue_style( 'datatable',get_template_directory_uri() .'/assets/css/jquery.dataTables.min.css');
+   wp_enqueue_style( 'datatablebootstrap',get_template_directory_uri() .'/assets/css/dataTables.bootstrap.min.css');   
+   wp_enqueue_style( 'datatablefont',get_template_directory_uri() .'/assets/css/dataTables.fontAwesome.css');
    wp_enqueue_style('screen', get_template_directory_uri() . '/assets/css/screen.css');
    wp_enqueue_style('reset', get_template_directory_uri() . '/assets/css/reset.css');
    wp_enqueue_style('cmxform', get_template_directory_uri() . '/assets/css/cmxform.css');
    wp_enqueue_style('cmxformtemplate', get_template_directory_uri() . '/assets/css/cmxformTemplate.css');
    wp_enqueue_style('core', get_template_directory_uri() . '/assets/css/core.css');
+   wp_enqueue_style('owlcarousel', get_template_directory_uri() . '/assets/css/owl.carousel.css');
+   wp_enqueue_style('owltheme', get_template_directory_uri() . '/assets/css/owl.theme.css');
    wp_enqueue_style( 'style',get_template_directory_uri() .'/assets/css/style.css');        
 }
 add_action( 'wp_enqueue_scripts', 'bootstrap_styles');
@@ -57,7 +61,8 @@ function jquery_load_scripts() {
    wp_enqueue_script( "validate", get_template_directory_uri() . '/assets/js/jquery.validate.js', array( 'jquery' ) );   
    wp_enqueue_script( "datatable", get_template_directory_uri() . '/assets/js/jquery.dataTables.min.js', array( 'jquery' ) );   
    wp_enqueue_script( "ckeditor", get_template_directory_uri() . '/assets/ckeditor/ckeditor.js', array( 'jquery' ) );  
-   wp_enqueue_script( "popper", 'https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js', array( 'jquery' ) );    
+   wp_enqueue_script( "popper", 'https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js', array( 'jquery' ) );
+   wp_enqueue_script( "owlcaro", get_template_directory_uri() . '/assets/js/owl.carousel.min.js', array( 'jquery' ) );      
 }
 add_action( 'wp_enqueue_scripts', 'jquery_load_scripts');
 ?>

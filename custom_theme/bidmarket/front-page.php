@@ -7,63 +7,74 @@ get_header();
     <!--==========================
       Portfolio Section
     ============================-->
-  <div class="container">
+  
+    <section id="slider_section" class="slider-section">
+      <div class="container border">
+        <div class="row inside-row">      
+          <div class="col-md-12">
+            <div class="section-title col-text-center">
+              <h2>Slide Section Title</h2>
+              <div class="line"></div>
+              <p>Our slide here....</p>
+            </div>              
+            <div class="s-slider">
+              <div class="item"><img src="<?php echo get_template_directory_uri(); ?>/assets/img/slides/1.jpg" alt=""/></div>
+              <div class="item"><img src="<?php echo get_template_directory_uri(); ?>/assets/img/slides/2.jpg" alt=""/></div>
+              <div class="item"><img src="<?php echo get_template_directory_uri(); ?>/assets/img/slides/3.jpg" alt=""/></div>
+              <div class="item"><img src="<?php echo get_template_directory_uri(); ?>/assets/img/slides/4.jpg" alt=""/></div>
+              <div class="item"><img src="<?php echo get_template_directory_uri(); ?>/assets/img/slides/5.jpg" alt=""/></div>
+              <div class="item"><img src="<?php echo get_template_directory_uri(); ?>/assets/img/slides/6.jpg" alt=""/></div>
+              <div class="item"><img src="<?php echo get_template_directory_uri(); ?>/assets/img/slides/7.jpg" alt=""/></div>
+              <div class="item"><img src="<?php echo get_template_directory_uri(); ?>/assets/img/slides/1.jpg" alt=""/></div>
+            </div>
+          </div>
+          </div><!--- END COL -->
+        </div><!--- END ROW -->    
+    </section>
+    <section id="how_it_works_section" class="how-it-works-section">
+      <div class="container border">
+      <div class="row inside-row">
+        <div class="col-md-6">
+          <div class="container border">
+            <div class="youtube-video">
+            video section here...
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="container border">
+            <div class="owners-section">
+              Home Owners section here...
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="container border">
+          <div class="contractors-section">
+            Contractors Section Here...
+          </div>
+        </div>
+        </div>               
+      </div>
+    </div>
+    </section>
 
-    <section id="projects" class="col-text-center">
-      <h2>OUR PROJECTS</h2>
-      <div class="row">
-        <div class="col col-text-center">
-          <i class="fa fa-paint-brush icon-size"></i><br>        
-          Painting
-        </div>        
-        <div class="col col-text-center">
-          <i class="fa fa-reorder icon-size"></i><br>        
-          Flooring
-        </div>
-        <div class="col col-text-center">
-          <i class="fa fa-cutlery icon-size"></i><br>        
-          Kitchen Remodel
-        </div>   
-        <div class="col col-text-center">
-          <i class="fa fa-home icon-size"></i><br>
-          Whole House Remodel
-        </div>                               
-        <div class="col col-text-center">
-          <i class="fa fa-home icon-size"></i><br>
-          Roofing
-        </div> 
-        <div class="col col-text-center">
-          <i class="fa fa-bath icon-size"></i><br>        
-          Bath Room Remodel
-        </div>             
-    </div>  
-    </section><!-- #project -->
-    <section id="priorities" class="col-text-center">
-      <h2>YOUR PRIORITIES</h2>
-      <div class="row">
-        <div class="col col-text-center">
-          <i class="fa fa-line-chart icon-size"></i><br>        
-          Quality
-        </div>        
-        <div class="col col-text-center">
-          <i class="fa fa-star icon-size"></i><br>        
-          Reputation          
-        </div>
-        <div class="col col-text-center">
-          <i class="fa fa-clock-o icon-size"></i><br>        
-          Project Completion Time
-        </div>        
-        <div class="col col-text-center">
-          <i class="fa fa-calendar icon-size"></i><br>        
-          Project Start Date         
-        </div>
-        <div class="col col-text-center">
-          <i class="fa fa-money icon-size"></i><br>        
-          Price
-        </div> 
-     </div>       
-    </section><!-- #project -->  
-  </div>
+<script type="text/javascript">
+   jQuery(document).ready( function() {  
+      $('.s-slider').owlCarousel({ 
+      items:4,
+      itemsDesktop:[1000,2],
+      itemsDesktopSmall:[979,2],
+      itemsTablet:[768,2],
+      itemsMobile:[650,1],
+      pagination:false,
+      navigation:true,
+      navigationText:["",""],
+      autoPlay:true
+    });
+});
+</script>
 <?php
 get_footer();
 ?>
+

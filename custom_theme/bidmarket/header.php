@@ -27,6 +27,7 @@
         
     <nav id="nav-menu-container" class="navbar navbar-expand-sm">
       <?php
+      if ( is_user_logged_in() ) {
        wp_nav_menu( array( 'theme_location' => 'primary',
                            'container'       => 'div',
                            'container_id'    => 'bs4navbar',
@@ -35,6 +36,12 @@
                            'depth'           => 2,
                            'fallback_cb'     => 'bs4navwalker::fallback',
                            'walker'          => new bs4navwalker() ));
+       } else {
+         ?>
+         <span class="top-buttons"><a type="button" class="btn btn-primary login-button" href="#">Log in</a></span>
+         <span class="top-buttons"><a type="button" class="btn btn-primary sign-up" href="#">Sign up</a>
+         <?php
+       }
       ?>
     </nav>
 
@@ -42,7 +49,7 @@
   <section id="hero">
     <div class="hero-container">       
       <h1><span class="header-color">Welcome to bidmarket</span></h1>
-      <div class="container mt-3">
+      <!--<div class="container mt-3">
       <div class="row">
         <div class="col-lg-12">
           <h4><span class="header-color">Find your projects here!</span></h4>
@@ -54,6 +61,6 @@
           </div>
         </div>
       </div>
-      </div>
+      </div>-->
     </div>
   </section><!-- #hero -->
