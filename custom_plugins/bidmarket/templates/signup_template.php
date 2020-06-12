@@ -12,13 +12,13 @@
         <div class="col-md-3">
             <div class="form-group">
                 Password:
-                <input type="text" id="password" name="password" class="form-control" placeholder="Password">
+                <input type="password" id="password" name="password" class="form-control" placeholder="Password">
             </div>
         </div>
         <div class="col-md-3">
             <div class="form-group">
                 Re type password:
-                <input type="text" id="repassword" name="repassword" class="form-control" placeholder="Re type password">
+                <input type="password" id="repassword" name="repassword" class="form-control" placeholder="Re type password">
             </div>
         </div>        
     </div>    
@@ -38,7 +38,7 @@
         <div class="col-md-3">
             <div class="form-group">
                 Email:
-                <input type="text" id="email1" name="email1" class="form-control" placeholder="Email">
+                <input type="text" id="email" name="email" class="form-control" placeholder="Email">
             </div>
         </div>    
     </div> 
@@ -87,7 +87,7 @@
                  },
                  firstname:"required",
                  lastname:"required",
-                 email1: {
+                 email: {
                   required: true,
                   email: true,
                  }, 
@@ -99,18 +99,19 @@
              password: {
               required: "Please provide a password",
               minlength: "Your password must be at least 8 characters long",
-              equalTo: "Please enter the same password as above"
+              equalTo: "Please enter the same password as above",
              },
              repassword: {
               required: "Please provide a password",
               minlength: "Your password must be at least 8 characters long",
-              equalTo: "Please enter the same password as above"
+              equalTo: "Please enter the same password as above",
              },
              username: {
               required: "Please provide an username",
               minlength: "Your password must be at least 8 characters long",
              },
              email: "Please enter a valid email",
+             signup_type: "Please choose sign up type",
           },
           errorClass: "error_validate",
           inputContainer: "form-group",
@@ -120,13 +121,15 @@
             var username=jQuery("#username").val();
             var password=jQuery("#password").val();
             var email=jQuery("#email").val();
+            var signup_type=jQuery("#signup_type").val();
             var data= {
-                action:'signup_user',
+                action:'sign_up_users',
                 firstname: firstname,
                 lastname: lastname,
                 username: username,
                 password: password,
-                phone: phone
+                email: email,
+                signup_type: signup_type
             };
               jQuery.post(ajaxurl, data, function(response) {
                 jQuery("#signup_container").html((response));

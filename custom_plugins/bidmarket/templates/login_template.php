@@ -4,20 +4,23 @@
    <form id="signup_form" action="<?php echo site_url( '/wp-login.php' ); ?>" method="POST">
     <input type="hidden" value="<?php echo site_url(); ?>" name="redirect_to">
      <div class="row">
-        <div class="col-md-3">
+        <div class="col-md-6">
             <div class="form-group">
                 Email or User name:
-                <input type="text" id="username" name="username" class="form-control" placeholder="User Name">
+                <input type="text" id="log" name="log" class="form-control" placeholder="User Name">
             </div>
         </div>
-        <div class="col-md-3">
+     </div>
+     <div class="row">
+        <div class="col-md-6">
             <div class="form-group">
                 Password:
-                <input type="password" id="password" name="password" class="form-control" placeholder="Password">
+                <input type="password" id="pwd" name="pwd" class="form-control" placeholder="Password">
             </div>
         </div>
+      </div>
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-6">
             <div class="form-group" style="text-align:center;">
               <button type="submit" class="btn btn-primary" id="button_submit">Submit</button>
             </div>
@@ -29,14 +32,14 @@
                 </div>
             <?php } ?>
     <div class="row">
-      <div class="col-md-6">
+      <div class="col-md-3">
         <div class="form-group">
           <a href="<?php echo get_site_url().'/index.php/recover-password'; ?>" class="text-muted"><i class="fa fa-lock"></i> Forgot your password?</a>  
         </div>
       </div>
-      <div class="col-md-6">
+      <div class="col-md-3">
         <div class="form-group">
-          <a href="<?php echo get_site_url().'/index.php/signup/'; ?>" class="text-muted"><i class="fa fa-user"></i> Create an account</a>
+          <a href="<?php echo get_site_url().'/index.php/sign-up/'; ?>" class="text-muted"><i class="fa fa-user"></i> Create an account</a>
         </div>
       </div>              
     </div>
@@ -50,21 +53,21 @@
         jQuery("#signup_form").validate({
           ignore: [],
           rules: {
-                 username:{
+                 log:{
                   required: true,
                   minlength: 8
                  },
-                 password: {
+                 pwd: {
                   required: true,
                   minlength: 8
                  },  
           },
           messages: {
-             password: {
+             pwd: {
               required: "Please provide a password",
               minlength: "Your password must be at least 8 characters long",
              },
-             username: {
+             log: {
               required: "Please provide an username",
               minlength: "Your password must be at least 8 characters long",
              },

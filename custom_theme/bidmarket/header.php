@@ -36,10 +36,11 @@
                            'depth'           => 2,
                            'fallback_cb'     => 'bs4navwalker::fallback',
                            'walker'          => new bs4navwalker() ));
+         echo "<span class=top-buttons'><a type='button' class='btn btn-primary login-button' href=".wp_logout_url(get_site_url()).">Log out</a></span>";       
        } else {
          ?>
-         <span class="top-buttons"><a type="button" class="btn btn-primary login-button" href="#">Log in</a></span>
-         <span class="top-buttons"><a type="button" class="btn btn-primary sign-up" href="#">Sign up</a>
+         <span class="top-buttons"><a type="button" class="btn btn-primary login-button" href="<?php echo get_site_url(); ?>/index.php/log-in/">Log in</a></span>
+         <span class="top-buttons"><a type="button" class="btn btn-primary sign-up" href="<?php echo get_site_url(); ?>/index.php/sign-up/">Sign up</a>
          <?php
        }
       ?>
@@ -49,18 +50,5 @@
   <section id="hero">
     <div class="hero-container">       
       <h1><span class="header-color">Welcome to bidmarket</span></h1>
-      <!--<div class="container mt-3">
-      <div class="row">
-        <div class="col-lg-12">
-          <h4><span class="header-color">Find your projects here!</span></h4>
-          <div class="input-group mb-3">
-            <input type="text" class="form-control">
-              <div class="input-group-append">
-                <button class="btn btn-primary" type="button"><i class="fa fa-search"></i></button>
-              </div>
-          </div>
-        </div>
-      </div>
-      </div>-->
     </div>
   </section><!-- #hero -->
