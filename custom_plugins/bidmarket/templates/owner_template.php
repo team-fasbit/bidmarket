@@ -2,6 +2,26 @@
   <div id="owner_container">
    <h1>Owners</h1>
    <form id="owners_form">
+      <div class="row">
+        <div class="col-md-3">
+            <div class="form-group">
+                Username:
+                <input type="text" id="username" name="username" class="form-control">
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                Password:
+                <input type="password" id="password" name="password" class="form-control">
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                Re type password:
+                <input type="password" id="repassword" name="repassword" class="form-control">
+            </div>
+        </div>        
+    </div>    
      <div class="row">
         <div class="col-md-6">
             <div class="form-group">
@@ -126,14 +146,27 @@
         jQuery("#owners_form").validate({
           ignore: [],
           rules: {
+                 username:{
+                  required: true,
+                  minlength: 8
+                 },
+                 password: {
+                  required: true,
+                  minlength: 8
+                 },
+                 repassword: {
+                   required: true,
+                   minlength: 8,
+                   equalTo: "#password"
+                 },
                  firstname:"required",
                  lastname:"required",
                  street:"required",
                  city: "required",
                  zip:"required",
-                 state:"required",                 
-                 phone1:"required",                 
-                 phone2:"required",                 
+                 state:"required",
+                 phone1:"required",
+                 phone2:"required",
                  email1: {
                   required: true,
                   email: true,
@@ -145,9 +178,23 @@
                  customerid: "required",
                  project:"required",
                  description: "required",
-                 priorities: "required",                
+                 priorities: "required",
           },
           messages: {
+             password: {
+              required: "Please provide a password",
+              minlength: "Your password must be at least 8 characters long",
+              equalTo: "Please enter the same password",
+             },
+             repassword: {
+              required: "Please provide a password",
+              minlength: "Your password must be at least 8 characters long",
+              equalTo: "Please enter the same password",
+             },
+             username: {
+              required: "Please provide an username",
+              minlength: "Your password must be at least 8 characters long",
+             },
              firstname: "Please enter first name",
              lastname: "Please enter last name",
              street: "Please enter street",
@@ -180,8 +227,12 @@
             var project=jQuery("#project").val();
             var description=jQuery("#description").val();
             var priorities=jQuery("#priorities").val(); 
+            var username=jQuery("#username").val();
+            var password=jQuery("#password").val();
             var data= {
                 action:'save_owner',
+                username: username,
+                password: password,
                 firstname: firstname,
                 lastname: lastname,
                 street: street,

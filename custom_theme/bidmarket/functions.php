@@ -20,8 +20,11 @@ function mis_widgets(){
    )
  );
 }
-
 add_action('init','mis_widgets');
+function my_function_admin_bar() {
+    return false;
+}
+add_filter('show_admin_bar', 'my_function_admin_bar');
 function fonts_googleapis_styles() {
 	wp_enqueue_style( 'fonts_googleapis', "https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,700,700i|Poppins:300,400,500,700", array(), wp_get_theme()->get( 'Version' ) );
 }

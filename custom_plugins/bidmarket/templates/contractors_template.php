@@ -2,6 +2,26 @@
   <div id="contractors_container">
    <h1>Contractors</h1>
    <form id="contractors_form">
+      <div class="row">
+        <div class="col-md-3">
+            <div class="form-group">
+                Username:
+                <input type="text" id="username" name="username" class="form-control">
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                Password:
+                <input type="password" id="password" name="password" class="form-control">
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                Re type password:
+                <input type="password" id="repassword" name="repassword" class="form-control">
+            </div>
+        </div>        
+    </div>    
      <div class="row">
         <div class="col-md-12">
             <div class="form-group">
@@ -84,21 +104,48 @@
         jQuery("#contractors_form").validate({
           ignore: [],
           rules: {
+                 username:{
+                  required: true,
+                  minlength: 8
+                 },
+                 password: {
+                  required: true,
+                  minlength: 8
+                 },
+                 repassword: {
+                   required: true,
+                   minlength: 8,
+                   equalTo: "#password"
+                 },
                  company:"required",
                  street:"required",
                  city: "required",
                  zip:"required",
-                 state:"required",                 
-                 phone:"required",                 
-                 phone2:"required",                 
+                 state:"required",
+                 phone:"required",
+                 phone2:"required",
                  email: {
                   required: true,
                   email: true,
                  },
                  website: "required",
-                 name:"required",            
+                 name:"required",
           },
           messages: {
+             password: {
+              required: "Please provide a password",
+              minlength: "Your password must be at least 8 characters long",
+              equalTo: "Please enter the same password",
+             },
+             repassword: {
+              required: "Please provide a password",
+              minlength: "Your password must be at least 8 characters long",
+              equalTo: "Please enter the same password",
+             },
+             username: {
+              required: "Please provide an username",
+              minlength: "Your password must be at least 8 characters long",
+             },
              company: "Please enter company name",
              street: "Please enter street",
              city: "Please enter city",
@@ -123,8 +170,12 @@
             var email=jQuery("#email").val();
             var website=jQuery("#website").val();
             var name=jQuery("#name").val();
+            var username=jQuery("#username").val();
+            var password=jQuery("#password").val();            
             var data= {
                 action:'save_contractors',
+                username: username,
+                password: password,
                 company: company,
                 street: street,
                 city: city,

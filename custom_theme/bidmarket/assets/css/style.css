@@ -526,9 +526,6 @@ body.mobile-nav-active #mobile-nav-toggle {
 .icon-size{
   font-size:48px;
 }
-#priorities{
-  padding-top: 50px;
-}
 .header-color{
   color: #1697d1;
 }
@@ -599,7 +596,7 @@ body.mobile-nav-active #mobile-nav-toggle {
   height: 36px;
   transition: 0.3s;
 }
-.login-button{
+.top-button{
   padding: 10px;
   background: #1697d1;
   border-radius: 10%;
@@ -608,9 +605,17 @@ body.mobile-nav-active #mobile-nav-toggle {
 }
 .sign-up{
   padding: 10px;
-  background: #1697d1;
+  background: #102e43;
   border-radius: 10%;
-  border-color: #1697d1;
+  border-color: #102e43;
+  color: white;
+  padding: 70px 0;
+  display: table-cell;
+  width: 200px;
+  height:200px;  
+}
+.inside-button {
+
 }
 .top-buttons{
   padding-left: 10px;
@@ -618,4 +623,8 @@ body.mobile-nav-active #mobile-nav-toggle {
 .inside-row{
   padding-top: 8px;
   padding-bottom: 8px;
+}
+#signup_container{
+  padding-bottom: 30px;
+  text-align: center;
 }

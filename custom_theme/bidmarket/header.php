@@ -36,11 +36,11 @@
                            'depth'           => 2,
                            'fallback_cb'     => 'bs4navwalker::fallback',
                            'walker'          => new bs4navwalker() ));
-         echo "<span class=top-buttons'><a type='button' class='btn btn-primary login-button' href=".wp_logout_url(get_site_url()).">Log out</a></span>";       
+         echo "<span class=top-buttons'><a type='button' class='btn btn-primary login-top-button' href=".wp_logout_url(get_site_url()).">Log out</a></span>";       
        } else {
          ?>
-         <span class="top-buttons"><a type="button" class="btn btn-primary login-button" href="<?php echo get_site_url(); ?>/index.php/log-in/">Log in</a></span>
-         <span class="top-buttons"><a type="button" class="btn btn-primary sign-up" href="<?php echo get_site_url(); ?>/index.php/sign-up/">Sign up</a>
+         <span class="top-buttons"><a type="button" class="btn btn-primary top-button" href="<?php echo get_site_url(); ?>/index.php/log-in/">Log in</a></span>
+         <span class="top-buttons"><a type="button" class="btn btn-primary top-button" href="<?php echo get_site_url(); ?>/index.php/sign-up/">Sign up</a>
          <?php
        }
       ?>

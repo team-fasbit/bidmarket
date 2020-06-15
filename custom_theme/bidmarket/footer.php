@@ -36,4 +36,5 @@ Al igual que en el caso del archivo header.php, éste será común en toda la pl
     </div>
   </footer><!-- #footer -->
 </div>
+<?php wp_footer(); ?>
 </body>
