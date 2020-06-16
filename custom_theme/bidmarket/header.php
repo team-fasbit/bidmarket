@@ -36,7 +36,7 @@
                            'depth'           => 2,
                            'fallback_cb'     => 'bs4navwalker::fallback',
                            'walker'          => new bs4navwalker() ));
-         echo "<span class=top-buttons'><a type='button' class='btn btn-primary login-top-button' href=".wp_logout_url(get_site_url()).">Log out</a></span>";       
+         echo "<span class=top-buttons'><a type='button' class='btn btn-primary top-button' href=".wp_logout_url(get_site_url()).">Log out</a></span>";       
        } else {
          ?>
          <span class="top-buttons"><a type="button" class="btn btn-primary top-button" href="<?php echo get_site_url(); ?>/index.php/log-in/">Log in</a></span>
@@ -48,7 +48,14 @@
 
   </header><!-- #header -->
   <section id="hero">
-    <div class="hero-container">       
-      <h1><span class="header-color">Welcome to bidmarket</span></h1>
+    <div class="hero-container">
+    <?php if ( is_user_logged_in() ) { 
+       do_action('show_owner_contractor');
+     }
+     else{
+    ?>
+      <br><br><br><br><h2><span class="header-color">Welcome to bidmarket</span></h2>
+      <h4><span class="header-color"><?php do_action('show_owner_contractor'); ?></span></h4>
+    <?php } ?>
     </div>
   </section><!-- #hero -->

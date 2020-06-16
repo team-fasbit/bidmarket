@@ -92,7 +92,7 @@
    }
    function log_in(){
      global $wpdb;
-     $login=$_GET['login']; 
+     $login=$_GET['login'];
      include('templates/login_template.php');
    }   
    function sign_up(){      
@@ -266,11 +266,49 @@
       $wpdb->query($sql);
       echo "Success"; 
       wp_die();
-   }
+   } 
    function contractors_home(){
       global $wpdb;    
       include('templates/contractors_template.php');
    }
+   function change_password(){
+      global $wpdb;    
+      include('templates/change_password__template.php');
+   }
+   function set_password(){
+      global $wpdb;
+      $email=$_GET['email'];    
+      include('templates/set_password__template.php');
+   }
+   function set_pwd(){
+      global $wpdb; 
+      $email=$_POST['email'];
+      $password=$_POST['password'];
+      $table_name2= $wpdb->prefix . "users";
+      $sql2="UPDATE $table_name2 SET user_pass=md5('$password') WHERE user_email='$email';";
+      $wpdb->query($sql2);
+      include('templates/password_changed_template.php'); 
+      wp_die();
+   }   
+   function change_pwd(){
+      global $wpdb; 
+      $email=$_POST['email'];
+      $subject="Bidmarket change password";
+      $message="<!DOCTYPE html>";
+      $message.="<html>";
+      $message.="<head>";
+      $message.="<title>BidMarket Message</title>";
+      $message.="</head>";
+      $message.="<body>";
+      $message.="<img src='".get_template_directory_uri()."/assets/img/logo.png'></img>";
+      $message.="<p>To set your new password please click in link above!!</p> <br><br>";
+      $message.="<a type='button' class='btn btn-primary' href='".get_site_url()."/index.php/set-password/?email=".$email."'>Set your new password</a>;";
+      $message.="</body>";
+      $message.="</html>";                
+      wp_mail($email, $subject, $message); 
+      include('templates/email_sent_template.php');      
+      wp_die();
+   }       
    function email_verified(){
       global $wpdb;
       $email=$_GET['email'];
@@ -508,6 +546,18 @@
        contractors_home();
        return ob_get_clean();
    }
+   add_shortcode( 'cr_change_password', 'change_password_shortcode' );
+   function change_password_shortcode() {
+       ob_start();
+       change_password();
+       return ob_get_clean();
+   }   
+   add_shortcode( 'cr_set_password', 'set_password_shortcode' );
+   function set_password_shortcode() {
+       ob_start();
+       set_password();
+       return ob_get_clean();
+   }   
    add_shortcode( 'cr_view_contractors', 'view_contractors_shortcode' );
    function view_contractors_shortcode() {
        ob_start();
@@ -555,14 +605,18 @@
    add_action('wp_ajax_save_owner', 'save_owner');
    add_action('wp_ajax_delete_owner', 'delete_owner');
    add_action('wp_ajax_update_owner', 'update_owner' );
-   add_action('wp_ajax_nopriv_save_owner', 'save_owner');
-   add_action('wp_ajax_nopriv_delete_owner', 'delete_owner');   
-   add_action('wp_ajax_nopriv_update_owner', 'update_owner' );
    add_action('wp_ajax_save_contractors', 'save_contractors');
    add_action('wp_ajax_delete_contractors', 'delete_contractors');
    add_action('wp_ajax_update_contractors', 'update_contractors' );
+   add_action('wp_ajax_change_pwd', 'change_pwd' );
+   add_action('wp_ajax_set_pwd', 'set_pwd' );
+   add_action('wp_ajax_nopriv_save_owner', 'save_owner');
+   add_action('wp_ajax_nopriv_delete_owner', 'delete_owner');   
+   add_action('wp_ajax_nopriv_update_owner', 'update_owner' );
    add_action('wp_ajax_nopriv_save_contractors', 'save_contractors');
    add_action('wp_ajax_nopriv_delete_contractors', 'delete_contractors');   
    add_action('wp_ajax_nopriv_update_contractors', 'update_contractors' );
+   add_action('wp_ajax_nopriv_change_pwd', 'change_pwd' );
+   add_action('wp_ajax_nopriv_set_pwd', 'set_pwd' );
    add_action('activate_bidmarket/bidmarket.php','bidmarket_install');
    add_action('deactivate_bidmarket/bidmarket.php', 'bidmarket_uninstall');

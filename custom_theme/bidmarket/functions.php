@@ -68,4 +68,29 @@ function jquery_load_scripts() {
    wp_enqueue_script( "owlcaro", get_template_directory_uri() . '/assets/js/owl.carousel.min.js', array( 'jquery' ) );      
 }
 add_action( 'wp_enqueue_scripts', 'jquery_load_scripts');
+function show_type_logged_user(){
+  global $wpdb;
+  $table_signups= $wpdb->prefix . "signups"; 
+  $output="";
+  if ( is_user_logged_in() ) {
+    $user_id=wp_get_current_user()->ID;
+    $sql="SELECT * FROM $table_signups WHERE user_id = $user_id;";
+    $results_type = $wpdb->get_results($sql);
+    foreach ($results_type as $key) {
+      $firstname=$key->firstname;
+      $type=$key->signup_type;
+    }
+    if($type==1){
+      $output="<br><br><br><br><h2><span class='header-color'>Welcome to bidmarket $firstname</span></h2>
+      <h4><span class='header-color'>You are a Homeowner</span></h4>";
+    }
+    else{
+      $output="<br><br><br><br><h2><span class='header-color'>Welcome to bidmarket $firstname</span></h2>
+      <h4><span class='header-color'>You are a Contractor</span></h4>";
+    }
+  }
+  echo $output;
+}
+add_action('show_owner_contractor','show_type_logged_user');
+
 ?>

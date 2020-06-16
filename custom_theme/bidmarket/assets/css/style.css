@@ -191,8 +191,9 @@ h1, h2, h3, h4, h5, h6 {
 
 #hero h2 {
   color: #eee;
-  margin-bottom: 50px;
+  margin-bottom: 20px;
   font-size: 24px;
+  text-transform: uppercase;
 }
 
 @media (max-width: 768px) {
@@ -627,4 +628,10 @@ body.mobile-nav-active #mobile-nav-toggle {
 #signup_container{
   padding-bottom: 30px;
   text-align: center;
+}
+.a.nav-link.active{
+  color: #1697d1;
+}
+.nav-menu a{
+  color: #1697d1;
 }
