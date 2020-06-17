@@ -6,7 +6,7 @@
         <div class="col-md-6">
             <div class="form-group">
                 First Name:
-                <input type="text" id="id" name="id" class="form-control" value="<?php echo $id; ?>">
+                <input type="hidden" id="id" name="id" class="form-control" value="<?php echo $id; ?>">
                 <input type="text" id="firstname" name="firstname" class="form-control"  value="<?php echo $firstname; ?>">
             </div>
         </div>
@@ -116,7 +116,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="form-group" style="text-align:center;">
-              <button type="submit" class="btn-primary" id="button_submit">Submit</button>
+              <button type="submit" class="btn btn-primary bidmarket_button" id="button_submit">Submit</button>
             </div>
         </div>
     </div>

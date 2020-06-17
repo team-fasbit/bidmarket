@@ -93,7 +93,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="form-group" style="text-align:center;">
-              <button type="submit" class="btn-primary" id="button_submit">Submit</button>
+              <button type="submit" class="btn btn-primary bidmarket_button" id="button_submit">Submit</button>
             </div>
         </div>
     </div>

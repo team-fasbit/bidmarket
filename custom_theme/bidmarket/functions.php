@@ -92,5 +92,39 @@ function show_type_logged_user(){
   echo $output;
 }
 add_action('show_owner_contractor','show_type_logged_user');
-
+function remove_menus(){
+  global $wpdb;
+  $table_signups= $wpdb->prefix . "signups";
+  $table_access= $wpdb->prefix . "access"; 
+  $table_posts= $wpdb->prefix . "posts"; 
+  $output="exclude=";
+  $access="";
+  if ( is_user_logged_in() ) {
+    $user_id=wp_get_current_user()->ID;
+    $sql="SELECT * FROM $table_signups WHERE user_id = $user_id;";
+    $results_type = $wpdb->get_results($sql);
+    foreach ($results_type as $key) {
+      $type=$key->signup_type;
+    }
+    $sql2="SELECT * FROM $table_access WHERE signup_type = $type;";
+    $results_access = $wpdb->get_results($sql2);
+    foreach ($results_access as $key_access) {
+      $access.=$key_access->menu_item.',';
+    }
+    $access=substr($access, 0, -1);
+    $sql3="SELECT * FROM `wp_posts` WHERE `post_type`='page' and ID NOT IN ($access);";
+    $results_exclude = $wpdb->get_results($sql3);
+    foreach ($results_exclude as $key_exclude) {
+      $output.=$key_exclude->ID.',';
+    }    
+    echo "<ul style='padding-right:100px;'>";
+    echo "<div id='bs4navbar' class='menu-menu-1-container'>";
+    echo "<ul id='menu-menu-1' class='nav-menu sf-js-enabled sf-arrows'>";
+    wp_list_pages(array ('title_li'     => __( 'Home' ), 'exclude' => $output));
+    echo "</ul>";
+    echo "</div>";
+    echo "</ul>";    
+  }
+}
+add_action( 'show_item_menu', 'remove_menus' );
 ?>

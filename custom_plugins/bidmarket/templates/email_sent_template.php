@@ -6,7 +6,7 @@
                    <i class="fa fa-envelope"></i><br>
                    <strong>Success!</strong> <br><br>
                       Email sent!<br><br>
-                      <a type="button" class="btn-primary" href="<?php echo get_site_url(); ?>">Home</a>
+                      <a type="button" class="btn btn-primary bidmarket_button" href="<?php echo get_site_url(); ?>">Home</a>
                 </h4>
                </span>
               </div>

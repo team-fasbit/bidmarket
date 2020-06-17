@@ -604,6 +604,12 @@ body.mobile-nav-active #mobile-nav-toggle {
   border-color: #1697d1;
 
 }
+.bidmarket_button{
+  background: #1697d1;
+  border-radius: 10%;
+  border-color: #1697d1;
+  color: white !important;
+}
 .sign-up{
   padding: 10px;
   background: #102e43;
@@ -628,9 +634,6 @@ body.mobile-nav-active #mobile-nav-toggle {
 #signup_container{
   padding-bottom: 30px;
   text-align: center;
-}
-.a.nav-link.active{
-  color: #1697d1;
 }
 .nav-menu a{
   color: #1697d1;

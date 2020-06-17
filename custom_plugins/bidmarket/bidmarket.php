@@ -13,7 +13,8 @@
      $table_projects= $wpdb->prefix . "projects";     
      $table_priorities= $wpdb->prefix . "priorities";
      $table_contractors= $wpdb->prefix . "contractors";
-     $table_signups= $wpdb->prefix . "signups";     
+     $table_signups= $wpdb->prefix . "signups";
+     $tables_access= $wpdb->prefix . "access";
      $sql1 = "CREATE TABLE $table_owner( id int(11) NOT NULL, firstname text NOT NULL, lastname text NOT NULL, street text NOT NULL, city text NOT NULL, state text NOT NULL, zip text NOT NULL, phone text NOT NULL, phone2 text NOT NULL, email text NOT NULL, email2 text NOT NULL, customerid text, project int(11) NOT NULL , description text NOT NULL, priorities text NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=latin1;";
      $sql2= "ALTER TABLE $table_owner ADD PRIMARY KEY(id);";
      $sql3="ALTER TABLE $table_owner MODIFY id INT(11) NOT NULL AUTO_INCREMENT;";
@@ -40,6 +41,12 @@
      $sql24 = " CREATE TABLE $table_signups ( id int(11) NOT NULL, firstname text NOT NULL, lastname text NOT NULL, username text NOT NULL, password text NOT NULL, email text NOT NULL, signup_type int(1), validated int(1),signup_key int(11)) ENGINE=InnoDB DEFAULT CHARSET=latin1;";
      $sql25= "ALTER TABLE $table_signups ADD PRIMARY KEY(id);";
      $sql26="ALTER TABLE $table_signups MODIFY id INT(11) NOT NULL AUTO_INCREMENT;";     
+     $sql27 = "CREATE TABLE $tables_access ( id int(11) NOT NULL, menu_item int(11), signup_type int(11)) ENGINE=InnoDB DEFAULT CHARSET=latin1;";
+     $sql28= "ALTER TABLE $tables_access ADD PRIMARY KEY(id);";
+     $sql29="ALTER TABLE $tables_access MODIFY id INT(11) NOT NULL AUTO_INCREMENT;";
+     $sql30="insert into $tables_access (menu_item,signup_type) values (8,1);";
+     $sql31="insert into $tables_access (menu_item,signup_type) values (21,2);";
+     $sql32="insert into $tables_access (menu_item,signup_type) values (23,2);";    
      $wpdb->query($sql1);
      $wpdb->query($sql2);
      $wpdb->query($sql3);
@@ -65,7 +72,13 @@
      $wpdb->query($sql23);
      $wpdb->query($sql24);
      $wpdb->query($sql25);
-     $wpdb->query($sql26);     
+     $wpdb->query($sql26);
+     $wpdb->query($sql27);
+     $wpdb->query($sql28);
+     $wpdb->query($sql29);
+     $wpdb->query($sql30);
+     $wpdb->query($sql31);
+     $wpdb->query($sql32);
     }
    function bidmarket_uninstall(){
       global $wpdb; 
@@ -110,33 +123,78 @@
    function view_owner(){
       global $wpdb;    
       $id= $_GET['id'];
-      $table_owner= $wpdb->prefix . "owner";
-      $result_owner = $wpdb->get_results("SELECT * FROM $table_owner WHERE id=$id;");
-      foreach ($result_owner as $key_owner) {
-         $firstname= $key_owner->firstname;
-         $lastname= $key_owner->lastname;
-         $street= $key_owner->street;
-         $city= $key_owner->city;
-         $zip= $key_owner->zip;
-         $state= $key_owner->state;
-         $phone1= $key_owner->phone;
-         $phone2= $key_owner->phone2;      
-         $email1= $key_owner->email;
-         $email2= $key_owner->email2;
-         $customerid= $key_owner->customerid;
-         $idproject= $key_owner->project;
-         $description= $key_owner->description;
-         $priorities= $key_owner->priorities;
+      $table_signups= $wpdb->prefix . "signups"; 
+      if(empty($id)){
+        if ( is_user_logged_in() ) {
+          $id=wp_get_current_user()->ID;
+          $sql="SELECT * FROM $table_signups WHERE user_id = $id;";
+          $results_type = $wpdb->get_results($sql);
+          foreach ($results_type as $key) {
+            $signup_key=$key->signup_key;
+            $type=$key->signup_type;
+          }
+          if($type==1){ 
+            $table_owner= $wpdb->prefix . "owner";
+            $sql_owner="SELECT * FROM $table_owner WHERE id=$signup_key;";
+            $result_owner = $wpdb->get_results($sql_owner);
+            foreach ($result_owner as $key_owner) {
+              $id=$key_owner->id;
+              $firstname= $key_owner->firstname;
+              $lastname= $key_owner->lastname;
+              $street= $key_owner->street;
+              $city= $key_owner->city;
+              $zip= $key_owner->zip;
+              $state= $key_owner->state;
+              $phone1= $key_owner->phone;
+              $phone2= $key_owner->phone2;      
+              $email1= $key_owner->email;
+              $email2= $key_owner->email2;
+              $customerid= $key_owner->customerid;
+              $idproject= $key_owner->project;
+              $description= $key_owner->description;
+              $priorities= $key_owner->priorities;         
+            }
+          }   
+          $table_project= $wpdb->prefix . "projects";
+          $result_prj = $wpdb->get_results("SELECT * FROM $table_project WHERE id=$idproject");
+          foreach ($result_prj as $key_prj) {
+            $project= $key_prj->name;
+          }
+          $results_project = $wpdb->get_results("SELECT * FROM $table_project ORDER BY name;");      
+          $table_priorities= $wpdb->prefix . "priorities";
+          $results_priorities = $wpdb->get_results("SELECT * FROM $table_priorities ORDER BY name;");
+          include('templates/view_owner_template.php');                  
+        }
       }
-      $table_project= $wpdb->prefix . "projects";
-      $result_prj = $wpdb->get_results("SELECT * FROM $table_project WHERE id=$idproject");
-      foreach ($result_prj as $key_prj) {
-         $project= $key_prj->name;
+      else {      
+        $table_owner= $wpdb->prefix . "owner";
+        $result_owner = $wpdb->get_results("SELECT * FROM $table_owner WHERE id=$id;");
+        foreach ($result_owner as $key_owner) {
+          $firstname= $key_owner->firstname;
+          $lastname= $key_owner->lastname;
+          $street= $key_owner->street;
+          $city= $key_owner->city;
+          $zip= $key_owner->zip;
+          $state= $key_owner->state;
+          $phone1= $key_owner->phone;
+          $phone2= $key_owner->phone2;      
+          $email1= $key_owner->email;
+          $email2= $key_owner->email2;
+          $customerid= $key_owner->customerid;
+          $idproject= $key_owner->project;
+          $description= $key_owner->description;
+          $priorities= $key_owner->priorities;
+        }
+        $table_project= $wpdb->prefix . "projects";
+        $result_prj = $wpdb->get_results("SELECT * FROM $table_project WHERE id=$idproject");
+        foreach ($result_prj as $key_prj) {
+          $project= $key_prj->name;
+        }
+        $results_project = $wpdb->get_results("SELECT * FROM $table_project ORDER BY name;");     
+        $table_priorities= $wpdb->prefix . "priorities";
+        $results_priorities = $wpdb->get_results("SELECT * FROM $table_priorities ORDER BY name;");      
+        include('templates/view_owner_template.php');
       }
-      $results_project = $wpdb->get_results("SELECT * FROM $table_project ORDER BY name;");      
-      $table_priorities= $wpdb->prefix . "priorities";
-      $results_priorities = $wpdb->get_results("SELECT * FROM $table_priorities ORDER BY name;");      
-      include('templates/view_owner_template.php');
    }   
    function save_owner(){
       global $wpdb;
@@ -280,6 +338,38 @@
       $email=$_GET['email'];    
       include('templates/set_password__template.php');
    }
+   function owner_modal(){
+      global $wpdb; 
+      $id=$_POST['id'];
+      $table_owner= $wpdb->prefix . "owner";
+      $result_owner = $wpdb->get_results("SELECT * FROM $table_owner WHERE id=$id;");
+      foreach ($result_owner as $key_owner) {
+         $firstname= $key_owner->firstname;
+         $lastname= $key_owner->lastname;
+         $street= $key_owner->street;
+         $city= $key_owner->city;
+         $zip= $key_owner->zip;
+         $state= $key_owner->state;
+         $phone1= $key_owner->phone;
+         $phone2= $key_owner->phone2;      
+         $email1= $key_owner->email;
+         $email2= $key_owner->email2;
+         $customerid= $key_owner->customerid;
+         $idproject= $key_owner->project;
+         $description= $key_owner->description;
+         $priorities= $key_owner->priorities;
+      }
+      $table_project= $wpdb->prefix . "projects";
+      $result_prj = $wpdb->get_results("SELECT * FROM $table_project WHERE id=$idproject");
+      foreach ($result_prj as $key_prj) {
+         $project= $key_prj->name;
+      }
+      $results_project = $wpdb->get_results("SELECT * FROM $table_project ORDER BY name;");      
+      $table_priorities= $wpdb->prefix . "priorities";
+      $results_priorities = $wpdb->get_results("SELECT * FROM $table_priorities ORDER BY name;");
+      include('templates/modal_owner_template.php');
+      wp_die();
+   }    
    function set_pwd(){
       global $wpdb; 
       $email=$_POST['email'];
@@ -367,24 +457,60 @@
    function view_contractors(){
       global $wpdb;    
       $id= $_GET['id'];
-      $table_contractors= $wpdb->prefix . "contractors";
-      $result_contractors = $wpdb->get_results("SELECT * FROM $table_contractors WHERE id=$id;");
-      foreach ($result_contractors as $key_contractors) {
-         $company= $key_contractors->company;
-         $street= $key_contractors->street;
-         $city= $key_contractors->city;
-         $zip= $key_contractors->zip;
-         $state= $key_contractors->state;
-         $phone= $key_contractors->phone;
-         $email= $key_contractors->email;
-         $website= $key_contractors->website;
-         $name= $key_contractors->name;
-         $phone2= $key_contractors->phone2;
-         $email_v= $key_contractors->email_v;
-         $registration= $key_contractors->registration;
-         $date_of_registration= $key_contractors->date_of_registration;         
-      }   
-      include('templates/view_contractors_template.php');
+      $table_signups= $wpdb->prefix . "signups"; 
+      if(empty($id)){
+        if ( is_user_logged_in() ) {
+          $id=wp_get_current_user()->ID;
+          $sql="SELECT * FROM $table_signups WHERE user_id = $id;";
+          $results_type = $wpdb->get_results($sql);
+          foreach ($results_type as $key) {
+            $signup_key=$key->signup_key;
+            $type=$key->signup_type;
+          }
+          if($type==2){ 
+            $table_contractors= $wpdb->prefix . "contractors";
+            $sql_contractors="SELECT * FROM $table_contractors WHERE id=$signup_key;";
+            $result_contractors = $wpdb->get_results($sql_contractors);
+            foreach ($result_contractors as $key_contractors) {
+              $id=$key_contractors->id;
+              $company= $key_contractors->company;
+              $street= $key_contractors->street;
+              $city= $key_contractors->city;
+              $zip= $key_contractors->zip;
+              $state= $key_contractors->state;
+              $phone= $key_contractors->phone;
+              $email= $key_contractors->email;
+              $website= $key_contractors->website;
+              $name= $key_contractors->name;
+              $phone2= $key_contractors->phone2;
+              $email_v= $key_contractors->email_v;
+              $registration= $key_contractors->registration;
+              $date_of_registration= $key_contractors->date_of_registration;         
+            }
+          }   
+          include('templates/view_contractors_template.php');               
+        }
+      }
+      else {
+        $table_contractors= $wpdb->prefix . "contractors";
+        $result_contractors = $wpdb->get_results("SELECT * FROM $table_contractors WHERE id=$id;");
+        foreach ($result_contractors as $key_contractors) {
+          $company= $key_contractors->company;
+          $street= $key_contractors->street;
+          $city= $key_contractors->city;
+          $zip= $key_contractors->zip;
+          $state= $key_contractors->state;
+          $phone= $key_contractors->phone;
+          $email= $key_contractors->email;
+          $website= $key_contractors->website;
+          $name= $key_contractors->name;
+          $phone2= $key_contractors->phone2;
+          $email_v= $key_contractors->email_v;
+          $registration= $key_contractors->registration;
+          $date_of_registration= $key_contractors->date_of_registration;         
+        }   
+        include('templates/view_contractors_template.php');
+      }
    }   
    function save_contractors(){
       global $wpdb;
@@ -610,6 +736,7 @@
    add_action('wp_ajax_update_contractors', 'update_contractors' );
    add_action('wp_ajax_change_pwd', 'change_pwd' );
    add_action('wp_ajax_set_pwd', 'set_pwd' );
+   add_action('wp_ajax_owner_modal', 'owner_modal' );
    add_action('wp_ajax_nopriv_save_owner', 'save_owner');
    add_action('wp_ajax_nopriv_delete_owner', 'delete_owner');   
    add_action('wp_ajax_nopriv_update_owner', 'update_owner' );
@@ -618,5 +745,6 @@
    add_action('wp_ajax_nopriv_update_contractors', 'update_contractors' );
    add_action('wp_ajax_nopriv_change_pwd', 'change_pwd' );
    add_action('wp_ajax_nopriv_set_pwd', 'set_pwd' );
+   add_action('wp_ajax_nopriv_owner_modal', 'owner_modal' );
    add_action('activate_bidmarket/bidmarket.php','bidmarket_install');
    add_action('deactivate_bidmarket/bidmarket.php', 'bidmarket_uninstall');

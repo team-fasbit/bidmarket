@@ -32,7 +32,7 @@ foreach ($results_owner as $key_owner) {
     <td> <?php echo $key_owner->phone2; ?> </td> 
     <td> <?php echo $key_owner->email; ?> </td> 
     <td>
-      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">View owner</button>
+      <a type="button" class="btn btn-primary bidmarket_button" data-toggle="modal" data-target="#myModal" onclick="view_owner(<?php echo $key_owner->id; ?>)">View owner</a>
     </td>
 </tr>
 <?php
