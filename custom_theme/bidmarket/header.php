@@ -29,15 +29,6 @@
       <?php
       if ( is_user_logged_in() ) {
         do_action('show_item_menu');
-       /*wp_nav_menu( array( 'theme_location' => 'primary',
-                           'container'       => 'div',
-                           'container_id'    => 'bs4navbar',
-                           'menu_id'         => false,
-                           'menu_class'      => 'nav-menu',
-                           'depth'           => 2,
-                           'fallback_cb'     => 'bs4navwalker::fallback',
-                           'walker'          => new bs4navwalker(),
-                         ));*/
          echo "<span class='top-buttons'><a type='button' class='btn btn-primary top-button' href=".wp_logout_url(get_site_url()).">Log out</a></span>";       
        } else {
          ?>

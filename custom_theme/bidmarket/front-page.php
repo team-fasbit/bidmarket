@@ -62,7 +62,7 @@ get_header();
 <script type="text/javascript">
    jQuery(document).ready( function() {  
       $('.s-slider').owlCarousel({ 
-      items:4,
+      items:3,
       itemsDesktop:[1000,2],
       itemsDesktopSmall:[979,2],
       itemsTablet:[768,2],

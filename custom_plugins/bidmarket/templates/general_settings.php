@@ -122,6 +122,41 @@ foreach ($results_contractors as $key_contractors) {
 </table>
 </div>
 </div>
+<div class="inside">
+<h3 class='hndle'>Access</h3>
+<form id="access_form">
+  <table class="form-table">
+    <tr>
+      <th>Pages to show:</th>
+      <td>
+        <select name="pages" id="pages">
+          <option value="">Choose a page</option>
+          <?php 
+          foreach ($results_posts as $key_post) {
+            echo "<option value='".$key_post->ID."'>".$key_post->post_title."</option>";
+          }
+          ?>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <th>Sign up type:</th>
+      <td>
+        <select name="signup_type" id="signup_type">
+          <option value="">Choose a type of user</option>
+          <option value="1">Homeowner</option>
+          <option value="2">Contractor</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2">
+        <button type="buttom" class="button button-primary" id="new_rule" onclick="addrule()">Add rule</button>
+      </td>
+    </tr>
+    </table>
+</form>
+</div>
 </div>
 </div>
 </div>
@@ -150,7 +185,27 @@ jQuery(document).ready( function($) {
     "bAutoWidth": false,
     "lengthMenu":[[10,25,50,100,200,-1],[10,25,50,100,200,"All"]]    
   });     
-});  
+});
+function addrule(){
+    var pages=jQuery("#pages").val();
+    var signup_type=jQuery("#signup_type").val();
+    var err=0;
+    if(!pages) err=1;
+    if(!signup_type) err=1;
+    if(err==0){    
+    var data= {
+        action:'add_rule',
+        pages: pages,
+        signup_type: signup_type
+    };
+    jQuery.post(ajaxurl, data, function(response) {
+      location.reload();
+    });
+  }
+  else {
+    alert('Choose page and choose type of user before add new rule!');
+  }
+}  
 function deleteowner(id){
     if (confirm("Are you sure?")) {
     var data= {

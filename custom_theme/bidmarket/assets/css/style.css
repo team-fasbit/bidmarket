@@ -598,11 +598,9 @@ body.mobile-nav-active #mobile-nav-toggle {
   transition: 0.3s;
 }
 .top-button{
-  padding: 10px;
   background: #1697d1;
   border-radius: 10%;
   border-color: #1697d1;
-
 }
 .bidmarket_button{
   background: #1697d1;
@@ -637,4 +635,22 @@ body.mobile-nav-active #mobile-nav-toggle {
 }
 .nav-menu a{
   color: #1697d1;
+}
+.top_menu{
+  padding-right:10px;
+  color: #1697d1;
+}
+.nav-menu > li {
+  background: #1697d1;
+  border-radius: 10%;
+  border-color: #1697d1;
+  color: white !important;
+  font-weight: 400;
+  font-size: 1rem;
+  line-height: 1.5;
+  padding: .375rem .75rem;
+}
+.nav-menu ul li a:hover{
+  background: #1697d1;
+  color: white !important;
 }

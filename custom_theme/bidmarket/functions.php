@@ -74,6 +74,11 @@ function show_type_logged_user(){
   $output="";
   if ( is_user_logged_in() ) {
     $user_id=wp_get_current_user()->ID;
+    if(current_user_can('administrator')) {
+      $output="<br><br><br><br><h2><span class='header-color'>Welcome to bidmarket </span></h2>
+      <h4><span class='header-color'>You are a Administrator</span></h4>";
+   }
+   else {
     $sql="SELECT * FROM $table_signups WHERE user_id = $user_id;";
     $results_type = $wpdb->get_results($sql);
     foreach ($results_type as $key) {
@@ -87,7 +92,8 @@ function show_type_logged_user(){
     else{
       $output="<br><br><br><br><h2><span class='header-color'>Welcome to bidmarket $firstname</span></h2>
       <h4><span class='header-color'>You are a Contractor</span></h4>";
-    }
+    }    
+   }
   }
   echo $output;
 }
@@ -101,29 +107,40 @@ function remove_menus(){
   $access="";
   if ( is_user_logged_in() ) {
     $user_id=wp_get_current_user()->ID;
-    $sql="SELECT * FROM $table_signups WHERE user_id = $user_id;";
-    $results_type = $wpdb->get_results($sql);
-    foreach ($results_type as $key) {
-      $type=$key->signup_type;
+    if(current_user_can('administrator')) {
+      echo "<ul class='top_menu'>";
+      echo "<div id='bs4navbar' class='menu-menu-1-container'>";
+      echo "<ul id='menu-menu-1' class='nav-menu sf-js-enabled sf-arrows'>";
+      wp_list_pages(array ('title_li'     => __( 'Home' )));
+      echo "</ul>";
+      echo "</div>";
+      echo "</ul>";       
     }
-    $sql2="SELECT * FROM $table_access WHERE signup_type = $type;";
-    $results_access = $wpdb->get_results($sql2);
-    foreach ($results_access as $key_access) {
-      $access.=$key_access->menu_item.',';
-    }
-    $access=substr($access, 0, -1);
-    $sql3="SELECT * FROM `wp_posts` WHERE `post_type`='page' and ID NOT IN ($access);";
-    $results_exclude = $wpdb->get_results($sql3);
-    foreach ($results_exclude as $key_exclude) {
-      $output.=$key_exclude->ID.',';
-    }    
-    echo "<ul style='padding-right:100px;'>";
-    echo "<div id='bs4navbar' class='menu-menu-1-container'>";
-    echo "<ul id='menu-menu-1' class='nav-menu sf-js-enabled sf-arrows'>";
-    wp_list_pages(array ('title_li'     => __( 'Home' ), 'exclude' => $output));
-    echo "</ul>";
-    echo "</div>";
-    echo "</ul>";    
+    else {
+      $sql="SELECT * FROM $table_signups WHERE user_id = $user_id;";
+      $results_type = $wpdb->get_results($sql);
+      foreach ($results_type as $key) {
+        $type=$key->signup_type;
+      }
+      $sql2="SELECT * FROM $table_access WHERE signup_type = $type;";
+      $results_access = $wpdb->get_results($sql2);
+      foreach ($results_access as $key_access) {
+        $access.=$key_access->menu_item.',';
+      }
+      $access=substr($access, 0, -1);
+      $sql3="SELECT * FROM `wp_posts` WHERE `post_type`='page' and ID NOT IN ($access);";
+      $results_exclude = $wpdb->get_results($sql3);
+      foreach ($results_exclude as $key_exclude) {
+        $output.=$key_exclude->ID.',';
+      }    
+      echo "<ul class='top_menu'>";
+      echo "<div id='bs4navbar' class='menu-menu-1-container'>";
+      echo "<ul id='menu-menu-1' class='nav-menu sf-js-enabled sf-arrows'>";
+      wp_list_pages(array ('title_li'     => __( 'Home' ), 'exclude' => $output));
+      echo "</ul>";
+      echo "</div>";
+      echo "</ul>"; 
+    }   
   }
 }
 add_action( 'show_item_menu', 'remove_menus' );
