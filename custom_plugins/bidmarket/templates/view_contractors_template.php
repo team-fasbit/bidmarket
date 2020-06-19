@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container border">
   <div id="contractors_container">
    <h1>Contractors</h1>
    <form id="edit_contractors_form">
@@ -27,7 +27,14 @@
         <div class="col-md-3">
             <div class="form-group">
                 State:
-                <input type="text" id="state" name="state" class="form-control"  value="<?php echo $state; ?>">
+                <select name="state" id="state" class="form-control">
+                    <option selected value="<?php echo $state; ?>"><?php echo $state; ?></option>
+                    <?php 
+                      foreach ($results_state as $key) {
+                          echo "<option value='".$key->name."'>".$key->name."</option>";
+                      }
+                    ?>
+                  </select>
             </div>
         </div>        
     </div>
@@ -78,6 +85,9 @@
             </div>
         </div>
     </div>
+</form>
+</div>
+</div>
 <script type="text/javascript">
    var ajaxurl = "<?php echo admin_url('admin-ajax.php'); ?>";
    jQuery(document).ready( function() {

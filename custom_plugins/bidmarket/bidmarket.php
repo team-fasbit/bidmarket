@@ -67,7 +67,7 @@
      $sql48="insert into $table_state (name, code) values ('Georgia','GA');";
      $sql49="insert into $table_state (name, code) values ('Idaho','ID');";
      $sql50="insert into $table_state (name, code) values ('Illinois','IL');";
-     $sql51="insert into $table_state (name, code) values ('Indiana'IN');";
+     $sql51="insert into $table_state (name, code) values ('Indiana','IN');";
      $sql52="insert into $table_state (name, code) values ('Iowa','IA');";
      $sql53="insert into $table_state (name, code) values ('Kansas','KS');";
      $sql54="insert into $table_state (name, code) values ('Kentucky','KY');";
@@ -96,7 +96,7 @@
      $sql77="insert into $table_state (name, code) values ('Utah','UT');";
      $sql78="insert into $table_state (name, code) values ('Vermont','VT');";
      $sql79="insert into $table_state (name, code) values ('Virginia','VA');";
-     $sql80="insert into $table_state (name, code) values ('West Virginia'WV');";
+     $sql80="insert into $table_state (name, code) values ('West Virginia','WV');";
      $sql81="insert into $table_state (name, code) values ('Washington','WA');";
      $sql82="insert into $table_state (name, code) values ('Wisconsin','WI');";
      $sql83="insert into $table_state (name, code) values ('Wyoming','WY');";
@@ -233,6 +233,8 @@
       $results_project = $wpdb->get_results("SELECT * FROM $table_project ORDER BY name;");
       $table_priorities= $wpdb->prefix . "priorities";
       $results_priorities = $wpdb->get_results("SELECT * FROM $table_priorities ORDER BY name;");
+      $table_state= $wpdb->prefix . "state";
+      $results_state = $wpdb->get_results("SELECT * FROM $table_state ORDER BY name;");      
       $customerid=random_int(0, 9999999);     
       include('templates/owner_template.php');
    }
@@ -279,6 +281,9 @@
           $results_project = $wpdb->get_results("SELECT * FROM $table_project ORDER BY name;");      
           $table_priorities= $wpdb->prefix . "priorities";
           $results_priorities = $wpdb->get_results("SELECT * FROM $table_priorities ORDER BY name;");
+          $table_state= $wpdb->prefix . "state";
+          $results_state = $wpdb->get_results("SELECT * FROM $table_state ORDER BY name;");      
+
           include('templates/view_owner_template.php');                  
         }
       }
@@ -308,7 +313,10 @@
         }
         $results_project = $wpdb->get_results("SELECT * FROM $table_project ORDER BY name;");     
         $table_priorities= $wpdb->prefix . "priorities";
-        $results_priorities = $wpdb->get_results("SELECT * FROM $table_priorities ORDER BY name;");      
+        $results_priorities = $wpdb->get_results("SELECT * FROM $table_priorities ORDER BY name;");  
+        $table_state= $wpdb->prefix . "state";
+        $results_state = $wpdb->get_results("SELECT * FROM $table_state ORDER BY name;");      
+
         include('templates/view_owner_template.php');
       }
    }   
@@ -442,7 +450,9 @@
       wp_die();
    } 
    function contractors_home(){
-      global $wpdb;    
+      global $wpdb;
+      $table_state= $wpdb->prefix . "state";
+      $results_state = $wpdb->get_results("SELECT * FROM $table_state ORDER BY name;"); 
       include('templates/contractors_template.php');
    }
    function change_password(){
@@ -587,6 +597,8 @@
             $table_contractors= $wpdb->prefix . "contractors";
             $sql_contractors="SELECT * FROM $table_contractors WHERE id=$signup_key;";
             $result_contractors = $wpdb->get_results($sql_contractors);
+            $table_state= $wpdb->prefix . "state";
+            $results_state = $wpdb->get_results("SELECT * FROM $table_state ORDER BY name;");      
             foreach ($result_contractors as $key_contractors) {
               $id=$key_contractors->id;
               $company= $key_contractors->company;
@@ -610,6 +622,9 @@
       else {
         $table_contractors= $wpdb->prefix . "contractors";
         $result_contractors = $wpdb->get_results("SELECT * FROM $table_contractors WHERE id=$id;");
+        $table_state= $wpdb->prefix . "state";
+        $results_state = $wpdb->get_results("SELECT * FROM $table_state ORDER BY name;");      
+
         foreach ($result_contractors as $key_contractors) {
           $company= $key_contractors->company;
           $street= $key_contractors->street;
