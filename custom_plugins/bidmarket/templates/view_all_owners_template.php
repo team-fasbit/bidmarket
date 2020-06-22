@@ -33,6 +33,7 @@ foreach ($results_owner as $key_owner) {
     <td> <?php echo $key_owner->email; ?> </td> 
     <td>
       <a type="button" class="btn btn-primary bidmarket_button" data-toggle="modal" data-target="#myModal" onclick="view_owner(<?php echo $key_owner->id; ?>)">View owner</a>
+      <a type="button" class="btn btn-primary bidmarket_button" data-toggle="modal" data-target="#myBid" onclick="new_bid(<?php echo $key_owner->id; ?>)">Send Offer</a>
     </td>
 </tr>
 <?php
@@ -81,6 +82,31 @@ foreach ($results_owner as $key_owner) {
     </div>
   </div>
 </div>
+<div class="modal" id="myBid">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Send Offer to Owner</h4>
+
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+        <div id="modal_bid">
+        </div>
+      </div>
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+      </div>
+
+    </div>
+  </div>
+</div>
 <script type="text/javascript">
 var ajaxurl = "<?php echo admin_url('admin-ajax.php'); ?>";  
 jQuery(document).ready( function($) {
@@ -101,6 +127,15 @@ function view_owner(id){
     };
     jQuery.post(ajaxurl, data, function(response) {
       jQuery("#modal_body").html((response));
+    });
+}
+function new_bid(id){
+    var data= {
+        action:'modal_bid',
+        id: id
+    };
+    jQuery.post(ajaxurl, data, function(response) {
+      jQuery("#modal_bid").html((response));
     });
 }
 </script>

@@ -16,6 +16,7 @@
      $table_signups= $wpdb->prefix . "signups";
      $tables_access= $wpdb->prefix . "access";
      $table_state= $wpdb->prefix . "state";     
+     $table_bids= $wpdb->prefix . "bids";     
      $sql1 = "CREATE TABLE $table_owner( id int(11) NOT NULL, firstname text NOT NULL, lastname text NOT NULL, street text NOT NULL, city text NOT NULL, state text NOT NULL, zip text NOT NULL, phone text NOT NULL, phone2 text NOT NULL, email text NOT NULL, email2 text NOT NULL, customerid text, project int(11) NOT NULL , description text NOT NULL, priorities text NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=latin1;";
      $sql2= "ALTER TABLE $table_owner ADD PRIMARY KEY(id);";
      $sql3="ALTER TABLE $table_owner MODIFY id INT(11) NOT NULL AUTO_INCREMENT;";
@@ -48,7 +49,6 @@
      $sql30="insert into $tables_access (menu_item,signup_type) values (8,1);";
      $sql31="insert into $tables_access (menu_item,signup_type) values (21,2);";
      $sql32="insert into $tables_access (menu_item,signup_type) values (23,2);";
-
      $sql33="CREATE TABLE $table_state (id int(11) NOT NULL, name text NOT NULL, code character(2) NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;";
      $sql34="ALTER TABLE $table_state  ADD PRIMARY KEY (id);";
      $sql35="ALTER TABLE $table_state  MODIFY id int(11) NOT NULL AUTO_INCREMENT;";  
@@ -100,6 +100,9 @@
      $sql81="insert into $table_state (name, code) values ('Washington','WA');";
      $sql82="insert into $table_state (name, code) values ('Wisconsin','WI');";
      $sql83="insert into $table_state (name, code) values ('Wyoming','WY');";
+     $sql84 = " CREATE TABLE $table_bids ( id int(11) NOT NULL, owner_id int(11), contractor_id int(11), date_of_bid date, bid_number text, mount decimal(11,2), description text, status text) ENGINE=InnoDB DEFAULT CHARSET=latin1;";
+     $sql85= "ALTER TABLE $table_bids ADD PRIMARY KEY(id);";
+     $sql86="ALTER TABLE $table_bids MODIFY id INT(11) NOT NULL AUTO_INCREMENT;"; 
      $wpdb->query($sql1);
      $wpdb->query($sql2);
      $wpdb->query($sql3);
@@ -193,6 +196,9 @@
      $wpdb->query($sql81);
      $wpdb->query($sql82);
      $wpdb->query($sql83);            
+     $wpdb->query($sql84);
+     $wpdb->query($sql85);
+     $wpdb->query($sql86);            
     }
    function bidmarket_uninstall(){
       global $wpdb; 
@@ -463,6 +469,63 @@
       global $wpdb;
       $email=$_GET['email'];    
       include('templates/set_password__template.php');
+   }
+   function modal_bid(){
+      global $wpdb; 
+      $owner_id=$_POST['id'];
+      $bidnumber=random_int(0, 9999999);
+      $user_id=wp_get_current_user()->ID;
+      $table_signup= $wpdb->prefix . "signups";
+      $results_signup = $wpdb->get_results("SELECT * FROM $table_signup where user_id=$user_id;");
+      foreach ($results_signup as $key_su) {
+              $contractor_id=$key_su->signup_key;
+      }
+      $table_bids= $wpdb->prefix . "bids";
+      $results_bids = $wpdb->get_results("SELECT * FROM $table_bids where owner_id=$owner_id and contractor_id=$contractor_id;");
+      if (count($results_bids)> 0) {
+        foreach ($results_bids as $key_bid) {
+          $owner_id=$key_bid->owner_id;
+          $contractor_id=$key_bid->contractor_id;
+          $bidnumber=$key_bid->bid_number;
+          $description=$key_bid->description;
+          $amount=$key_bid->mount;
+          include('templates/view_bids_template.php');
+        }
+      } else {
+        include('templates/bids_template.php');
+      }      
+      wp_die();    
+   }
+   function save_bid(){
+      global $wpdb; 
+      $table_bids= $wpdb->prefix . "bids"; 
+      $owner_id=$_POST['owner_id'];
+      $contractor_id=$_POST['contractor_id'];
+      $bidnumber=$_POST['bid'];
+      $description=$_POST['description'];
+      $amount=$_POST['amount'];
+      $time=time();
+      $day = strftime("%d",$time);
+      $month=strftime("%m",$time);
+      $year= strftime("%Y",$time);
+      $date="$year-$month-$day";
+      $databid= array('owner_id' => $owner_id,
+        'contractor_id' => $contractor_id,
+        'mount' => $amount,
+        'description' => $description,
+        'bid_number' => $bidnumber,
+        'status' => 'sent',
+        'date_of_bid' => $date);
+      $formatbid = array('%d','%d','%d','%s','%s','%s','%s');
+      $wpdb->insert($table_bids,$databid,$formatbid);
+      $my_id = $wpdb->insert_id;
+      if($my_id>0){
+        include('templates/success_bid.php');
+      }
+      else {
+        include('templates/failed_bid.php'); 
+      }
+      wp_die();      
    }
    function owner_modal(){
       global $wpdb; 
@@ -868,6 +931,8 @@
    add_action('wp_ajax_change_pwd', 'change_pwd' );
    add_action('wp_ajax_set_pwd', 'set_pwd' );
    add_action('wp_ajax_owner_modal', 'owner_modal' );
+   add_action('wp_ajax_modal_bid', 'modal_bid' );
+   add_action('wp_ajax_save_bid', 'save_bid' );
    add_action('wp_ajax_nopriv_save_owner', 'save_owner');
    add_action('wp_ajax_nopriv_delete_owner', 'delete_owner');   
    add_action('wp_ajax_nopriv_update_owner', 'update_owner' );
@@ -877,5 +942,7 @@
    add_action('wp_ajax_nopriv_change_pwd', 'change_pwd' );
    add_action('wp_ajax_nopriv_set_pwd', 'set_pwd' );
    add_action('wp_ajax_nopriv_owner_modal', 'owner_modal' );
+   add_action('wp_ajax_nopriv_modal_bid', 'modal_bid' );
+   add_action('wp_ajax_nopriv_save_bid', 'save_bid' );
    add_action('activate_bidmarket/bidmarket.php','bidmarket_install');
    add_action('deactivate_bidmarket/bidmarket.php', 'bidmarket_uninstall');
