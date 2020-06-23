@@ -10,13 +10,14 @@
     function bidmarket_install(){
      global $wpdb;
      $table_owner= $wpdb->prefix . "owner";
-     $table_projects= $wpdb->prefix . "projects";     
+     $table_projects= $wpdb->prefix . "projects";
      $table_priorities= $wpdb->prefix . "priorities";
      $table_contractors= $wpdb->prefix . "contractors";
      $table_signups= $wpdb->prefix . "signups";
      $tables_access= $wpdb->prefix . "access";
-     $table_state= $wpdb->prefix . "state";     
-     $table_bids= $wpdb->prefix . "bids";     
+     $table_state= $wpdb->prefix . "state";
+     $table_bids= $wpdb->prefix . "bids";
+     $table_view_bids= $wpdb->prefix . "view_bids";
      $sql1 = "CREATE TABLE $table_owner( id int(11) NOT NULL, firstname text NOT NULL, lastname text NOT NULL, street text NOT NULL, city text NOT NULL, state text NOT NULL, zip text NOT NULL, phone text NOT NULL, phone2 text NOT NULL, email text NOT NULL, email2 text NOT NULL, customerid text, project int(11) NOT NULL , description text NOT NULL, priorities text NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=latin1;";
      $sql2= "ALTER TABLE $table_owner ADD PRIMARY KEY(id);";
      $sql3="ALTER TABLE $table_owner MODIFY id INT(11) NOT NULL AUTO_INCREMENT;";
@@ -103,6 +104,7 @@
      $sql84 = " CREATE TABLE $table_bids ( id int(11) NOT NULL, owner_id int(11), contractor_id int(11), date_of_bid date, bid_number text, mount decimal(11,2), description text, status text) ENGINE=InnoDB DEFAULT CHARSET=latin1;";
      $sql85= "ALTER TABLE $table_bids ADD PRIMARY KEY(id);";
      $sql86="ALTER TABLE $table_bids MODIFY id INT(11) NOT NULL AUTO_INCREMENT;"; 
+     $sql87="CREATE VIEW $table_view_bids AS SELECT $table_bids.id as id, $table_bids.bid_number as bid_number, $table_bids.mount as mount, $table_bids.description as description,$table_bids.status as status,$table_contractors.company as company,$table_contractors.name as name,$table_contractors.website as website FROM $table_bids, $table_contractors WHERE $table_bids.contractor_id=$table_contractors.id order by $table_bids.id;"
      $wpdb->query($sql1);
      $wpdb->query($sql2);
      $wpdb->query($sql3);
@@ -195,10 +197,10 @@
      $wpdb->query($sql80);
      $wpdb->query($sql81);
      $wpdb->query($sql82);
-     $wpdb->query($sql83);            
+     $wpdb->query($sql83);
      $wpdb->query($sql84);
      $wpdb->query($sql85);
-     $wpdb->query($sql86);            
+     $wpdb->query($sql86);
     }
    function bidmarket_uninstall(){
       global $wpdb; 
@@ -225,11 +227,24 @@
       $results_owner = $wpdb->get_results("SELECT * FROM $table_owner ORDER BY customerid;");     
       include('templates/view_all_owners_template.php');
    }
+   function view_bids(){
+      global $wpdb;
+      $table_signups= $wpdb->prefix . "signups";
+      $id=wp_get_current_user()->ID;
+      $sql="SELECT * FROM $table_signups WHERE user_id = $id;";
+      $results_type = $wpdb->get_results($sql);
+      foreach ($results_type as $key) {
+        $owner_id=$key->signup_key;
+      }
+      $table_view_bids= $wpdb->prefix . "view_bids"; 
+      $results_bids = $wpdb->get_results("SELECT * FROM $table_view_bids where owner_id=$owner_id;");      
+      include('templates/view_owner_bids_template.php');
+   } 
    function log_in(){
      global $wpdb;
      $login=$_GET['login'];
      include('templates/login_template.php');
-   }   
+   }      
    function sign_up(){      
       include('templates/signup_template.php');
    }          
@@ -240,8 +255,8 @@
       $table_priorities= $wpdb->prefix . "priorities";
       $results_priorities = $wpdb->get_results("SELECT * FROM $table_priorities ORDER BY name;");
       $table_state= $wpdb->prefix . "state";
-      $results_state = $wpdb->get_results("SELECT * FROM $table_state ORDER BY name;");      
-      $customerid=random_int(0, 9999999);     
+      $results_state = $wpdb->get_results("SELECT * FROM $table_state ORDER BY name;");
+      $customerid=random_int(0, 9999999);
       include('templates/owner_template.php');
    }
    function view_owner(){
@@ -270,7 +285,7 @@
               $zip= $key_owner->zip;
               $state= $key_owner->state;
               $phone1= $key_owner->phone;
-              $phone2= $key_owner->phone2;      
+              $phone2= $key_owner->phone2;
               $email1= $key_owner->email;
               $email2= $key_owner->email2;
               $customerid= $key_owner->customerid;
@@ -284,16 +299,15 @@
           foreach ($result_prj as $key_prj) {
             $project= $key_prj->name;
           }
-          $results_project = $wpdb->get_results("SELECT * FROM $table_project ORDER BY name;");      
+          $results_project = $wpdb->get_results("SELECT * FROM $table_project ORDER BY name;");
           $table_priorities= $wpdb->prefix . "priorities";
           $results_priorities = $wpdb->get_results("SELECT * FROM $table_priorities ORDER BY name;");
           $table_state= $wpdb->prefix . "state";
-          $results_state = $wpdb->get_results("SELECT * FROM $table_state ORDER BY name;");      
-
-          include('templates/view_owner_template.php');                  
+          $results_state = $wpdb->get_results("SELECT * FROM $table_state ORDER BY name;");
+          include('templates/view_owner_template.php');
         }
       }
-      else {      
+      else {
         $table_owner= $wpdb->prefix . "owner";
         $result_owner = $wpdb->get_results("SELECT * FROM $table_owner WHERE id=$id;");
         foreach ($result_owner as $key_owner) {
@@ -304,7 +318,7 @@
           $zip= $key_owner->zip;
           $state= $key_owner->state;
           $phone1= $key_owner->phone;
-          $phone2= $key_owner->phone2;      
+          $phone2= $key_owner->phone2;
           $email1= $key_owner->email;
           $email2= $key_owner->email2;
           $customerid= $key_owner->customerid;
@@ -317,12 +331,11 @@
         foreach ($result_prj as $key_prj) {
           $project= $key_prj->name;
         }
-        $results_project = $wpdb->get_results("SELECT * FROM $table_project ORDER BY name;");     
+        $results_project = $wpdb->get_results("SELECT * FROM $table_project ORDER BY name;");
         $table_priorities= $wpdb->prefix . "priorities";
-        $results_priorities = $wpdb->get_results("SELECT * FROM $table_priorities ORDER BY name;");  
+        $results_priorities = $wpdb->get_results("SELECT * FROM $table_priorities ORDER BY name;");
         $table_state= $wpdb->prefix . "state";
-        $results_state = $wpdb->get_results("SELECT * FROM $table_state ORDER BY name;");      
-
+        $results_state = $wpdb->get_results("SELECT * FROM $table_state ORDER BY name;");
         include('templates/view_owner_template.php');
       }
    }   
@@ -337,14 +350,14 @@
       $zip= $_POST['zip'];
       $state= $_POST['state'];
       $phone1= $_POST['phone1'];
-      $phone2= $_POST['phone2'];      
+      $phone2= $_POST['phone2'];
       $email1= $_POST['email1'];
       $email2= $_POST['email2'];
       $customerid= $_POST['customerid'];
       $project= $_POST['project'];
       $description= $_POST['description'];
       $priorities= $_POST['priorities'];
-      $table_signups= $wpdb->prefix . "signups";  
+      $table_signups= $wpdb->prefix . "signups";
       $table_owner= $wpdb->prefix . "owner";
       $data_owner= array('firstname'=>$firstname,
          'lastname'=>$lastname,
@@ -374,11 +387,11 @@
          'signup_key'=>$my_id);
         $format_signup = array('%s','%s','%s','%s','%s','%d','%d','%d');
         $wpdb->insert($table_signups,$data_signup,$format_signup);
-        $signups_query=$wpdb->last_query;         
+        $signups_query=$wpdb->last_query;
         $subject="BidMarket register";
         $message="<!DOCTYPE html>";
         $message.="<html>";
-        $message.="<head>";      
+        $message.="<head>";
         $message.="<title>Sign up message</title>";
         $message.="</head>";
         $message.="<body>";
@@ -399,9 +412,9 @@
                    </h4>
                    </span></div></div></div>";
         $message.="</body>";
-        $message.="</html>";                
-        wp_mail($email1, $subject, $message);        
-        include('templates/success.php');      
+        $message.="</html>";
+        wp_mail($email1, $subject, $message);
+        include('templates/success.php');
       }
       else {
         include('templates/failed.php'); 
@@ -410,7 +423,7 @@
    }
    function update_owner(){
       global $wpdb; 
-      $id= $_POST['id'];   
+      $id= $_POST['id'];
       $firstname= $_POST['firstname'];
       $lastname= $_POST['lastname'];
       $street= $_POST['street'];
@@ -418,7 +431,7 @@
       $zip= $_POST['zip'];
       $state= $_POST['state'];
       $phone1= $_POST['phone1'];
-      $phone2= $_POST['phone2'];      
+      $phone2= $_POST['phone2'];
       $email1= $_POST['email1'];
       $email2= $_POST['email2'];
       $customerid= $_POST['customerid'];
@@ -540,7 +553,7 @@
          $zip= $key_owner->zip;
          $state= $key_owner->state;
          $phone1= $key_owner->phone;
-         $phone2= $key_owner->phone2;      
+         $phone2= $key_owner->phone2;
          $email1= $key_owner->email;
          $email2= $key_owner->email2;
          $customerid= $key_owner->customerid;
@@ -583,9 +596,9 @@
       $message.="<p>To set your new password please click in link above!!</p> <br><br>";
       $message.="<a type='button' class='btn btn-primary' href='".get_site_url()."/index.php/set-password/?email=".$email."'>Set your new password</a>;";
       $message.="</body>";
-      $message.="</html>";                
+      $message.="</html>";
       wp_mail($email, $subject, $message); 
-      include('templates/email_sent_template.php');      
+      include('templates/email_sent_template.php');
       wp_die();
    }       
    function email_verified(){
@@ -596,7 +609,7 @@
       $table_contractors= $wpdb->prefix . "contractors";  
       $website=get_site_url();
       $table_signups= $wpdb->prefix . "signups";
-      $table_name2= $wpdb->prefix . "users";   
+      $table_name2= $wpdb->prefix . "users";
       $results = $wpdb->get_results("SELECT * FROM $table_signups where email='$email';");
       foreach ($results as $key) {
         $id=$key->id;
@@ -623,7 +636,7 @@
         $wpdb->query($sql2);
         if($type==2){
           $sql2="UPDATE $table_contractors SET email_v=1 WHERE id=$signup_key;";
-          $wpdb->query($sql2);          
+          $wpdb->query($sql2);
         }
         $subject="Bidmarket register";
         $message="<!DOCTYPE html>";
@@ -635,7 +648,7 @@
         $message.="<img src='".get_template_directory_uri()."/assets/img/logo.png'></img>";
         $message.="<p>Your register in BidMarket has been approved! Now you can login in Bidmarket.net site! Thanks!!</p> ";
         $message.="</body>";
-        $message.="</html>";                
+        $message.="</html>";
         wp_mail($email, $subject, $message);
         include('templates/validate_template.php');               
       }
@@ -884,6 +897,12 @@
        view_contractors();
        return ob_get_clean();
    }
+   add_shortcode( 'cr_view_bids', 'view_bids_shortcode' );
+   function view_bids_shortcode() {
+       ob_start();
+       view_bids();
+       return ob_get_clean();
+   }   
    add_shortcode( 'cr_email_verified', 'email_verified_shortcode' );
    function email_verified_shortcode() {
        ob_start();
@@ -933,16 +952,20 @@
    add_action('wp_ajax_owner_modal', 'owner_modal' );
    add_action('wp_ajax_modal_bid', 'modal_bid' );
    add_action('wp_ajax_save_bid', 'save_bid' );
+   add_action('wp_ajax_view_info', 'view_info' );
+   add_action('wp_ajax_accept_offer', 'accept_offer' );   
    add_action('wp_ajax_nopriv_save_owner', 'save_owner');
    add_action('wp_ajax_nopriv_delete_owner', 'delete_owner');   
    add_action('wp_ajax_nopriv_update_owner', 'update_owner' );
    add_action('wp_ajax_nopriv_save_contractors', 'save_contractors');
-   add_action('wp_ajax_nopriv_delete_contractors', 'delete_contractors');   
+   add_action('wp_ajax_nopriv_delete_contractors', 'delete_contractors');
    add_action('wp_ajax_nopriv_update_contractors', 'update_contractors' );
    add_action('wp_ajax_nopriv_change_pwd', 'change_pwd' );
    add_action('wp_ajax_nopriv_set_pwd', 'set_pwd' );
    add_action('wp_ajax_nopriv_owner_modal', 'owner_modal' );
    add_action('wp_ajax_nopriv_modal_bid', 'modal_bid' );
    add_action('wp_ajax_nopriv_save_bid', 'save_bid' );
+   add_action('wp_ajax_nopriv_view_info', 'view_info' );
+   add_action('wp_ajax_nopriv_accept_offer', 'accept_offer' );   
    add_action('activate_bidmarket/bidmarket.php','bidmarket_install');
    add_action('deactivate_bidmarket/bidmarket.php', 'bidmarket_uninstall');
