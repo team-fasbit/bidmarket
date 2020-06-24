@@ -104,7 +104,7 @@
      $sql84 = " CREATE TABLE $table_bids ( id int(11) NOT NULL, owner_id int(11), contractor_id int(11), date_of_bid date, bid_number text, mount decimal(11,2), description text, status text) ENGINE=InnoDB DEFAULT CHARSET=latin1;";
      $sql85= "ALTER TABLE $table_bids ADD PRIMARY KEY(id);";
      $sql86="ALTER TABLE $table_bids MODIFY id INT(11) NOT NULL AUTO_INCREMENT;"; 
-     $sql87="CREATE VIEW $table_view_bids AS SELECT $table_bids.id as id, $table_bids.bid_number as bid_number, $table_bids.mount as mount, $table_bids.description as description,$table_bids.status as status,$table_contractors.company as company,$table_contractors.name as name,$table_contractors.website as website FROM $table_bids, $table_contractors WHERE $table_bids.contractor_id=$table_contractors.id order by $table_bids.id;"
+     $sql87="CREATE VIEW $table_view_bids AS SELECT $table_bids.id as id, $table_bids.owner_id as owner_id, $table_bids.bid_number as bid_number, $table_bids.mount as mount, $table_bids.description as description,$table_bids.status as status,$table_contractors.company as company,$table_contractors.name as name,$table_contractors.website as website FROM $table_bids, $table_contractors WHERE $table_bids.contractor_id=$table_contractors.id order by $table_bids.id;";
      $wpdb->query($sql1);
      $wpdb->query($sql2);
      $wpdb->query($sql3);
@@ -509,6 +509,42 @@
       }      
       wp_die();    
    }
+
+   function view_info(){
+      global $wpdb; 
+      $bid_id=$_POST['id'];
+      $table_bids= $wpdb->prefix . "bids";
+      $results_bids = $wpdb->get_results("SELECT * FROM $table_bids where id=$bid_id;");
+      if (count($results_bids)> 0) {
+        foreach ($results_bids as $key_bid) {
+          $owner_id=$key_bid->owner_id;
+          $contractor_id=$key_bid->contractor_id;
+          $bidnumber=$key_bid->bid_number;
+          $description=$key_bid->description;
+          $amount=$key_bid->mount;
+          include('templates/view_bids_template.php');
+        }
+      }
+      wp_die();    
+   }
+   function add_rule(){
+      global $wpdb; 
+      $table_access= $wpdb->prefix . "access"; 
+      $pages=$_POST['pages'];
+      $signup_type=$_POST['signup_type'];
+      $dataaccess= array('menu_item' => $pages,
+        'signup_type' => $signup_type);
+      $formataccess= array('%d','%d');
+      $wpdb->insert($table_access,$dataaccess,$formataccess);
+      $my_id = $wpdb->insert_id;
+      if($my_id>0){
+        echo "Success";
+      }
+      else {
+        echo $wpdb->last_error;
+      }
+      wp_die();      
+   }   
    function save_bid(){
       global $wpdb; 
       $table_bids= $wpdb->prefix . "bids"; 
@@ -953,7 +989,8 @@
    add_action('wp_ajax_modal_bid', 'modal_bid' );
    add_action('wp_ajax_save_bid', 'save_bid' );
    add_action('wp_ajax_view_info', 'view_info' );
-   add_action('wp_ajax_accept_offer', 'accept_offer' );   
+   add_action('wp_ajax_accept_offer', 'accept_offer' ); 
+   add_action('wp_ajax_add_rule', 'add_rule' );     
    add_action('wp_ajax_nopriv_save_owner', 'save_owner');
    add_action('wp_ajax_nopriv_delete_owner', 'delete_owner');   
    add_action('wp_ajax_nopriv_update_owner', 'update_owner' );
@@ -967,5 +1004,6 @@
    add_action('wp_ajax_nopriv_save_bid', 'save_bid' );
    add_action('wp_ajax_nopriv_view_info', 'view_info' );
    add_action('wp_ajax_nopriv_accept_offer', 'accept_offer' );   
+   add_action('wp_ajax_nopriv_add_rule', 'add_rule' );   
    add_action('activate_bidmarket/bidmarket.php','bidmarket_install');
    add_action('deactivate_bidmarket/bidmarket.php', 'bidmarket_uninstall');

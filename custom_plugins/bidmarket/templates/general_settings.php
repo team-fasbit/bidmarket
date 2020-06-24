@@ -199,6 +199,7 @@ function addrule(){
         signup_type: signup_type
     };
     jQuery.post(ajaxurl, data, function(response) {
+      alert(response);
       location.reload();
     });
   }

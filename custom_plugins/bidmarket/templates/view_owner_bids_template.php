@@ -20,7 +20,7 @@ foreach ($results_bids as $key_owner) {
     <td> <?php echo $key_owner->company; ?> </td> 
     <td> <?php echo $key_owner->website; ?> </td> 
     <td> <?php echo $key_owner->name; ?> </td> 
-    <td> <?php echo $key_owner->amount; ?> </td> 
+    <td> <?php echo $key_owner->mount; ?> </td> 
     <td>
       <a type="button" class="btn btn-primary bidmarket_button" data-toggle="modal" data-target="#myModal" onclick="view_info(<?php echo $key_owner->id; ?>)">View info</a>
       <a type="button" class="btn btn-primary bidmarket_button" onclick="accept(<?php echo $key_owner->id; ?>)">Acept Offer</a>
