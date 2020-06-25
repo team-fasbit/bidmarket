@@ -509,7 +509,11 @@
       }      
       wp_die();    
    }
+   function accept_offer(){
+      global $wpdb; 
 
+      wp_die();    
+   }
    function view_info(){
       global $wpdb; 
       $bid_id=$_POST['id'];
@@ -692,6 +696,10 @@
         include('templates/validate_template.php'); 
       }         
    }
+   function dashboard_contractors(){
+      global $wpdb;    
+      include('templates/dashboard_contractors_template.php');               
+   }   
    function view_contractors(){
       global $wpdb;    
       $id= $_GET['id'];
@@ -933,6 +941,12 @@
        view_contractors();
        return ob_get_clean();
    }
+   add_shortcode( 'cr_dashboard_contractors', 'dashboard_contractors_shortcode' );
+   function dashboard_contractors_shortcode() {
+       ob_start();
+       dashboard_contractors();
+       return ob_get_clean();
+   }    
    add_shortcode( 'cr_view_bids', 'view_bids_shortcode' );
    function view_bids_shortcode() {
        ob_start();
