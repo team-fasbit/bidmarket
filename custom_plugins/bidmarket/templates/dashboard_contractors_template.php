@@ -1,7 +1,7 @@
 <div class="container mt-3">
   <h2>Toggleable Tabs</h2>
   <br>
-  <!-- Nav tabs -->
+<!-- Nav tabs -->
     <ul class="nav nav-tabs" role="tablist">
     <li class="nav-item">
       <a class="nav-link active" role="tab" data-toggle="tab" href="#dashboard">Dashboard</a>
@@ -135,3 +135,23 @@
     </div>
   </div>
 </div>
+<script type="text/javascript">
+jQuery(document).ready( function($) {  
+  jQuery('.nav-tabs a').on('click', function (event) {
+    event.preventDefault();
+    jQuery("#dashboard").hide();
+    jQuery("#leads").hide();
+    jQuery("#reports").hide();
+    jQuery("#calendar").hide();
+    jQuery("#roi").hide();
+    jQuery("#profile").hide();
+    jQuery("#account").hide();    
+    var this_tab=jQuery(this).attr('href');
+
+    jQuery('.active').removeClass('active');
+    jQuery(this).parent().addClass('active');
+    //jQuery('.tab-content div').hide();
+    jQuery(jQuery(this).attr('href')).show();
+  });
+});
+</script>
