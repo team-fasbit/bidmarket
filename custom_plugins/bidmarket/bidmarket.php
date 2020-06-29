@@ -698,6 +698,11 @@
    }
    function dashboard_contractors(){
       global $wpdb;    
+      $time=time();
+      $day = strftime("%d",$time);
+      $month=strftime("%m",$time);
+      $year= strftime("%Y",$time);
+      $date="$year-$month-$day";      
       include('templates/dashboard_contractors_template.php');               
    }   
    function view_contractors(){
@@ -964,8 +969,8 @@
          add_options_page('Bid Market - General Settings', 'Bid Market general settings', 8, basename(__FILE__), 'bidmarket_general_settings');
       }
    }
-   add_action( 'wp_login_failed', 'cutepupp_login_fail' ); 
-   function cutepupp_login_fail( $username ) {
+   add_action( 'wp_login_failed', 'bidmarket_login_fail' ); 
+   function bidmarket_login_fail( $username ) {
      $referrer = $_SERVER['HTTP_REFERER'];  
      if ( !empty($referrer) && !strstr($referrer,'wp-login') && !strstr($referrer,'wp-admin') ) {
           wp_redirect(site_url() . '/index.php/log-in/?login=failed' );
@@ -977,6 +982,24 @@
         return 'text/html';
    }   
    add_action( 'phpmailer_init', 'send_smtp_email' );
+  function redirect_contractors( $redirect_to, $request, $user ){
+    global $wpdb;
+    $table_signups= $wpdb->prefix . "signups";     
+    $user_id=wp_get_current_user()->ID; 
+    $sql="SELECT * FROM $table_signups WHERE user_id = $user_id;";
+    $results_type = $wpdb->get_results($sql);
+    foreach ($results_type as $key) {
+      $type=$key->signup_type;
+    }
+    if($type==2){
+      $redirect_to= site_url().'/index.php/dashboard-contractors/';
+    }    
+    else{
+      $redirect_to = site_url();
+    }
+    return $redirect_to;
+  }
+   add_filter( 'login_redirect', 'redirect_contractors', 10, 3 );
    function send_smtp_email( $phpmailer ) {
     $phpmailer->isSMTP();
     $phpmailer->Host       = SMTP_HOST;

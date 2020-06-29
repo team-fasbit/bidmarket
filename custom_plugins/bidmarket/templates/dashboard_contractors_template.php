@@ -4,25 +4,25 @@
 <!-- Nav tabs -->
     <ul class="nav nav-tabs" role="tablist">
     <li class="nav-item">
-      <a class="nav-link active" role="tab" data-toggle="tab" href="#dashboard">Dashboard</a>
+      <a class="nav-link active" role="tab" data-toggle="tab" href="#dashboard"><i class="fa fa-dashboard"></i> Dashboard</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" data-toggle="tab" role="tab" href="#leads">Leads</a>
+      <a class="nav-link" data-toggle="tab" role="tab" href="#leads"><i class="fa fa-users"></i> Leads</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" data-toggle="tab" role="tab" href="#reports">Reports</a>
+      <a class="nav-link" data-toggle="tab" role="tab" href="#reports"><i class="fa fa-bar-chart"></i> Reports</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" data-toggle="tab" role="tab" href="#calendar">Calendar</a>
+      <a class="nav-link" data-toggle="tab" role="tab" href="#calendar_content"><i class="fa fa-calendar"></i> Calendar</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" data-toggle="tab" role="tab" href="#roi">ROI Calculator</a>
+      <a class="nav-link" data-toggle="tab" role="tab" href="#roi"><i class="fa fa-calculator"></i> ROI Calculator</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" data-toggle="tab" role="tab" href="#profile">Profile</a>
+      <a class="nav-link" data-toggle="tab" role="tab" href="#profile"><i class="fa fa-vcard-o"></i> Profile</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" data-toggle="tab" role="tab" href="#account">My Account</a>
+      <a class="nav-link" data-toggle="tab" role="tab" href="#account"><i class="fa fa-user-circle-o"></i> My Account</a>
     </li>
   </ul>
   <!-- Tab panes -->
@@ -96,7 +96,7 @@
             <div class="col">
               <div class="card">
                 <div class="card-header">Upcoming Estimates</div>
-                <div class="card-body">Calendar here...</div>
+                <div class="card-body"><div id="calendar_dashboard"></div></div>
               </div>
             </div>
           </div>
@@ -117,9 +117,10 @@
      <h2>Reports content tab here</h2>
       <h4>Title</h4>
     </div>
-    <div id="calendar" role="tabpanel" class="container tab-pane"><br>
+    <div id="calendar_content" role="tabpanel" class="container tab-pane"><br>
      <h2>Calendar content tab here</h2>
       <h4>Title</h4>
+      <div id="calendar"></div>
     </div>
     <div id="roi" role="tabpanel" class="container tab-pane"><br>
      <h2>ROI content tab here</h2>
@@ -136,13 +137,14 @@
   </div>
 </div>
 <script type="text/javascript">
+  var datedef="<?php echo $date; ?>";
 jQuery(document).ready( function($) {  
   jQuery('.nav-tabs a').on('click', function (event) {
     event.preventDefault();
     jQuery("#dashboard").hide();
     jQuery("#leads").hide();
     jQuery("#reports").hide();
-    jQuery("#calendar").hide();
+    jQuery("#calendar_content").hide();
     jQuery("#roi").hide();
     jQuery("#profile").hide();
     jQuery("#account").hide();    
@@ -153,5 +155,26 @@ jQuery(document).ready( function($) {
     //jQuery('.tab-content div').hide();
     jQuery(jQuery(this).attr('href')).show();
   });
+  jQuery("#calendar_dashboard").fullCalendar({
+    header: {
+      left: 'prev,next today',
+      center: 'title',
+      right: 'month,agendaWeek,agendaDay',
+    },
+    defaultView: 'agendaWeek',     
+    defaultDate: datedef,
+    navLinks: true, 
+    editable: true, 
+  });
+  $('#calendar').fullCalendar({
+    header: {
+      left: 'prev,next today',
+      center: 'title',
+      right: 'month,agendaWeek,agendaDay,listWeek'
+    },   
+    defaultDate: datedef,
+    navLinks: true, 
+    editable: true, 
+  });  
 });
 </script>

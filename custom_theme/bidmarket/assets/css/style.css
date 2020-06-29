@@ -65,6 +65,7 @@ h1, h2, h3, h4, h5, h6 {
   .back-to-top {
     bottom: 15px;
   }
+
 }
 
 .back-to-top:focus {
@@ -653,4 +654,7 @@ body.mobile-nav-active #mobile-nav-toggle {
 .nav-menu ul li a:hover{
   background: #1697d1;
   color: white !important;
+}
+a.nav-link{
+  color:#102e43;
 }

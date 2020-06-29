@@ -22,7 +22,12 @@ function mis_widgets(){
 }
 add_action('init','mis_widgets');
 function my_function_admin_bar() {
+  if ( is_user_logged_in() ) {
     return true;
+  }
+  else {
+    return false;
+  }
 }
 add_filter('show_admin_bar', 'my_function_admin_bar');
 function fonts_googleapis_styles() {
@@ -42,6 +47,7 @@ function bootstrap_styles() {
    wp_enqueue_style('core', get_template_directory_uri() . '/assets/css/core.css');
    wp_enqueue_style('owlcarousel', get_template_directory_uri() . '/assets/css/owl.carousel.css');
    wp_enqueue_style('owltheme', get_template_directory_uri() . '/assets/css/owl.theme.css');
+   wp_enqueue_style('calensartheme', get_template_directory_uri() . '/assets/css/fullcalendar.min.css');   
    wp_enqueue_style( 'style',get_template_directory_uri() .'/assets/css/style.css');        
 }
 add_action( 'wp_enqueue_scripts', 'bootstrap_styles');
@@ -57,6 +63,7 @@ function jquery_load_scripts() {
    wp_enqueue_script( "bootstrap", get_template_directory_uri() . '/assets/js/bootstrap.js' , array( 'jquery' ) );
    wp_enqueue_script( "easing", get_template_directory_uri() . '/lib/easing/easing.min.js' , array( 'jquery' ) ); 
    wp_enqueue_script( "tables", get_template_directory_uri() . '/lib/wow/wow.min.js' , array( 'jquery' ) );
+   wp_enqueue_script( "moment", get_template_directory_uri() . '/assets/js/moment.js', array( 'jquery' ) );    
    wp_enqueue_script( "waypoint", get_template_directory_uri() . '/lib/waypoints/waypoints.min.js' , array( 'jquery' ) );
    wp_enqueue_script( "counterup", get_template_directory_uri() . '/lib/counterup/counterup.min.js' , array( 'jquery' ) );
    wp_enqueue_script( "hover", get_template_directory_uri() . '/lib/superfish/hoverIntent.js' , array( 'jquery' ) );
@@ -65,7 +72,8 @@ function jquery_load_scripts() {
    wp_enqueue_script( "validate", get_template_directory_uri() . '/assets/js/jquery.validate.js', array( 'jquery' ) );   
    wp_enqueue_script( "datatable", get_template_directory_uri() . '/assets/js/jquery.dataTables.min.js', array( 'jquery' ) );   
    wp_enqueue_script( "ckeditor", get_template_directory_uri() . '/assets/ckeditor/ckeditor.js', array( 'jquery' ) );  
-   wp_enqueue_script( "owlcaro", get_template_directory_uri() . '/assets/js/owl.carousel.min.js', array( 'jquery' ) );      
+   wp_enqueue_script( "owlcaro", get_template_directory_uri() . '/assets/js/owl.carousel.min.js', array( 'jquery' ) );   
+   wp_enqueue_script( "calendar", get_template_directory_uri() . '/assets/js/fullcalendar.min.js', array( 'moment','jquery' ) );        
 }
 add_action( 'wp_enqueue_scripts', 'jquery_load_scripts');
 function show_type_logged_user(){

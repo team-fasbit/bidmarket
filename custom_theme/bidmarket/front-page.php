@@ -18,14 +18,9 @@ get_header();
               <p>Our slide here....</p>
             </div>              
             <div class="s-slider">
-              <div class="item"><img src="<?php echo get_template_directory_uri(); ?>/assets/img/slides/1.jpg" alt=""/></div>
-              <div class="item"><img src="<?php echo get_template_directory_uri(); ?>/assets/img/slides/2.jpg" alt=""/></div>
-              <div class="item"><img src="<?php echo get_template_directory_uri(); ?>/assets/img/slides/3.jpg" alt=""/></div>
-              <div class="item"><img src="<?php echo get_template_directory_uri(); ?>/assets/img/slides/4.jpg" alt=""/></div>
-              <div class="item"><img src="<?php echo get_template_directory_uri(); ?>/assets/img/slides/5.jpg" alt=""/></div>
-              <div class="item"><img src="<?php echo get_template_directory_uri(); ?>/assets/img/slides/6.jpg" alt=""/></div>
-              <div class="item"><img src="<?php echo get_template_directory_uri(); ?>/assets/img/slides/7.jpg" alt=""/></div>
-              <div class="item"><img src="<?php echo get_template_directory_uri(); ?>/assets/img/slides/1.jpg" alt=""/></div>
+              <div class="item"><img class="img-responsive" src="<?php echo get_template_directory_uri(); ?>/assets/img/slides/Vermont Home - grey over.png" alt="" widht="100%" height="712px"/></div>
+              <div class="item"><img class="img-responsive" src="<?php echo get_template_directory_uri(); ?>/assets/img/slides/Vermont Home Blue.png" alt=""  widht="100%" height="712px"/></div>
+              <div class="item"><img class="img-responsive" src="<?php echo get_template_directory_uri(); ?>/assets/img/slides/Yellow House - grey over.png" alt=""  widht="100%" height="712px"/></div>
             </div>
           </div>
           </div><!--- END COL -->
@@ -62,11 +57,11 @@ get_header();
 <script type="text/javascript">
    jQuery(document).ready( function() {  
       $('.s-slider').owlCarousel({ 
-      items:3,
-      itemsDesktop:[1000,2],
-      itemsDesktopSmall:[979,2],
-      itemsTablet:[768,2],
-      itemsMobile:[650,1],
+      items:1,
+      itemsDesktop:[1000,1],
+      itemsDesktopSmall:[979,1],
+      itemsTablet:[768,1],
+      itemsMobile:[479,1],
       pagination:false,
       navigation:true,
       navigationText:["",""],
