@@ -702,7 +702,9 @@
       $day = strftime("%d",$time);
       $month=strftime("%m",$time);
       $year= strftime("%Y",$time);
-      $date="$year-$month-$day";      
+      $date="$year-$month-$day"; 
+      $table_owner= $wpdb->prefix . "owner";
+      $results_owner = $wpdb->get_results("SELECT * FROM $table_owner ORDER BY customerid;");
       include('templates/dashboard_contractors_template.php');               
    }   
    function view_contractors(){

@@ -111,11 +111,158 @@
     </div>
     <div id="leads" role="tabpanel" class="container tab-pane"><br>
      <h2>Leads content tab here</h2>
-      <h4>Title</h4>
+       <h3 class='hndle'>Leads</h3>
+       <div id="table_owner" class="table-responsive">
+       <table id="table_dis2" class="table table-hover" >
+        <thead>
+          <tr>
+              <th>Customer ID</th> 
+              <th>First name</th> 
+              <th>Last name</th> 
+              <th>Street</th> 
+              <th>City</th> 
+              <th>State</th> 
+              <th>Zip</th> 
+              <th>Phone #1</th> 
+              <th>Phone #2</th> 
+              <th>Email #1</th> 
+            </tr>
+        </thead>
+        <tbody>
+        <?php
+        foreach ($results_owner as $key_owner) {
+        ?>  
+          <tr>
+            <td> <?php echo $key_owner->customerid; ?> </td>  
+            <td> <?php echo $key_owner->firstname; ?> </td> 
+            <td> <?php echo $key_owner->lastname; ?> </td> 
+            <td> <?php echo $key_owner->street; ?> </td> 
+            <td> <?php echo $key_owner->city; ?> </td> 
+            <td> <?php echo $key_owner->state; ?> </td> 
+            <td> <?php echo $key_owner->zip; ?> </td> 
+            <td> <?php echo $key_owner->phone; ?> </td> 
+            <td> <?php echo $key_owner->phone2; ?> </td> 
+            <td> <?php echo $key_owner->email; ?> </td> 
+          </tr>
+          <?php
+          }
+          ?>
+          </tbody>
+          <tfoot>
+              <tr>
+                <th>Customer ID</th> 
+                <th>First name</th> 
+                <th>Last name</th> 
+                <th>Street</th> 
+                <th>City</th> 
+                <th>State</th> 
+                <th>Zip</th> 
+                <th>Phone #1</th> 
+                <th>Phone #2</th> 
+                <th>Email #1</th> 
+              </tr>
+          </tfoot>  
+          </table>
+      </div>      
     </div>
     <div id="reports" role="tabpanel" class="container tab-pane"><br>
-     <h2>Reports content tab here</h2>
-      <h4>Title</h4>
+      <h2>Reports content tab here</h2>
+      <div class="row">
+        <div class="col">
+          <div class="card">
+            <div class="card-header">Leads</div>
+            <div class="card-body">0
+              <div class="chart">
+                <canvas id="reportleads"></canvas>
+              </div>
+            </div>
+          </div>                
+        </div>
+        <div class="col">
+          <div class="card">
+            <div class="card-header">Spent</div>
+            <div class="card-body"> $ 0.00</div>
+          </div>                
+        </div>
+        <div class="col">
+          <div class="card">
+            <div class="card-header">Missed Lead</div>
+            <div class="card-body">0
+              <div class="chart">
+              <canvas id="missed"></canvas>             
+              </div>
+            </div>
+          </div>                
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="card">
+            <div class="card-header">Missed Potential Jobs Value</div>
+            <div class="card-body">$ 0.00
+              <div class="chart">
+              <canvas id="jobsmissed"></canvas>
+              </div>
+            </div>
+          </div>                
+        </div>
+        <div class="col">
+          <div class="card">
+            <div class="card-header">Jobs Won</div>
+            <div class="card-body">0
+              <div class="chart">
+              <canvas id="jobswon"></canvas>
+              </div>
+            </div>
+          </div>                
+        </div>
+        <div class="col">
+          <div class="card">
+            <div class="card-header">Revenue</div>
+            <div class="card-body">$ 0.00 </div>
+          </div>                
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="card">
+            <div class="card-header">Estimates</div>
+            <div class="card-body">0
+              <div class="chart">
+              <canvas id="estimates"></canvas>
+              </div>
+            </div>
+          </div>                
+        </div>
+        <div class="col">
+          <div class="card">
+            <div class="card-header">Total Discount</div>
+            <div class="card-body">$0.00</div>
+          </div>                
+        </div>
+        <div class="col">
+          <div class="card">
+            <div class="card-header">Avg Speed to Call</div>
+            <div class="card-body">0<sup>H</sup> 0<sup>M</sup> 0<sup>S</sup> </div>
+          </div>                
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="card">
+            <div class="card-header">Avg Number of Days Called</div>
+            <div class="card-body">0</div>
+          </div>                
+        </div>
+        <div class="col">
+          <div class="card">
+            <div class="card-header">Avg Calls Per Lead</div>
+            <div class="card-body">0,00</div>
+          </div>                
+        </div>
+        <div class="col">
+        </div>
+      </div>
     </div>
     <div id="calendar_content" role="tabpanel" class="container tab-pane"><br>
      <h2>Calendar content tab here</h2>
@@ -161,12 +308,19 @@ jQuery(document).ready( function($) {
       center: 'title',
       right: 'month,agendaWeek,agendaDay',
     },
-    defaultView: 'agendaWeek',     
+    views: {
+      listDay: { buttonText: 'list day' },
+      listWeek: { buttonText: 'list week' },
+      listMonth: { buttonText: 'list month' }
+    },    
+    defaultView: 'listWeek',     
     defaultDate: datedef,
+    //events: 'https://fullcalendar.io/demo-events.json',
     navLinks: true, 
     editable: true, 
+
   });
-  $('#calendar').fullCalendar({
+  jQuery('#calendar').fullCalendar({
     header: {
       left: 'prev,next today',
       center: 'title',
@@ -175,6 +329,71 @@ jQuery(document).ready( function($) {
     defaultDate: datedef,
     navLinks: true, 
     editable: true, 
+  });
+  jQuery("#table_dis2").dataTable({
+    "oPaginate": true,
+    "bLengthChange": true,
+    "bFilter": true,
+    "bSort": true,
+    "bInfo": true,
+    "bAutoWidth": false,
+    "lengthMenu":[[10,25,50,100,200,-1],[10,25,50,100,200,"All"]]    
   });  
 });
+jQuery(function () {
+  var config2 = {
+    type: 'line',
+    data: {
+        labels: ["", "", "", "", "", "", "","","","","",""],
+        datasets: [{
+            label: "",
+            backgroundColor: window.chartColors.red,
+            borderColor: window.chartColors.red,
+            data: [0,0,0,0,0,0,0,0,0,0,0,0],
+            fill: false,
+        }],
+    },
+    options: {
+        responsive: true,
+        title:{
+            display:true,
+            text:''
+        },
+        tooltips: {
+            mode: 'index',
+            intersect: false,
+        },
+        hover: {
+            mode: 'nearest',
+            intersect: true
+        },
+        scales: {
+            xAxes: [{
+                display: true,
+                scaleLabel: {
+                    display: true,
+                    labelString: ''
+                }
+            }],
+            yAxes: [{
+                display: true,
+                scaleLabel: {
+                    display: true,
+                    labelString: ''
+                }
+            }]
+        }
+    }
+  };
+  var ctx1 = jQuery("#reportleads");
+  var ctx2 = jQuery("#missed");
+  var ctx3 = jQuery("#jobsmissed");
+  var ctx4 = jQuery("#jobswon");
+  var ctx5 = jQuery("#estimates");
+  var myNewLine1 = new Chart(ctx1, config2); 
+  var myNewLine2 = new Chart(ctx2, config2); 
+  var myNewLine3 = new Chart(ctx3, config2); 
+  var myNewLine4 = new Chart(ctx4, config2); 
+  var myNewLine5 = new Chart(ctx5, config2); 
+});  
 </script>

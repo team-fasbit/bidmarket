@@ -73,7 +73,12 @@ function jquery_load_scripts() {
    wp_enqueue_script( "datatable", get_template_directory_uri() . '/assets/js/jquery.dataTables.min.js', array( 'jquery' ) );   
    wp_enqueue_script( "ckeditor", get_template_directory_uri() . '/assets/ckeditor/ckeditor.js', array( 'jquery' ) );  
    wp_enqueue_script( "owlcaro", get_template_directory_uri() . '/assets/js/owl.carousel.min.js', array( 'jquery' ) );   
-   wp_enqueue_script( "calendar", get_template_directory_uri() . '/assets/js/fullcalendar.min.js', array( 'moment','jquery' ) );        
+   wp_enqueue_script( "calendar", get_template_directory_uri() . '/assets/js/fullcalendar.min.js', array( 'moment','jquery' ) );
+   wp_enqueue_script( "chartbundle", get_template_directory_uri() . '/assets/js/Chart.bundle.js', array( 'jquery' ) );
+   wp_enqueue_script( "chartutils", get_template_directory_uri() . '/assets/js/utils.js', array( 'jquery' ) );       
+   wp_enqueue_script( "chart", get_template_directory_uri() . '/assets/js/Chart.js', array( 'jquery' ) ); 
+
+
 }
 add_action( 'wp_enqueue_scripts', 'jquery_load_scripts');
 function show_type_logged_user(){
