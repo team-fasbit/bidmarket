@@ -12,11 +12,6 @@ get_header();
       <div class="container border">
         <div class="row inside-row">      
           <div class="col-md-12">
-            <div class="section-title col-text-center">
-              <h2>Slide Section Title</h2>
-              <div class="line"></div>
-              <p>Our slide here....</p>
-            </div>              
             <div class="s-slider">
               <div class="item"><img class="img-responsive" src="<?php echo get_template_directory_uri(); ?>/assets/img/slides/Vermont Home - grey over.png" alt="" widht="100%" height="712px"/></div>
               <div class="item"><img class="img-responsive" src="<?php echo get_template_directory_uri(); ?>/assets/img/slides/Vermont Home Blue.png" alt=""  widht="100%" height="712px"/></div>
@@ -59,7 +54,7 @@ get_header();
       $('.s-slider').owlCarousel({ 
       items:1,
       itemsDesktop:[1000,1],
-      itemsDesktopSmall:[979,1],
+      itemsDesktopSmall:[1000,1],
       itemsTablet:[768,1],
       itemsMobile:[479,1],
       pagination:false,

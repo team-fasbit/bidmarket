@@ -9,7 +9,7 @@
                    <i class="fa fa-check"></i><br>
                    <strong>Success!</strong> <br><br>
                       The regitration has been completed successfully!<br><br>
-                      <a type="button" class="btn-primary" href="<?php echo get_site_url(); ?>">Home</a>
+                      <a type="button" class="btn-primary" href="<?php echo get_site_url().'/index.php/log-in/'; ?>">Log in</a>
                       <?php
                     } else {
                       ?>

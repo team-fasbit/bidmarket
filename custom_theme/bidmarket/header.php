@@ -20,7 +20,7 @@
   Header
   ============================-->
   <header id="header">
-    <div class="container">
+    <div class="container-fluid">
       <div id="logo" class="pull-left">
         <a href="<?php echo get_site_url(); ?>"><img src="<?php echo get_template_directory_uri(); ?>/assets/img/logo.png" alt="" title="" /></img></a>
       </div>
@@ -47,7 +47,7 @@
      }
      else{
     ?>
-      <br><br><br><br><h2><span class="header-color">Welcome to bidmarket</span></h2>
+      <h2><span class="header-color">Welcome to bidmarket</span></h2>
       <h4><span class="header-color"><?php do_action('show_owner_contractor'); ?></span></h4>
     <?php } ?>
     </div>

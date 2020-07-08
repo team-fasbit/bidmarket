@@ -97,40 +97,6 @@
             </div>
         </div>
     </div>             
-     <div class="row">
-        <div class="col-md-3">
-            <div class="form-group">
-                Customer ID:
-                <input type="text" id="customerid" name="customerid" class="form-control" disabled value="<?php echo $customerid; ?>">
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="form-group">
-                Project Type:
-                <select id="project" name="project" class="form-control">
-                    <option value="">Choose project type</option>
-                    <?php
-                    foreach ($results_project as $key) {
-                       echo "<option value=".$key->id.">".$key->name."</option>";
-                    }
-                    ?>
-                </select>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="form-group">
-                Priorities:
-                <select id="priorities" name="priorities" class="form-control">
-                    <option value="">Choose priorities</option>
-                    <?php
-                    foreach ($results_priorities as $key) {
-                       echo "<option value=".$key->name.">".$key->name."</option>";
-                    }
-                    ?>
-                </select>
-            </div>
-        </div>        
-    </div>  
     <div class="row">
         <div class="col-md-12">
             <div class="form-group">
@@ -142,6 +108,9 @@
     <div class="row">
         <div class="col-md-12">
             <div class="form-group" style="text-align:center;">
+              <input type="hidden" id="customerid" name="customerid"  value="<?php echo $customerid; ?>">
+              <input type="hidden" id="project" name="project" >
+              <input type="hidden" id="priorities" name="priorities" >                
               <button type="submit" class="btn btn-primary bidmarket_button" id="button_submit">Submit</button>
             </div>
         </div>
@@ -180,10 +149,7 @@
                   required: true,
                   email: true,
                  },
-                 customerid: "required",
-                 project:"required",
                  description: "required",
-                 priorities: "required",
           },
           messages: {
              password: {
@@ -208,10 +174,7 @@
              state: "Please enter state code",
              phone1: "Please enter a phone",
              email1: "Please enter a valid email",
-             customerid: "Please enter customerid",
-             project:"Please choose the project",
              description: "Please enter description",
-             priorities: "Please choose priorities",
           },
           errorClass: "error_validate",
           inputContainer: "form-group",

@@ -7,7 +7,7 @@
         <div class="col-md-6">
             <div class="form-group">
                 Email or User name:
-                <input type="text" id="log" name="log" class="form-control" placeholder="User Name">
+                <input type="text" id="log" name="log" class="form-control" placeholder="Email">
             </div>
         </div>
      </div>
@@ -55,7 +55,7 @@
           rules: {
                  log:{
                   required: true,
-                  minlength: 8
+                  email: true
                  },
                  pwd: {
                   required: true,
@@ -69,7 +69,7 @@
              },
              log: {
               required: "Please provide an username",
-              minlength: "Your password must be at least 8 characters long",
+              email: "Enter a valid email",
              },
           },
           errorClass: "error_validate",

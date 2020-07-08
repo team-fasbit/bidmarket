@@ -77,8 +77,6 @@ function jquery_load_scripts() {
    wp_enqueue_script( "chartbundle", get_template_directory_uri() . '/assets/js/Chart.bundle.js', array( 'jquery' ) );
    wp_enqueue_script( "chartutils", get_template_directory_uri() . '/assets/js/utils.js', array( 'jquery' ) );       
    wp_enqueue_script( "chart", get_template_directory_uri() . '/assets/js/Chart.js', array( 'jquery' ) ); 
-
-
 }
 add_action( 'wp_enqueue_scripts', 'jquery_load_scripts');
 function show_type_logged_user(){
@@ -88,7 +86,7 @@ function show_type_logged_user(){
   if ( is_user_logged_in() ) {
     $user_id=wp_get_current_user()->ID;
     if(current_user_can('administrator')) {
-      $output="<br><br><br><br><h2><span class='header-color'>Welcome to bidmarket </span></h2>
+      $output="<h2><span class='header-color'>Welcome to bidmarket </span></h2>
       <h4><span class='header-color'>You are a Administrator</span></h4>";
    }
    else {
@@ -99,11 +97,11 @@ function show_type_logged_user(){
       $type=$key->signup_type;
     }
     if($type==1){
-      $output="<br><br><br><br><h2><span class='header-color'>Welcome to bidmarket $firstname</span></h2>
+      $output="<h2><span class='header-color'>Welcome to bidmarket $firstname</span></h2>
       <h4><span class='header-color'>You are a Homeowner</span></h4>";
     }
     else{
-      $output="<br><br><br><br><h2><span class='header-color'>Welcome to bidmarket $firstname</span></h2>
+      $output="<h2><span class='header-color'>Welcome to bidmarket $firstname</span></h2>
       <h4><span class='header-color'>You are a Contractor</span></h4>";
     }    
    }
