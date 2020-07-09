@@ -1,7 +1,4 @@
 <div class="container mt-3">
-  <h2>Toggleable Tabs</h2>
-  <br>
-<!-- Nav tabs -->
     <ul class="nav nav-tabs" role="tablist">
     <li class="nav-item">
       <a class="nav-link active" role="tab" data-toggle="tab" href="#dashboard"><i class="fa fa-dashboard"></i> Dashboard</a>
@@ -29,7 +26,6 @@
   <div class="tab-content">  
     <div id="dashboard" role="tabpanel" class="container tab-pane active"><br>
       <h2>Dashboard</h2>
-      <h4>Title</h4>
       <h5>
       <div class="row">
         <div class="col-md-6">
@@ -166,7 +162,6 @@
       </div>      
     </div>
     <div id="reports" role="tabpanel" class="container tab-pane"><br>
-      <h2>Reports content tab here</h2>
       <div class="row">
         <div class="col">
           <div class="card">
@@ -267,15 +262,47 @@
     <div id="calendar_content" role="tabpanel" class="container tab-pane"><br>
      <h2>Calendar content tab here</h2>
       <h4>Title</h4>
-      <div id="calendar"></div>
+      <div id="calendar7"></div>
     </div>
     <div id="roi" role="tabpanel" class="container tab-pane"><br>
      <h2>ROI content tab here</h2>
       <h4>Title</h4>
     </div>
     <div id="profile" role="tabpanel" class="container tab-pane"><br>
-     <h2>Profile content tab here</h2>
-      <h4>Title</h4>
+      <div class="row">
+        <div class="col">
+          <div class="card">
+            <div class="card-header">Company Form</div>
+            <div class="card-body"><?php view_contractors_dashboard_form(); ?>
+            </div>
+          </div>                
+        </div>
+        <div class="col">
+          <div class="card">
+            <div class="card-header">Company Logo</div>
+            <div class="card-body">
+              <div class="container">
+                <div class="row">
+                  <div class="col" style="text-align: center;">
+                    <?php if (empty($companylogo)){ echo "<i class='fa fa-photo' style='font-size:100px;'></i>";  } else{ ?>
+                    <img src="<?php echo plugin_dir_path( __DIR__ ). 'bidmarket/template/assets/uploads/'; ?>" />
+                    <?php } ?>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <div class="form-group">
+                      Image:
+                      <input type="hidden" id="picture" name="picture">
+                      <div id="fileupload3">Image</div>
+                    </div>
+                  </div>
+                </div>                
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>    
     </div>
     <div id="account" role="tabpanel" class="container tab-pane"><br>
      <h2>Account content tab here</h2>
@@ -284,7 +311,8 @@
   </div>
 </div>
 <script type="text/javascript">
-  var datedef="<?php echo $date; ?>";
+var ajaxurl = "<?php echo admin_url('admin-ajax.php'); ?>";  
+var datedef="<?php echo $date; ?>";
 jQuery(document).ready( function($) {  
   jQuery('.nav-tabs a').on('click', function (event) {
     event.preventDefault();
@@ -320,7 +348,7 @@ jQuery(document).ready( function($) {
     editable: true, 
 
   });
-  jQuery('#calendar').fullCalendar({
+  jQuery('#calendar7').fullCalendar({
     header: {
       left: 'prev,next today',
       center: 'title',
@@ -338,7 +366,24 @@ jQuery(document).ready( function($) {
     "bInfo": true,
     "bAutoWidth": false,
     "lengthMenu":[[10,25,50,100,200,-1],[10,25,50,100,200,"All"]]    
-  });  
+  }); 
+  jQuery("#fileupload3").uploadFile({
+          url: ajaxurl,
+          formData: { action: 'uploadfile' },
+          fileName:"myfile",
+          allowedTypes: "jpg,png,gif",
+          maxFileSize: "5358562",
+          allowDuplicates: false,
+          duplicateStrict: true,
+          showFileCounter: false,
+          maxFileCount:1,
+          showStatusAfterSuccess: true,
+          showProgress: true,  
+          onSuccess:function(data)
+           {
+             jQuery("#picture").val(data); 
+           }
+  });   
 });
 jQuery(function () {
   var config2 = {

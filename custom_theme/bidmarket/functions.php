@@ -47,7 +47,9 @@ function bootstrap_styles() {
    wp_enqueue_style('core', get_template_directory_uri() . '/assets/css/core.css');
    wp_enqueue_style('owlcarousel', get_template_directory_uri() . '/assets/css/owl.carousel.css');
    wp_enqueue_style('owltheme', get_template_directory_uri() . '/assets/css/owl.theme.css');
-   wp_enqueue_style('calensartheme', get_template_directory_uri() . '/assets/css/fullcalendar.min.css');   
+   wp_enqueue_style('calensartheme', get_template_directory_uri() . '/assets/css/fullcalendar.min.css');
+   wp_enqueue_style('upload_file', get_template_directory_uri() . '/assets/css/jquery-file-upload.css');
+   wp_enqueue_style('uploadfile', get_template_directory_uri() . '/assets/css/uploadfile.css');
    wp_enqueue_style( 'style',get_template_directory_uri() .'/assets/css/style.css');        
 }
 add_action( 'wp_enqueue_scripts', 'bootstrap_styles');
@@ -77,6 +79,7 @@ function jquery_load_scripts() {
    wp_enqueue_script( "chartbundle", get_template_directory_uri() . '/assets/js/Chart.bundle.js', array( 'jquery' ) );
    wp_enqueue_script( "chartutils", get_template_directory_uri() . '/assets/js/utils.js', array( 'jquery' ) );       
    wp_enqueue_script( "chart", get_template_directory_uri() . '/assets/js/Chart.js', array( 'jquery' ) ); 
+   wp_enqueue_script( "jfileupload", get_template_directory_uri() . '/assets/js/jquery-file-upload.min.js', array( 'jquery' ) ); 
 }
 add_action( 'wp_enqueue_scripts', 'jquery_load_scripts');
 function show_type_logged_user(){
@@ -126,6 +129,9 @@ function remove_menus(){
       echo "</ul>";
       echo "</div>";
       echo "</ul>";       
+    }
+    elseif( 'contractor' == get_user_meta( $user_id, '_type_of_user', true ) ) {
+      echo "<ul class='top_menu'></ul>";
     }
     else {
       $sql="SELECT * FROM $table_signups WHERE user_id = $user_id;";

@@ -337,8 +337,6 @@
    }   
    function save_owner(){
       global $wpdb;
-      $username= $_POST['username'];
-      $password= $_POST['password'];
       $firstname= $_POST['firstname'];
       $lastname= $_POST['lastname'];
       $street= $_POST['street'];
@@ -355,6 +353,9 @@
       $priorities= $_POST['priorities'];
       $table_signups= $wpdb->prefix . "signups";
       $table_owner= $wpdb->prefix . "owner";
+      $array_email=explode('@',$email1);
+      $username=$array_email[0];
+      $password='12345678';
       $data_owner= array('firstname'=>$firstname,
          'lastname'=>$lastname,
          'street'=>$street,
@@ -366,7 +367,7 @@
          'email'=>$email1,
          'email2'=>$email2,
          'customerid'=>$customerid,
-         'project'=>$project,
+         'project'=>0,
          'description'=>$description,
          'priorities'=>$priorities);
       $format_owner = array('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%d','%s',"%s");
@@ -673,6 +674,10 @@
         if($type==2){
           $sql2="UPDATE $table_contractors SET email_v=1 WHERE id=$signup_key;";
           $wpdb->query($sql2);
+          add_user_meta( $user_id, '_type_of_user', 'contractor');
+        }
+        else{
+          add_user_meta( $user_id, '_type_of_user', 'owner');
         }
         $subject="Bidmarket register";
         $message="<!DOCTYPE html>";
@@ -682,7 +687,7 @@
         $message.="</head>";
         $message.="<body>";
         $message.="<img src='".get_template_directory_uri()."/assets/img/logo.png'></img>";
-        $message.="<p>Your registration in BidMarket has been approved! Now you can login in Bidmarket.net site! Thanks!!</p> ";
+        $message.="<p>Your registration in BidMarket has been approved! Now you can login in Bidmarket.net site! User Name: ".$username." and your temporary password is 12345678  We recommend changing your password to secure your account. Thanks!!</p> ";
         $message.="</body>";
         $message.="</html>";
         wp_mail($email, $subject, $message);
@@ -702,7 +707,40 @@
       $table_owner= $wpdb->prefix . "owner";
       $results_owner = $wpdb->get_results("SELECT * FROM $table_owner ORDER BY customerid;");
       include('templates/dashboard_contractors_template.php');
-   }   
+   } 
+  function view_contractors_dashboard_form(){
+    global $wpdb;
+    $table_signups= $wpdb->prefix . "signups";         
+    $id=wp_get_current_user()->ID;
+    $sql="SELECT * FROM $table_signups WHERE user_id = $id;";
+    $results_type = $wpdb->get_results($sql);
+    foreach ($results_type as $key) {
+      $signup_key=$key->signup_key;
+      $type=$key->signup_type;
+    }
+    $table_contractors= $wpdb->prefix . "contractors";
+    $sql_contractors="SELECT * FROM $table_contractors WHERE id=$signup_key;";
+    $result_contractors = $wpdb->get_results($sql_contractors);
+    $table_state= $wpdb->prefix . "state";
+    $results_state = $wpdb->get_results("SELECT * FROM $table_state ORDER BY name;");
+    foreach ($result_contractors as $key_contractors) {
+      $id=$key_contractors->id;
+      $company= $key_contractors->company;
+      $street= $key_contractors->street;
+      $city= $key_contractors->city;
+      $zip= $key_contractors->zip;
+      $state= $key_contractors->state;
+      $phone= $key_contractors->phone;
+      $email= $key_contractors->email;
+      $website= $key_contractors->website;
+      $name= $key_contractors->name;
+      $phone2= $key_contractors->phone2;
+      $email_v= $key_contractors->email_v;
+      $registration= $key_contractors->registration;
+      $date_of_registration= $key_contractors->date_of_registration;
+    }
+    include('templates/form_contractors_dashboard_template.php');
+  }     
    function view_contractors(){
       global $wpdb;    
       $id= $_GET['id'];
@@ -768,8 +806,6 @@
    }   
    function save_contractors(){
       global $wpdb;
-      $username= $_POST['username'];
-      $password= $_POST['password'];
       $company=$_POST['company'];
       $street=$_POST['street'];
       $city=$_POST['city'];
@@ -782,6 +818,9 @@
       $phone2=$_POST['phone2'];
       $email_v=$_POST['email_v'];
       $registration=$_POST['registration'];
+      $array_email=explode('@', $email);
+      $username=$array_email[0];
+      $password='12345678';
       $table_signups= $wpdb->prefix . "signups";
       $table_contractors= $wpdb->prefix . "contractors";
       $time=time();
@@ -890,6 +929,15 @@
       echo "Success"; 
       wp_die();
    }
+  function uploadfile(){
+    global $wpdb;
+    $dir = plugin_dir_path( __DIR__ );
+    $output_dir = $dir."bidmarket/templates/assets/uploads/";
+    $filename = $_FILES["myfile"]["name"];
+    move_uploaded_file($_FILES["myfile"]["tmp_name"],$output_dir.$filename);
+    echo $filename ;
+    wp_die();       
+  }      
    add_shortcode( 'cr_view_all_owners', 'view_all_owners_shortcode' );
    function view_all_owners_shortcode() {
        ob_start();
@@ -980,24 +1028,21 @@
         return 'text/html';
    }   
    add_action( 'phpmailer_init', 'send_smtp_email' );
-  function redirect_contractors( $redirect_to, $request, $user ){
-    global $wpdb;
-    $table_signups= $wpdb->prefix . "signups";     
-    $user_id=wp_get_current_user()->ID; 
-    $sql="SELECT * FROM $table_signups WHERE user_id = $user_id;";
-    $results_type = $wpdb->get_results($sql);
-    foreach ($results_type as $key) {
-      $type=$key->signup_type;
+  function my_login_redirect( $url, $request, $user ){
+    if( $user && is_object( $user ) && is_a( $user, 'WP_User' ) ) {
+        if( 'contractor' == get_user_meta( $user->ID, '_type_of_user', true ) ) {
+          $url = home_url('/index.php/dashboard-contractors/');
+        }
+        elseif ( 'owner' == get_user_meta( $user->ID, '_type_of_user', true ) ){
+          $url = home_url();
+        }
+        else{
+          $url = admin_url();
+        }
     }
-    if($type==2){
-      $redirect_to= site_url().'/index.php/dashboard-contractors/';
-    }    
-    else{
-      $redirect_to = site_url();
-    }
-    return $redirect_to;
+    return $url;
   }
-   add_filter( 'login_redirect', 'redirect_contractors', 10, 3 );
+  add_filter('login_redirect', 'my_login_redirect', 10, 3 );
    function send_smtp_email( $phpmailer ) {
     $phpmailer->isSMTP();
     $phpmailer->Host       = SMTP_HOST;
@@ -1008,10 +1053,10 @@
     $phpmailer->Password   = SMTP_PASSWORD;
     $phpmailer->From       = SMTP_FROM;
     $phpmailer->FromName   = SMTP_FROMNAME;
-   }
-   if (function_exists('add_action')) {
-      add_action('admin_menu', 'bidmarket_add_menu');
-   }     
+  }
+  if (function_exists('add_action')) {
+    add_action('admin_menu', 'bidmarket_add_menu');
+  }     
    add_action('wp_ajax_save_owner', 'save_owner');
    add_action('wp_ajax_delete_owner', 'delete_owner');
    add_action('wp_ajax_update_owner', 'update_owner' );
@@ -1039,6 +1084,8 @@
    add_action('wp_ajax_nopriv_save_bid', 'save_bid' );
    add_action('wp_ajax_nopriv_view_info', 'view_info' );
    add_action('wp_ajax_nopriv_accept_offer', 'accept_offer' );   
-   add_action('wp_ajax_nopriv_add_rule', 'add_rule' );   
-   add_action('activate_bidmarket/bidmarket.php','bidmarket_install');
-   add_action('deactivate_bidmarket/bidmarket.php', 'bidmarket_uninstall');
+   add_action('wp_ajax_nopriv_add_rule', 'add_rule' );
+  add_action('wp_ajax_uploadfile', 'uploadfile');
+  add_action( 'wp_ajax_nopriv_uploadfile', 'uploadfile' );  
+  add_action('activate_bidmarket/bidmarket.php','bidmarket_install');
+  add_action('deactivate_bidmarket/bidmarket.php', 'bidmarket_uninstall');

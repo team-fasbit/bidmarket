@@ -5,7 +5,7 @@
         <div class="col-md-6">
            <a type="button" href="<?php echo get_site_url(); ?>/index.php/register-owner/" class="btn btn-primary sign-up"><span class="inside-button">I am a Homeowner</span></a>
         </div>
-        <div class="col-m6">
+        <div class="col-md-6">
            <a type="button" href="<?php echo get_site_url(); ?>/index.php/contractors/" class="btn btn-primary sign-up"><span class="inside-button">I am a Contractor</span></a>
         </div>
      </div>

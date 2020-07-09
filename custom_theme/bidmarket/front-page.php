@@ -1,13 +1,6 @@
 <?php
-/*
-Es la plantilla que WordPress carga por defecto como página de inicio. Está especialmente pensada para que sea un listado de posts, es decir, la portada de un blog.
-*/
 get_header();
 ?>
-    <!--==========================
-      Portfolio Section
-    ============================-->
-  
     <section id="slider_section" class="slider-section">
       <div class="container border">
         <div class="row inside-row">      

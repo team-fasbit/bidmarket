@@ -2,26 +2,6 @@
   <div id="owner_container">
    <h1>Owners</h1>
    <form id="owners_form">
-      <div class="row">
-        <div class="col-md-3">
-            <div class="form-group">
-                Username:
-                <input type="text" id="username" name="username" class="form-control">
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="form-group">
-                Password:
-                <input type="password" id="password" name="password" class="form-control">
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="form-group">
-                Re type password:
-                <input type="password" id="repassword" name="repassword" class="form-control">
-            </div>
-        </div>        
-    </div>    
      <div class="row">
         <div class="col-md-6">
             <div class="form-group">
@@ -99,18 +79,11 @@
     </div>             
     <div class="row">
         <div class="col-md-12">
-            <div class="form-group">
-                Description:
-                <textarea id="description" name="description" class="form-control" placeholder="Description"></textarea>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12">
             <div class="form-group" style="text-align:center;">
               <input type="hidden" id="customerid" name="customerid"  value="<?php echo $customerid; ?>">
               <input type="hidden" id="project" name="project" >
-              <input type="hidden" id="priorities" name="priorities" >                
+              <input type="hidden" id="priorities" name="priorities" >
+              <input type="hidden" id="description" name="description" >                 
               <button type="submit" class="btn btn-primary bidmarket_button" id="button_submit">Submit</button>
             </div>
         </div>
@@ -125,19 +98,6 @@
         jQuery("#owners_form").validate({
           ignore: [],
           rules: {
-                 username:{
-                  required: true,
-                  minlength: 8
-                 },
-                 password: {
-                  required: true,
-                  minlength: 8
-                 },
-                 repassword: {
-                   required: true,
-                   minlength: 8,
-                   equalTo: "#password"
-                 },
                  firstname:"required",
                  lastname:"required",
                  street:"required",
@@ -149,23 +109,8 @@
                   required: true,
                   email: true,
                  },
-                 description: "required",
           },
           messages: {
-             password: {
-              required: "Please provide a password",
-              minlength: "Your password must be at least 8 characters long",
-              equalTo: "Please enter the same password",
-             },
-             repassword: {
-              required: "Please provide a password",
-              minlength: "Your password must be at least 8 characters long",
-              equalTo: "Please enter the same password",
-             },
-             username: {
-              required: "Please provide an username",
-              minlength: "Your password must be at least 8 characters long",
-             },
              firstname: "Please enter first name",
              lastname: "Please enter last name",
              street: "Please enter street",
@@ -174,7 +119,6 @@
              state: "Please enter state code",
              phone1: "Please enter a phone",
              email1: "Please enter a valid email",
-             description: "Please enter description",
           },
           errorClass: "error_validate",
           inputContainer: "form-group",
@@ -193,12 +137,8 @@
             var project=jQuery("#project").val();
             var description=jQuery("#description").val();
             var priorities=jQuery("#priorities").val(); 
-            var username=jQuery("#username").val();
-            var password=jQuery("#password").val();
             var data= {
                 action:'save_owner',
-                username: username,
-                password: password,
                 firstname: firstname,
                 lastname: lastname,
                 street: street,
