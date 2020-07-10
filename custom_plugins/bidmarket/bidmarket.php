@@ -385,7 +385,7 @@
         $format_signup = array('%s','%s','%s','%s','%s','%d','%d','%d');
         $wpdb->insert($table_signups,$data_signup,$format_signup);
         $signups_query=$wpdb->last_query;
-        $subject="BidMarket register";
+        $subject="BidMarket registration";
         $message="<!DOCTYPE html>";
         $message.="<html>";
         $message.="<head>";
@@ -479,6 +479,24 @@
       global $wpdb;
       $email=$_GET['email'];    
       include('templates/set_password__template.php');
+   }   
+   function view_account_info(){
+      global $wpdb;
+      $table_signups= $wpdb->prefix . "signups";   
+      $id=wp_get_current_user()->ID;
+      $sql="SELECT * FROM $table_signups WHERE user_id = $id;";
+      $results_type = $wpdb->get_results($sql);
+      foreach ($results_type as $key) {
+        $firstname=$key->firstname;
+        $lastname=$key->lastname;
+        $username=$key->username;
+        $password=$key->password;
+        $email=$key->email;
+        $signup_type=$key->signup_type;
+        $validated=$key->validated;
+        $signup_key=$key->signup_key;
+      } 
+      include('templates/account_info_template.php');
    }
    function modal_bid(){
       global $wpdb; 
@@ -679,7 +697,7 @@
         else{
           add_user_meta( $user_id, '_type_of_user', 'owner');
         }
-        $subject="Bidmarket register";
+        $subject="Bidmarket registration";
         $message="<!DOCTYPE html>";
         $message.="<html>";
         $message.="<head>";
@@ -856,7 +874,7 @@
         $format_signup = array('%s','%s','%s','%s','%s','%d','%d','%d');
         $wpdb->insert($table_signups,$data_signup,$format_signup);
         $signups_query=$wpdb->last_query;
-        $subject="BidMarket register";
+        $subject="BidMarket registration";
         $message="<!DOCTYPE html>";
         $message.="<html>";
         $message.="<head>"; 
@@ -929,15 +947,24 @@
       echo "Success"; 
       wp_die();
    }
-  function uploadfile(){
+  function uploadlogo(){
     global $wpdb;
+    $user_id=wp_get_current_user()->ID;
     $dir = plugin_dir_path( __DIR__ );
     $output_dir = $dir."bidmarket/templates/assets/uploads/";
     $filename = $_FILES["myfile"]["name"];
+    add_user_meta( $user_id, '_image_logo', $filename);
     move_uploaded_file($_FILES["myfile"]["tmp_name"],$output_dir.$filename);
     echo $filename ;
     wp_die();       
-  }      
+  }
+  function new_logo(){
+    global $wpdb;
+    $user_id=wp_get_current_user()->ID;
+    $filename =  get_user_meta( $user_id, '_image_logo', true );
+    echo "<img src='". plugin_dir_url( __FILE__ ) . "template/assets/uploads/".$filename."' width='324px' height='200px' />" ;
+    wp_die();       
+  }         
    add_shortcode( 'cr_view_all_owners', 'view_all_owners_shortcode' );
    function view_all_owners_shortcode() {
        ob_start();
@@ -1085,7 +1112,9 @@
    add_action('wp_ajax_nopriv_view_info', 'view_info' );
    add_action('wp_ajax_nopriv_accept_offer', 'accept_offer' );   
    add_action('wp_ajax_nopriv_add_rule', 'add_rule' );
-  add_action('wp_ajax_uploadfile', 'uploadfile');
-  add_action( 'wp_ajax_nopriv_uploadfile', 'uploadfile' );  
+  add_action('wp_ajax_uploadlogo', 'uploadlogo');
+  add_action( 'wp_ajax_nopriv_uploadlogo', 'uploadlogo' );  
+  add_action('wp_ajax_new_logo', 'new_logo');
+  add_action( 'wp_ajax_nopriv_new_logo', 'new_logo' );  
   add_action('activate_bidmarket/bidmarket.php','bidmarket_install');
   add_action('deactivate_bidmarket/bidmarket.php', 'bidmarket_uninstall');

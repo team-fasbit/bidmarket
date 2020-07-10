@@ -272,21 +272,26 @@
       <div class="row">
         <div class="col">
           <div class="card">
-            <div class="card-header">Company Form</div>
+            <div class="card-header"><i class="fa fa-id-card-o"></i> Company Form</div>
             <div class="card-body"><?php view_contractors_dashboard_form(); ?>
             </div>
           </div>                
         </div>
         <div class="col">
           <div class="card">
-            <div class="card-header">Company Logo</div>
+            <div class="card-header"><i class="fa fa-image"></i> Company Logo</div>
             <div class="card-body">
-              <div class="container">
+              <div class="container border">
                 <div class="row">
                   <div class="col" style="text-align: center;">
-                    <?php if (empty($companylogo)){ echo "<i class='fa fa-photo' style='font-size:100px;'></i>";  } else{ ?>
-                    <img src="<?php echo plugin_dir_path( __DIR__ ). 'bidmarket/template/assets/uploads/'; ?>" />
+                    <div id="container_logo">
+                    <?php 
+                    $user_id=wp_get_current_user()->ID;
+                    $img=get_user_meta( $user_id, '_image_logo', true );
+                    if (empty($img)){ echo "<i class='fa fa-photo' style='font-size:100px;'></i>";  } else{ ?>
+                      <img src="<?php echo plugin_dir_url( __FILE__ ). 'assets/uploads/'.$img; ?>  " width='314px' height='190px'/>
                     <?php } ?>
+                    </div>
                   </div>
                 </div>
                 <div class="row">
@@ -305,9 +310,38 @@
       </div>    
     </div>
     <div id="account" role="tabpanel" class="container tab-pane"><br>
-     <h2>Account content tab here</h2>
-     <h4>Title</h4>
+      <div class="row">
+        <div class="col">
+          <div class="card">
+            <div class="card-header"><i class="fa fa-address-card-o"></i> Account info</div>
+            <div class="card-body"><?php view_account_info(); ?>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card">
+            <div class="card-header"><i class="fa fa-credit-card"></i> Billing info</div>
+            <div class="card-body">
+            </div>
+          </div>
+        </div>
     </div>
+      <div class="row">
+        <div class="col">
+          <div class="card">
+            <div class="card-header"><i class="fa fa-phone"></i> Contact info</div>
+            <div class="card-body">
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card">
+            <div class="card-header"><i class="fa fa-money"></i> Payment history</div>
+            <div class="card-body">
+            </div>
+          </div>
+        </div>
+    </div>    
   </div>
 </div>
 <script type="text/javascript">
@@ -369,7 +403,7 @@ jQuery(document).ready( function($) {
   }); 
   jQuery("#fileupload3").uploadFile({
           url: ajaxurl,
-          formData: { action: 'uploadfile' },
+          formData: { action: 'uploadlogo' },
           fileName:"myfile",
           allowedTypes: "jpg,png,gif",
           maxFileSize: "5358562",
@@ -382,6 +416,7 @@ jQuery(document).ready( function($) {
           onSuccess:function(data)
            {
              jQuery("#picture").val(data); 
+             new_logo();
            }
   });   
 });
@@ -441,4 +476,12 @@ jQuery(function () {
   var myNewLine4 = new Chart(ctx4, config2); 
   var myNewLine5 = new Chart(ctx5, config2); 
 });  
+function new_logo(){
+    var data= {
+        action:'new_logo'
+    };
+    jQuery.post(ajaxurl, data, function(response) {
+      jQuery("#container_logo").html((response));
+    });  
+}
 </script>
