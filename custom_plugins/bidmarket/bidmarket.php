@@ -251,14 +251,27 @@
    function registration_owner(){
       global $wpdb;    
       $table_state= $wpdb->prefix . "state";
-      $results_state = $wpdb->get_results("SELECT * FROM $table_state ORDER BY name;");
-      $customerid=random_int(0, 9999999);
-      include('templates/register_owner_template.php');
+      $verify_id=wp_get_current_user()->ID;
+      if( 'contractor' == get_user_meta( $verify_id, '_type_of_user', true ) ) {
+        $url=home_url('/index.php/dashboard-contractors/');
+        echo("<script>location.href = '".$url."'</script>");
+      }
+      else {
+        $results_state = $wpdb->get_results("SELECT * FROM $table_state ORDER BY name;");
+        $customerid=random_int(0, 9999999);
+        include('templates/register_owner_template.php');
+      }
    }             
    function view_owner(){
       global $wpdb;    
       $id= $_GET['id'];
       $table_signups= $wpdb->prefix . "signups"; 
+      $verify_id=wp_get_current_user()->ID;
+      if( 'contractor' == get_user_meta( $verify_id, '_type_of_user', true ) ) {
+        $url=home_url('/index.php/dashboard-contractors/');
+        echo("<script>location.href = '".$url."'</script>");
+      }
+      else {
       if(empty($id)){
         if ( is_user_logged_in() ) {
           $id=wp_get_current_user()->ID;
@@ -334,6 +347,7 @@
         $results_state = $wpdb->get_results("SELECT * FROM $table_state ORDER BY name;");
         include('templates/view_owner_template.php');
       }
+    }
    }   
    function save_owner(){
       global $wpdb;
@@ -660,7 +674,7 @@
       global $wpdb;
       $email=$_GET['email'];
       $type=$_GET['type'];
-      $table_owner= $wpdb->prefix . "owners";
+      $table_owner= $wpdb->prefix . "owner";
       $table_contractors= $wpdb->prefix . "contractors";  
       $website=get_site_url();
       $table_signups= $wpdb->prefix . "signups";
@@ -716,7 +730,13 @@
       }         
    }
    function dashboard_contractors(){
-      global $wpdb;
+    global $wpdb;
+    $verify_id=wp_get_current_user()->ID;
+    if( 'owner' == get_user_meta( $verify_id, '_type_of_user', true ) ) {
+      $url=home_url('/index.php/dashboard-owners/');
+      echo("<script>location.href = '".$url."'</script>");
+    }
+    else {
       $time=time();
       $day = strftime("%d",$time);
       $month=strftime("%m",$time);
@@ -725,10 +745,54 @@
       $table_owner= $wpdb->prefix . "owner";
       $results_owner = $wpdb->get_results("SELECT * FROM $table_owner ORDER BY customerid;");
       include('templates/dashboard_contractors_template.php');
+    }
+   } 
+   function dashboard_owners(){
+    global $wpdb;
+    $table_owner= $wpdb->prefix . "owner";
+    $id=wp_get_current_user()->ID;
+    if( 'contractor' == get_user_meta( $id, '_type_of_user', true ) ) {
+      $url=home_url('/index.php/dashboard-contractors/');
+      echo("<script>location.href = '".$url."'</script>");
+    }
+    else {
+      $time=time();
+      $day = strftime("%d",$time);
+      $month=strftime("%m",$time);
+      $year= strftime("%Y",$time);
+      $date="$year-$month-$day";
+      $table_signups= $wpdb->prefix . "signups";   
+      $sql="SELECT * FROM $table_signups WHERE user_id = $id;";
+      $results_type = $wpdb->get_results($sql);
+      foreach ($results_type as $key) {
+        $signup_key=$key->signup_key;
+      } 
+      $sql_owner="SELECT * FROM $table_owner WHERE id=$signup_key;";
+      $result_owner = $wpdb->get_results($sql_owner);
+      foreach ($result_owner as $key_owner) {
+         $firstname= $key_owner->firstname;
+         $lastname= $key_owner->lastname;
+         $street= $key_owner->street;
+         $city= $key_owner->city;
+         $zip= $key_owner->zip;
+         $state= $key_owner->state;
+         $phone1= $key_owner->phone;
+         $phone2= $key_owner->phone2;
+         $email1= $key_owner->email;
+         $email2= $key_owner->email2;
+         $customerid= $key_owner->customerid;
+         $idproject= $key_owner->project;
+         $description= $key_owner->description;
+         $priorities= $key_owner->priorities;
+      }       
+      $table_contractors= $wpdb->prefix . "contractors";
+      $results_contractors = $wpdb->get_results("SELECT * FROM $table_contractors ORDER BY id;");
+      include('templates/dashboard_owners_template.php');
+    }
    } 
   function view_contractors_dashboard_form(){
     global $wpdb;
-    $table_signups= $wpdb->prefix . "signups";         
+    $table_signups= $wpdb->prefix . "signups";
     $id=wp_get_current_user()->ID;
     $sql="SELECT * FROM $table_signups WHERE user_id = $id;";
     $results_type = $wpdb->get_results($sql);
@@ -759,7 +823,40 @@
     }
     include('templates/form_contractors_dashboard_template.php');
   }     
-   function view_contractors(){
+  function view_owners_dashboard_form(){
+    global $wpdb;
+    $table_signups= $wpdb->prefix . "signups";
+    $id=wp_get_current_user()->ID;
+    $sql="SELECT * FROM $table_signups WHERE user_id = $id;";
+    $results_type = $wpdb->get_results($sql);
+    foreach ($results_type as $key) {
+      $signup_key=$key->signup_key;
+      $type=$key->signup_type;
+    }
+    $table_owners= $wpdb->prefix . "owner";
+    $sql_owners="SELECT * FROM $table_owners WHERE id=$signup_key;";
+    $result_owners = $wpdb->get_results($sql_owners);
+    $table_state= $wpdb->prefix . "state";
+    $results_state = $wpdb->get_results("SELECT * FROM $table_state ORDER BY name;");
+    foreach ($result_owners as $key_owner) {
+      $firstname= $key_owner->firstname;
+      $lastname= $key_owner->lastname;
+      $street= $key_owner->street;
+      $city= $key_owner->city;
+      $zip= $key_owner->zip;
+      $state= $key_owner->state;
+      $phone1= $key_owner->phone;
+      $phone2= $key_owner->phone2;
+      $email1= $key_owner->email;
+      $email2= $key_owner->email2;
+      $customerid= $key_owner->customerid;
+      $idproject= $key_owner->project;
+      $description= $key_owner->description;
+      $priorities= $key_owner->priorities;
+    }
+    include('templates/form_owners_dashboard_template.php');
+    }
+    function view_contractors(){
       global $wpdb;    
       $id= $_GET['id'];
       $table_signups= $wpdb->prefix . "signups"; 
@@ -1019,6 +1116,12 @@
        view_contractors();
        return ob_get_clean();
    }
+   add_shortcode( 'cr_dashboard_owners', 'dashboard_owners_shortcode' );
+   function dashboard_owners_shortcode() {
+       ob_start();
+       dashboard_owners();
+       return ob_get_clean();
+   }
    add_shortcode( 'cr_dashboard_contractors', 'dashboard_contractors_shortcode' );
    function dashboard_contractors_shortcode() {
        ob_start();
@@ -1061,7 +1164,7 @@
           $url = home_url('/index.php/dashboard-contractors/');
         }
         elseif ( 'owner' == get_user_meta( $user->ID, '_type_of_user', true ) ){
-          $url = home_url();
+          $url = home_url('/index.php/dashboard-owners/');
         }
         else{
           $url = admin_url();
