@@ -120,7 +120,7 @@
         <div class="col">
           <div class="card">
             <div class="card-header"><i class="fa fa-gavel"></i> Post New Project Here</div>
-            <div class="card-body">form.....
+            <div class="card-body"><?php view_bids_form(); ?>
             </div>
           </div>                
         </div>

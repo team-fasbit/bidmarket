@@ -101,7 +101,7 @@
      $sql81="insert into $table_state (name, code) values ('Washington','WA');";
      $sql82="insert into $table_state (name, code) values ('Wisconsin','WI');";
      $sql83="insert into $table_state (name, code) values ('Wyoming','WY');";
-     $sql84 = " CREATE TABLE $table_bids ( id int(11) NOT NULL, owner_id int(11), contractor_id int(11), date_of_bid date, bid_number text, mount decimal(11,2), description text, status text) ENGINE=InnoDB DEFAULT CHARSET=latin1;";
+     $sql84 = "CREATE TABLE $table_bids ( id int(11) NOT NULL, owner_id int(11), contractor_id int(11), date_of_bid date, bid_number text, mount decimal(11,2), description text, status text, location text, image text, type text, priority text) ENGINE=InnoDB DEFAULT CHARSET=latin1;";
      $sql85= "ALTER TABLE $table_bids ADD PRIMARY KEY(id);";
      $sql86="ALTER TABLE $table_bids MODIFY id INT(11) NOT NULL AUTO_INCREMENT;"; 
      $sql87="CREATE VIEW $table_view_bids AS SELECT $table_bids.id as id, $table_bids.owner_id as owner_id, $table_bids.bid_number as bid_number, $table_bids.mount as mount, $table_bids.description as description,$table_bids.status as status,$table_contractors.company as company,$table_contractors.name as name,$table_contractors.website as website FROM $table_bids, $table_contractors WHERE $table_bids.contractor_id=$table_contractors.id order by $table_bids.id;";
@@ -494,6 +494,29 @@
       $email=$_GET['email'];    
       include('templates/set_password__template.php');
    }   
+   function view_bids_form(){
+      global $wpdb;
+      $table_signups=$wpdb->prefix . "signups";   
+      $id=wp_get_current_user()->ID;
+      $sql="SELECT * FROM $table_signups WHERE user_id = $id;";
+      $results_type = $wpdb->get_results($sql);
+      foreach ($results_type as $key) {
+        $firstname=$key->firstname;
+        $lastname=$key->lastname;
+        $username=$key->username;
+        $password=$key->password;
+        $email=$key->email;
+        $signup_type=$key->signup_type;
+        $validated=$key->validated;
+        $signup_key=$key->signup_key;
+      }
+      $bidnumber=random_int(0, 9999999);
+      $table_project= $wpdb->prefix . "projects";
+      $results_project = $wpdb->get_results("SELECT * FROM $table_project ORDER BY name;");
+      $table_priorities= $wpdb->prefix . "priorities";
+      $results_priorities = $wpdb->get_results("SELECT * FROM $table_priorities ORDER BY name;");
+      include('templates/create_new_project_template.php');
+   }
    function view_account_info(){
       global $wpdb;
       $table_signups= $wpdb->prefix . "signups";   
@@ -577,7 +600,49 @@
         echo $wpdb->last_error;
       }
       wp_die();      
-   }   
+   }
+   function save_project(){
+      global $wpdb; 
+      $table_bids= $wpdb->prefix . "bids"; 
+      $owner_id=$_POST['owner_id'];
+      $bid_number=$_POST['bid_number'];
+      $amount=$_POST['amount'];
+      $description=$_POST['description'];
+      $project=$_POST['project'];
+      $priorities=$_POST['priorities'];
+      $location=$_POST['projectlocation'];
+      $picturepreview=$_POST['picturepreview'];     
+      $contractor_id=0;
+      $time=time();
+      $day = strftime("%d",$time);
+      $month=strftime("%m",$time);
+      $year= strftime("%Y",$time);
+      $date="$year-$month-$day";
+      $databid= array('owner_id' => $owner_id,
+        'contractor_id' => $contractor_id,
+        'amount' => $amount,
+        'description' => $description,
+        'bid_number' => $bid_number,
+        'status' => 'sent',
+        'date_of_bid' => $date,
+        'project' => $project,
+        'priority' => $priorities,
+        'location' => $location,
+        'image' => $picturepreview
+      );
+      $formatbid = array('%d','%d','%d','%s','%s','%s','%s','%s','%s','%s','%s');
+      $wpdb->insert($table_bids,$databid,$formatbid);
+      $my_id = $wpdb->insert_id;
+      $output="";
+      if($my_id>0){
+        $output='success';
+      }
+      else {
+        $output=$wpdb->last_error; 
+      }
+      echo $output;
+      wp_die();      
+   }      
    function save_bid(){
       global $wpdb; 
       $table_bids= $wpdb->prefix . "bids"; 
@@ -1044,6 +1109,15 @@
       echo "Success"; 
       wp_die();
    }
+  function uploadpreview(){
+    global $wpdb;
+    $dir = plugin_dir_path( __DIR__ );
+    $output_dir = $dir."bidmarket/templates/assets/uploads/";
+    $filename = $_FILES["myfile"]["name"];
+    move_uploaded_file($_FILES["myfile"]["tmp_name"],$output_dir.$filename);
+    echo $filename ;
+    wp_die();       
+  }
   function uploadlogo(){
     global $wpdb;
     $user_id=wp_get_current_user()->ID;
@@ -1184,40 +1258,49 @@
     $phpmailer->From       = SMTP_FROM;
     $phpmailer->FromName   = SMTP_FROMNAME;
   }
+  function maps_load_scripts() {
+    wp_enqueue_script( "maps", 'https://maps.googleapis.com/maps/api/js?key=', array('jquery'), true );
+    wp_enqueue_script( "locations", plugin_dir_url( __FILE__ ) . '/templates/assets/js/location.js' , array( 'jquery','maps' ) ); 
+  }  
   if (function_exists('add_action')) {
     add_action('admin_menu', 'bidmarket_add_menu');
-  }     
-   add_action('wp_ajax_save_owner', 'save_owner');
-   add_action('wp_ajax_delete_owner', 'delete_owner');
-   add_action('wp_ajax_update_owner', 'update_owner' );
-   add_action('wp_ajax_save_contractors', 'save_contractors');
-   add_action('wp_ajax_delete_contractors', 'delete_contractors');
-   add_action('wp_ajax_update_contractors', 'update_contractors' );
-   add_action('wp_ajax_change_pwd', 'change_pwd' );
-   add_action('wp_ajax_set_pwd', 'set_pwd' );
-   add_action('wp_ajax_owner_modal', 'owner_modal' );
-   add_action('wp_ajax_modal_bid', 'modal_bid' );
-   add_action('wp_ajax_save_bid', 'save_bid' );
-   add_action('wp_ajax_view_info', 'view_info' );
-   add_action('wp_ajax_accept_offer', 'accept_offer' ); 
-   add_action('wp_ajax_add_rule', 'add_rule' );     
-   add_action('wp_ajax_nopriv_save_owner', 'save_owner');
-   add_action('wp_ajax_nopriv_delete_owner', 'delete_owner');   
-   add_action('wp_ajax_nopriv_update_owner', 'update_owner' );
-   add_action('wp_ajax_nopriv_save_contractors', 'save_contractors');
-   add_action('wp_ajax_nopriv_delete_contractors', 'delete_contractors');
-   add_action('wp_ajax_nopriv_update_contractors', 'update_contractors' );
-   add_action('wp_ajax_nopriv_change_pwd', 'change_pwd' );
-   add_action('wp_ajax_nopriv_set_pwd', 'set_pwd' );
-   add_action('wp_ajax_nopriv_owner_modal', 'owner_modal' );
-   add_action('wp_ajax_nopriv_modal_bid', 'modal_bid' );
-   add_action('wp_ajax_nopriv_save_bid', 'save_bid' );
-   add_action('wp_ajax_nopriv_view_info', 'view_info' );
-   add_action('wp_ajax_nopriv_accept_offer', 'accept_offer' );   
-   add_action('wp_ajax_nopriv_add_rule', 'add_rule' );
+  }
+  add_action('wp_head', 'maps_load_scripts');
+  add_action('wp_ajax_save_owner', 'save_owner');
+  add_action('wp_ajax_delete_owner', 'delete_owner');
+  add_action('wp_ajax_update_owner', 'update_owner' );
+  add_action('wp_ajax_save_contractors', 'save_contractors');
+  add_action('wp_ajax_delete_contractors', 'delete_contractors');
+  add_action('wp_ajax_update_contractors', 'update_contractors' );
+  add_action('wp_ajax_change_pwd', 'change_pwd' );
+  add_action('wp_ajax_set_pwd', 'set_pwd' );
+  add_action('wp_ajax_owner_modal', 'owner_modal' );
+  add_action('wp_ajax_modal_bid', 'modal_bid' );
+  add_action('wp_ajax_save_bid', 'save_bid' );
+  add_action('wp_ajax_save_project', 'save_project' );
+  add_action('wp_ajax_view_info', 'view_info' );
+  add_action('wp_ajax_accept_offer', 'accept_offer' ); 
+  add_action('wp_ajax_add_rule', 'add_rule' );
+  add_action('wp_ajax_nopriv_save_owner', 'save_owner');
+  add_action('wp_ajax_nopriv_delete_owner', 'delete_owner');
+  add_action('wp_ajax_nopriv_update_owner', 'update_owner' );
+  add_action('wp_ajax_nopriv_save_contractors', 'save_contractors');
+  add_action('wp_ajax_nopriv_delete_contractors', 'delete_contractors');
+  add_action('wp_ajax_nopriv_update_contractors', 'update_contractors' );
+  add_action('wp_ajax_nopriv_change_pwd', 'change_pwd' );
+  add_action('wp_ajax_nopriv_set_pwd', 'set_pwd' );
+  add_action('wp_ajax_nopriv_owner_modal', 'owner_modal' );
+  add_action('wp_ajax_nopriv_modal_bid', 'modal_bid' );
+  add_action('wp_ajax_nopriv_save_bid', 'save_bid' );
+  add_action('wp_ajax_nopriv_save_project', 'save_project' );
+  add_action('wp_ajax_nopriv_view_info', 'view_info' );
+  add_action('wp_ajax_nopriv_accept_offer', 'accept_offer' );
+  add_action('wp_ajax_nopriv_add_rule', 'add_rule' );
   add_action('wp_ajax_uploadlogo', 'uploadlogo');
-  add_action( 'wp_ajax_nopriv_uploadlogo', 'uploadlogo' );  
+  add_action( 'wp_ajax_nopriv_uploadlogo', 'uploadpreview' );
+  add_action('wp_ajax_uploadpreview', 'uploadpreview');
+  add_action( 'wp_ajax_nopriv_uploadpreview', 'uploadpreview' );
   add_action('wp_ajax_new_logo', 'new_logo');
-  add_action( 'wp_ajax_nopriv_new_logo', 'new_logo' );  
+  add_action( 'wp_ajax_nopriv_new_logo', 'new_logo' );
   add_action('activate_bidmarket/bidmarket.php','bidmarket_install');
   add_action('deactivate_bidmarket/bidmarket.php', 'bidmarket_uninstall');
