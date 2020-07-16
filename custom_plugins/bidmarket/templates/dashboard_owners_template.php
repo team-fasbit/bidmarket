@@ -32,7 +32,7 @@
           <div class="card">
             <div class="card-header"><i class="fa fa-gavel"></i> My Projects</div>
               <div class="card-body">
-               List of projects...
+               <?php view_bids(); ?>
               </div>
           </div>
         </div>

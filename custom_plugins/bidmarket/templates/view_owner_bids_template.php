@@ -1,15 +1,13 @@
-<h3 class='hndle'>Offers</h3>
 <div id="table_owner" class="table-responsive">
-<table id="table_dis" class="table table-hover" >
+<table id="table_bidown" class="table table-hover" >
 <thead>
 	<tr>
-      <th>Offer ID</th> 
-      <th>Company name</th> 
-      <th>Web site</th> 
-      <th>Name</th> 
-      <th>Amount</th> 
-      <th>Options</th>
-    </tr>
+    <th>Offer ID</th> 
+    <th>Project Type</th> 
+    <th>Priority</th> 
+    <th>Amount</th> 
+    <th>Options</th>
+  </tr>
 </thead>
 <tbody>
 <?php
@@ -17,13 +15,11 @@ foreach ($results_bids as $key_owner) {
 ?>	
   <tr>
     <td> <?php echo $key_owner->bid_number; ?> </td>  
-    <td> <?php echo $key_owner->company; ?> </td> 
-    <td> <?php echo $key_owner->website; ?> </td> 
-    <td> <?php echo $key_owner->name; ?> </td> 
-    <td> <?php echo $key_owner->mount; ?> </td> 
+    <td> <?php echo $key_owner->project; ?> </td> 
+    <td> <?php echo $key_owner->priority; ?> </td> 
+    <td> <?php echo $key_owner->amount; ?> </td> 
     <td>
-      <a type="button" class="btn btn-primary bidmarket_button" data-toggle="modal" data-target="#myModal" onclick="view_info(<?php echo $key_owner->id; ?>)">View info</a>
-      <a type="button" class="btn btn-primary bidmarket_button" onclick="accept(<?php echo $key_owner->id; ?>)">Acept Offer</a>
+      <a type="button" class="btn btn-primary bidmarket_button" data-toggle="modal" data-target="#myModal" onclick="view_info(<?php echo $key_owner->id; ?>)"><i class="fa fa-info-circle"></i></a>
     </td>
 </tr>
 <?php
@@ -32,12 +28,11 @@ foreach ($results_bids as $key_owner) {
 </tbody>
 <tfoot>
   <tr>
-      <th>Offer ID</th> 
-      <th>Company name</th> 
-      <th>Web site</th> 
-      <th>Name</th> 
-      <th>Amount</th> 
-      <th>Options</th>
+    <th>Offer ID</th> 
+    <th>Project Type</th> 
+    <th>Priority</th> 
+    <th>Amount</th> 
+    <th>Options</th>
     </tr>
 </tfoot>	
 </table>
@@ -48,7 +43,7 @@ foreach ($results_bids as $key_owner) {
 
       <!-- Modal Header -->
       <div class="modal-header">
-        <h4 class="modal-title">Owner</h4>
+        <h4 class="modal-title"><i class="fa fa-gavel"></i></h4>
 
         <button type="button" class="close" data-dismiss="modal">&times;</button>
       </div>
@@ -70,7 +65,7 @@ foreach ($results_bids as $key_owner) {
 <script type="text/javascript">
 var ajaxurl = "<?php echo admin_url('admin-ajax.php'); ?>";  
 jQuery(document).ready( function($) {
-  jQuery("#table_dis").dataTable({
+  jQuery("#table_bidown").dataTable({
     "oPaginate": true,
     "bLengthChange": true,
     "bFilter": true,
@@ -87,15 +82,6 @@ function view_info(id){
     };
     jQuery.post(ajaxurl, data, function(response) {
       jQuery("#modal_body").html((response));
-    });
-}
-function accept_offer(id){
-    var data= {
-        action:'accept_offer',
-        id: id
-    };
-    jQuery.post(ajaxurl, data, function(response) {
-      jQuery("#modal_bid").html((response));
     });
 }
 </script>

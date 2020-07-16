@@ -3,8 +3,8 @@ get_header();
 ?>
     <section id="slider_section" class="slider-section">
       <div class="container border">
-        <div class="row inside-row">      
-          <div class="col-md-12">
+        <div class="row inside-row slider_padding">      
+          <div class="col-md-12 slider_padding">
             <div class="s-slider">
               <div class="item"><img class="img-responsive" src="<?php echo get_template_directory_uri(); ?>/assets/img/slides/Vermont Home - grey over.png" alt="" widht="100%" height="712px"/></div>
               <div class="item"><img class="img-responsive" src="<?php echo get_template_directory_uri(); ?>/assets/img/slides/Vermont Home Blue.png" alt=""  widht="100%" height="712px"/></div>

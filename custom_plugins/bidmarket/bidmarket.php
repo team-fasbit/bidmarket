@@ -236,7 +236,7 @@
       foreach ($results_type as $key) {
         $owner_id=$key->signup_key;
       }
-      $table_view_bids= $wpdb->prefix . "view_bids"; 
+      $table_view_bids= $wpdb->prefix . "bids"; 
       $results_bids = $wpdb->get_results("SELECT * FROM $table_view_bids where owner_id=$owner_id;");
       include('templates/view_owner_bids_template.php');
    } 
@@ -577,9 +577,15 @@
           $contractor_id=$key_bid->contractor_id;
           $bidnumber=$key_bid->bid_number;
           $description=$key_bid->description;
-          $amount=$key_bid->mount;
-          include('templates/view_bids_template.php');
+          $amount=$key_bid->amount;
+          $project=$key_bid->project;
+          $priority=$key_bid->priority;
+          $image=$key_bid->image;
+          $location=$key_bid->location;
         }
+        $latlong=explode(',', $location);
+        
+        include('templates/view_bids_template.php');
       }
       wp_die();    
    }

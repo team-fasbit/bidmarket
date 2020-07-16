@@ -28,7 +28,6 @@
     <nav id="nav-menu-container" class="navbar navbar-expand-sm">
       <?php
       if ( is_user_logged_in() ) {
-        do_action('show_item_menu');
          echo "<span class='top-buttons'><a type='button' class='btn btn-primary top-button' href=".wp_logout_url(get_site_url()).">Log out</a></span>";       
        } else {
          ?>
@@ -41,14 +40,7 @@
 
   </header><!-- #header -->
   <section id="hero">
-    <div class="hero-container">
-    <?php if ( is_user_logged_in() ) { 
-       do_action('show_owner_contractor');
-     }
-     else{
-    ?>
-      <h2><span class="header-color">Welcome to bidmarket</span></h2>
-      <h4><span class="header-color"><?php do_action('show_owner_contractor'); ?></span></h4>
-    <?php } ?>
+    <div class="hero-container"  >
+      <span class="header-color" style="vertical-align: middle; display: table-cell;">WELCOME TO BIDMARKET</span>
     </div>
   </section><!-- #hero -->

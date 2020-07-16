@@ -138,7 +138,7 @@ h1, h2, h3, h4, h5, h6 {
 --------------------------------------------------------------*/
 #hero {
   width: 100%;
-  height: 20vh !important;
+  height: 15vh !important;
   background-size: cover;
   position: relative;
 }
@@ -529,6 +529,7 @@ body.mobile-nav-active #mobile-nav-toggle {
 }
 .header-color{
   color: #1697d1;
+  font-size: 20px;
 }
 .slider-section{
   padding-top:50px;
@@ -614,7 +615,7 @@ body.mobile-nav-active #mobile-nav-toggle {
   border-radius: 10%;
   border-color: #102e43;
   color: white;
-  padding: 70px 0;
+  padding: 80px 0;
   display: table-cell;
   width: 200px;
   height:200px;  
@@ -656,4 +657,14 @@ body.mobile-nav-active #mobile-nav-toggle {
 }
 a.nav-link{
   color:#102e43;
+}
+.slider-section {
+  padding-top: 0px !important;
+  padding-bottom: 50px;
+}
+.slider_padding{
+  padding-top: 0px !important;
+}
+.login_control{
+  width: 250px;
 }

@@ -1,26 +1,27 @@
-<div class="container">
-  <div id="signup_container">
+  <div id="signup_container" class="col-text-center">
    <h1>Log in</h1>
    <form id="signup_form" action="<?php echo site_url( '/wp-login.php' ); ?>" method="POST">
     <input type="hidden" value="<?php echo site_url(); ?>" name="redirect_to">
+    <div class="row">
+    <div class="col-md-3">
+    </div>
+    <div class="col">    
      <div class="row">
-        <div class="col-md-6">
+        <div class="col">
             <div class="form-group">
-                Email or User name:
                 <input type="text" id="log" name="log" class="form-control" placeholder="Email">
             </div>
         </div>
      </div>
      <div class="row">
-        <div class="col-md-6">
+        <div class="col">
             <div class="form-group">
-                Password:
                 <input type="password" id="pwd" name="pwd" class="form-control" placeholder="Password">
             </div>
         </div>
       </div>
     <div class="row">
-        <div class="col-md-6">
+        <div class="col">
             <div class="form-group" style="text-align:center;">
               <button type="submit" class="btn btn-primary bidmarket_button" id="button_submit">Submit</button>
             </div>
@@ -32,20 +33,22 @@
                 </div>
             <?php } ?>
     <div class="row">
-      <div class="col-md-3">
+      <div class="col">
         <div class="form-group">
           <a href="<?php echo get_site_url().'/index.php/recover-password'; ?>" class="text-muted"><i class="fa fa-lock"></i> Forgot your password?</a>  
         </div>
       </div>
-      <div class="col-md-3">
+      <div class="col">
         <div class="form-group">
           <a href="<?php echo get_site_url().'/index.php/sign-up/'; ?>" class="text-muted"><i class="fa fa-user"></i> Create an account</a>
         </div>
       </div>              
     </div>
   </div>
+      <div class="col-md-3">
+      </div>  
+  </div>
 </form>
-</div>
 </div>
 <script type="text/javascript">
    var ajaxurl = "<?php echo admin_url('admin-ajax.php'); ?>";
