@@ -131,14 +131,14 @@
         <div class="col">
           <div class="card">
             <div class="card-header"><i class="fa fa-info"></i> Owner Info</div>
-            <div class="card-body"><?php //view_owners_dashboard_form(); ?>
+            <div class="card-body"><?php view_profile_owner(); ?>
             </div>
           </div>
         </div>
         <div class="col">
           <div class="card">
             <div class="card-header"><i class="fa fa-gavel"></i> Preferred Projects</div>
-            <div class="card-body"><?php //view_owners_dashboard_form(); ?>
+            <div class="card-body"><?php view_preferred_projects(); ?>
             </div>
           </div>
         </div>
@@ -147,7 +147,7 @@
         <div class="col">
           <div class="card">
             <div class="card-header"><i class="fa fa-check-circle-o"></i> Preferred Priorities</div>
-            <div class="card-body"><?php //view_owners_dashboard_form(); ?>
+            <div class="card-body"><?php view_preferred_priorities(); ?>
             </div>
           </div>
         </div>

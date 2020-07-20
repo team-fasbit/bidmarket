@@ -70,9 +70,15 @@
   </div>
 </div>
 <script type="text/javascript">
-   var ajaxurl = "<?php echo admin_url('admin-ajax.php'); ?>";
-   jQuery(document).ready( function() {
-        jQuery("#previewimage").uploadFile({
+  var ajaxurl = "<?php echo admin_url('admin-ajax.php'); ?>";
+  jQuery(document).ready( function() {
+  jQuery('#picturepreview').keydown(function() {
+    return false;
+  });
+  jQuery('#projectlocation').keydown(function() {
+    return false;
+  });    
+  jQuery("#previewimage").uploadFile({
                 url: ajaxurl,
                 formData: { action: 'uploadpreview' },
                 fileName:"myfile",
@@ -88,8 +94,8 @@
                  {
                    jQuery("#picturepreview").val(data); 
                  }
-        });       
-        CKEDITOR.replace( 'description', { toolbarGroups : [
+  });       
+  CKEDITOR.replace( 'description', { toolbarGroups : [
             { name: 'document', groups: [ 'mode', 'document', 'doctools' ] },
             { name: 'clipboard', groups: [ 'clipboard', 'undo' ] },
             { name: 'editing', groups: [ 'find', 'selection', 'spellchecker', 'editing' ] },
@@ -105,8 +111,8 @@
             { name: 'about', groups: [ 'about' ] }
           ],      
           removeButtons : 'Form,Checkbox,Radio,TextField,Textarea,Select,Button,ImageButton,HiddenField,Link,Unlink,Anchor,Maximize,ShowBlocks,About,Image,Flash,Table,HorizontalRule,Smiley,SpecialChar,PageBreak,Iframe,Source,Save,NewPage,Preview,Print,Templates'
-        });
-        jQuery("#create_project_form").validate({
+  });
+  jQuery("#create_project_form").validate({
           ignore: [],
           rules: {
                  project: "required",
@@ -162,6 +168,6 @@
               location.reload();
             });            
           }
-        });       
-});  
+    });       
+  });  
 </script>

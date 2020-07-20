@@ -18,7 +18,7 @@
      $table_state= $wpdb->prefix . "state";
      $table_bids= $wpdb->prefix . "bids";
      $table_view_bids= $wpdb->prefix . "view_bids";
-     $sql1 = "CREATE TABLE $table_owner( id int(11) NOT NULL, firstname text NOT NULL, lastname text NOT NULL, street text NOT NULL, city text NOT NULL, state text NOT NULL, zip text NOT NULL, phone text NOT NULL, phone2 text, email text NOT NULL, email2 text, customerid text, project int(11), description text NOT NULL, priorities text) ENGINE=InnoDB DEFAULT CHARSET=latin1;";
+     $sql1 = "CREATE TABLE $table_owner( id int(11) NOT NULL, firstname text NOT NULL, lastname text NOT NULL, street text NOT NULL, city text NOT NULL, state text NOT NULL, zip text NOT NULL, phone text NOT NULL, phone2 text, email text NOT NULL, email2 text, customerid text, project text, description text NOT NULL, priorities text) ENGINE=InnoDB DEFAULT CHARSET=latin1;";
      $sql2= "ALTER TABLE $table_owner ADD PRIMARY KEY(id);";
      $sql3="ALTER TABLE $table_owner MODIFY id INT(11) NOT NULL AUTO_INCREMENT;";
      $sql4 = "CREATE TABLE $table_projects( id int(11) NOT NULL, name text NOT NULL)ENGINE=InnoDB DEFAULT CHARSET=latin1;";
@@ -261,10 +261,112 @@
         $customerid=random_int(0, 9999999);
         include('templates/register_owner_template.php');
       }
-   }             
+   }
+   function view_preferred_projects(){
+      global $wpdb;    
+      $table_signups= $wpdb->prefix . "signups"; 
+      $verify_id=wp_get_current_user()->ID;
+      if( 'contractor' == get_user_meta( $verify_id, '_type_of_user', true ) ) {
+        $url=home_url('/index.php/dashboard-contractors/');
+        echo("<script>location.href = '".$url."'</script>");
+      }
+      else {
+          $id=wp_get_current_user()->ID;
+          $sql="SELECT * FROM $table_signups WHERE user_id = $id;";
+          $results_type = $wpdb->get_results($sql);
+          foreach ($results_type as $key) {
+            $signup_key=$key->signup_key;
+            $type=$key->signup_type;
+          }
+          $table_owner= $wpdb->prefix . "owner";
+          $sql_owner="SELECT * FROM $table_owner WHERE id=$signup_key;";
+          $result_owner = $wpdb->get_results($sql_owner);
+          foreach ($result_owner as $key_owner) {
+            $projects= $key_owner->project;
+          }
+          $table_project= $wpdb->prefix . "projects";
+          $results_project = $wpdb->get_results("SELECT * FROM $table_project ORDER BY name;");
+          include('templates/profile_preferred_projects_template.php');
+      }
+   }
+   function view_preferred_priorities(){
+      global $wpdb;    
+      $table_signups= $wpdb->prefix . "signups"; 
+      $verify_id=wp_get_current_user()->ID;
+      if( 'contractor' == get_user_meta( $verify_id, '_type_of_user', true ) ) {
+        $url=home_url('/index.php/dashboard-contractors/');
+        echo("<script>location.href = '".$url."'</script>");
+      }
+      else {
+          $id=wp_get_current_user()->ID;
+          $sql="SELECT * FROM $table_signups WHERE user_id = $id;";
+          $results_type = $wpdb->get_results($sql);
+          foreach ($results_type as $key) {
+            $signup_key=$key->signup_key;
+            $type=$key->signup_type;
+          }
+          $table_owner= $wpdb->prefix . "owner";
+          $sql_owner="SELECT * FROM $table_owner WHERE id=$signup_key;";
+          $result_owner = $wpdb->get_results($sql_owner);
+          foreach ($result_owner as $key_owner) {
+            $priorities= $key_owner->priorities;
+          }
+          $table_priorities = $wpdb->prefix . "priorities";
+          $results_priorities = $wpdb->get_results("SELECT * FROM $table_priorities ORDER BY name;");
+          include('templates/profile_preferred_priorities_template.php');
+      }
+   }       
+   function view_profile_owner(){
+      global $wpdb;    
+      $table_signups= $wpdb->prefix . "signups"; 
+      $verify_id=wp_get_current_user()->ID;
+      if( 'contractor' == get_user_meta( $verify_id, '_type_of_user', true ) ) {
+        $url=home_url('/index.php/dashboard-contractors/');
+        echo("<script>location.href = '".$url."'</script>");
+      }
+      else {
+          $id=wp_get_current_user()->ID;
+          $sql="SELECT * FROM $table_signups WHERE user_id = $id;";
+          $results_type = $wpdb->get_results($sql);
+          foreach ($results_type as $key) {
+            $signup_key=$key->signup_key;
+            $type=$key->signup_type;
+          }
+          if($type==1){ 
+            $table_owner= $wpdb->prefix . "owner";
+            $sql_owner="SELECT * FROM $table_owner WHERE id=$signup_key;";
+            $result_owner = $wpdb->get_results($sql_owner);
+            foreach ($result_owner as $key_owner) {
+              $id=$key_owner->id;
+              $firstname= $key_owner->firstname;
+              $lastname= $key_owner->lastname;
+              $street= $key_owner->street;
+              $city= $key_owner->city;
+              $zip= $key_owner->zip;
+              $state= $key_owner->state;
+              $phone1= $key_owner->phone;
+              $phone2= $key_owner->phone2;
+              $email1= $key_owner->email;
+              $email2= $key_owner->email2;
+              $customerid= $key_owner->customerid;
+              $idproject= $key_owner->project;
+              $description= $key_owner->description;
+              $priorities= $key_owner->priorities;
+            }
+          }   
+          $table_project= $wpdb->prefix . "projects";
+          $results_project = $wpdb->get_results("SELECT * FROM $table_project ORDER BY name;");
+          $table_priorities= $wpdb->prefix . "priorities";
+          $results_priorities = $wpdb->get_results("SELECT * FROM $table_priorities ORDER BY name;");
+          $table_state= $wpdb->prefix . "state";
+          $results_state = $wpdb->get_results("SELECT * FROM $table_state ORDER BY name;");
+          include('templates/form_profile_owners_template.php');
+        }
+   }                
    function view_owner(){
       global $wpdb;    
       $id= $_GET['id'];
+      if(empty($id)){ $id=""; }
       $table_signups= $wpdb->prefix . "signups"; 
       $verify_id=wp_get_current_user()->ID;
       if( 'contractor' == get_user_meta( $verify_id, '_type_of_user', true ) ) {
@@ -381,10 +483,10 @@
          'email'=>$email1,
          'email2'=>$email2,
          'customerid'=>$customerid,
-         'project'=>0,
+         'project'=>'0',
          'description'=>$description,
          'priorities'=>$priorities);
-      $format_owner = array('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%d','%s',"%s");
+      $format_owner = array('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s',"%s");
       $wpdb->insert($table_owner,$data_owner,$format_owner);
       $my_id = $wpdb->insert_id;
       if($my_id>0){
@@ -446,9 +548,7 @@
       $email1= $_POST['email1'];
       $email2= $_POST['email2'];
       $customerid= $_POST['customerid'];
-      $project= $_POST['project'];
       $description= $_POST['description'];
-      $priorities= $_POST['priorities'];
       $table_owner= $wpdb->prefix . "owner";
       $data = array ('firstname'=> $firstname,
           'lastname'=> $lastname,
@@ -461,10 +561,8 @@
           'email'=> $email1,
           'email2'=> $email2,
           'customerid'=> $customerid,
-          'project'=> $project,
-          'description'=> $description,
-          'priorities'=> $priorities);
-      $format = array('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%d','%s',"%s");
+          'description'=> $description);
+      $format = array('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s');
       $where = array ('id' => $id);
       $wpdb->update( $table_owner, $data, $where, $format );
       include('templates/success.php');
@@ -733,8 +831,8 @@
       $message.="</head>";
       $message.="<body>";
       $message.="<img src='".get_template_directory_uri()."/assets/img/logo.png'></img>";
-      $message.="<p>To set your new password please click in link above!!</p> <br><br>";
-      $message.="<a type='button' class='btn btn-primary' href='".get_site_url()."/index.php/set-password/?email=".$email."'>Set your new password</a>;";
+      $message.="<p>To set your new password please click in link below!!</p> <br><br>";
+      $message.="<a type='button' class='btn btn-primary' href='".get_site_url()."/index.php/set-password/?email=".$email."'>Set your new password</a>";
       $message.="</body>";
       $message.="</html>";
       wp_mail($email, $subject, $message); 
@@ -1141,7 +1239,31 @@
     $filename =  get_user_meta( $user_id, '_image_logo', true );
     echo "<img src='". plugin_dir_url( __FILE__ ) . "template/assets/uploads/".$filename."' width='324px' height='200px' />" ;
     wp_die();       
-  }         
+  }
+  function update_projects(){
+    global $wpdb;
+    $owner_id=$_POST['owner_id'];
+    $projects=$_POST['projects'];
+    $table_owner= $wpdb->prefix . "owner";
+    $data = array ('project'=> $projects);
+    $format = array('%s');
+    $where = array ('id' => $owner_id);
+    $wpdb->update( $table_owner, $data, $where, $format );
+    echo "Success";
+    wp_die();       
+  }   
+  function update_priorities(){
+    global $wpdb;
+    $owner_id=$_POST['owner_id'];
+    $priorities=$_POST['priorities'];
+    $table_owner= $wpdb->prefix . "owner";
+    $data = array ('priorities'=> $priorities);
+    $format = array('%s');
+    $where = array ('id' => $owner_id);
+    $wpdb->update( $table_owner, $data, $where, $format );
+    echo "Success";
+    wp_die();       
+  }              
    add_shortcode( 'cr_view_all_owners', 'view_all_owners_shortcode' );
    function view_all_owners_shortcode() {
        ob_start();
@@ -1308,5 +1430,9 @@
   add_action( 'wp_ajax_nopriv_uploadpreview', 'uploadpreview' );
   add_action('wp_ajax_new_logo', 'new_logo');
   add_action( 'wp_ajax_nopriv_new_logo', 'new_logo' );
+  add_action('wp_ajax_update_priorities', 'update_priorities');
+  add_action( 'wp_ajax_nopriv_update_priorities', 'update_priorities' );
+  add_action('wp_ajax_update_projects', 'update_projects');
+  add_action( 'wp_ajax_nopriv_update_projects', 'update_projects' );
   add_action('activate_bidmarket/bidmarket.php','bidmarket_install');
   add_action('deactivate_bidmarket/bidmarket.php', 'bidmarket_uninstall');
