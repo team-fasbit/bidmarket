@@ -240,6 +240,19 @@
       $results_bids = $wpdb->get_results("SELECT * FROM $table_view_bids where owner_id=$owner_id;");
       include('templates/view_owner_bids_template.php');
    } 
+   function view_completed_bids(){
+      global $wpdb;
+      $table_signups= $wpdb->prefix . "signups";
+      $id=wp_get_current_user()->ID;
+      $sql="SELECT * FROM $table_signups WHERE user_id = $id;";
+      $results_type = $wpdb->get_results($sql);
+      foreach ($results_type as $key) {
+        $owner_id=$key->signup_key;
+      }
+      $table_view_bids= $wpdb->prefix . "bids"; 
+      $results_bids = $wpdb->get_results("SELECT * FROM $table_view_bids where owner_id=$owner_id AND status='completed';");
+      include('templates/view_completed_owner_bids_template.php');
+   } 
    function log_in(){
      global $wpdb;
      $login=$_GET['login'];
@@ -279,7 +292,7 @@
             $type=$key->signup_type;
           }
           $table_owner= $wpdb->prefix . "owner";
-          $sql_owner="SELECT * FROM $table_owner WHERE id=$signup_key;";
+          $sql_owner="SELECT * FROM $table_owner WHERE id=$signup_key and signup_type=1;";
           $result_owner = $wpdb->get_results($sql_owner);
           foreach ($result_owner as $key_owner) {
             $projects= $key_owner->project;
@@ -289,6 +302,65 @@
           include('templates/profile_preferred_projects_template.php');
       }
    }
+   function view_account_owner_contact(){
+      global $wpdb;    
+      $table_signups= $wpdb->prefix . "signups"; 
+      $verify_id=wp_get_current_user()->ID;
+      if( 'contractor' == get_user_meta( $verify_id, '_type_of_user', true ) ) {
+        $url=home_url('/index.php/dashboard-contractors/');
+        echo("<script>location.href = '".$url."'</script>");
+      }
+      else {
+          $id=wp_get_current_user()->ID;
+          $sql="SELECT * FROM $table_signups WHERE user_id = $id;";
+          $results_type = $wpdb->get_results($sql);
+          foreach ($results_type as $key) {
+            $signup_key=$key->signup_key;
+            $type=$key->signup_type;
+            $twitter=$key->twitter;
+            $facebook=$key->facebook;
+            $instagram=$key->instagram;
+          }
+          $table_owner= $wpdb->prefix . "owner";
+          $sql_owner="SELECT * FROM $table_owner WHERE id=$signup_key;";
+          $result_owner = $wpdb->get_results($sql_owner);
+          foreach ($result_owner as $key_owner) {
+            $phone1= $key_owner->phone;
+            $phone2= $key_owner->phone2;
+            $email1= $key_owner->email;
+            $email2= $key_owner->email2;
+          }          
+          include('templates/account_contact_owner_template.php');
+      }
+   } 
+   function view_profile_owner_address(){
+      global $wpdb;    
+      $table_signups= $wpdb->prefix . "signups"; 
+      $verify_id=wp_get_current_user()->ID;
+      if( 'contractor' == get_user_meta( $verify_id, '_type_of_user', true ) ) {
+        $url=home_url('/index.php/dashboard-contractors/');
+        echo("<script>location.href = '".$url."'</script>");
+      }
+      else {
+          $id=wp_get_current_user()->ID;
+          $sql="SELECT * FROM $table_signups WHERE user_id = $id;";
+          $results_type = $wpdb->get_results($sql);
+          foreach ($results_type as $key) {
+            $signup_key=$key->signup_key;
+            $type=$key->signup_type;
+          }
+          $table_owner= $wpdb->prefix . "owner";
+          $sql_owner="SELECT * FROM $table_owner WHERE id=$signup_key;";
+          $result_owner = $wpdb->get_results($sql_owner);
+          foreach ($result_owner as $key_owner) {
+            $street= $key_owner->street;
+            $city= $key_owner->city;
+            $state= $key_owner->state;
+            $zip= $key_owner->zip;
+          }
+          include('templates/profile_address_owner_template.php');
+      }
+   }   
    function view_preferred_priorities(){
       global $wpdb;    
       $table_signups= $wpdb->prefix . "signups"; 
@@ -534,6 +606,57 @@
       }
       wp_die();
    }
+   function update_social_account(){
+      global $wpdb; 
+      $id= $_POST['id'];
+      $twitter= $_POST['twitter'];
+      $facebook= $_POST['facebook'];
+      $instagram= $_POST['instagram'];
+      $table_signups= $wpdb->prefix . "signups";
+      $data = array ('twitter'=> $twitter,
+          'facebook'=> $facebook,
+          'instagram'=> $instagram);
+      $format = array('%s','%s','%s');
+      $where = array ('signup_key' => $id, 'signup_type'=> 1);
+      $wpdb->update( $table_signups, $data, $where, $format );
+      $table_owner= $wpdb->prefix . "owner";
+      $sql_owner="SELECT * FROM $table_owner WHERE id=$id;";
+      $result_owner = $wpdb->get_results($sql_owner);
+      foreach ($result_owner as $key_owner) {
+        $phone1= $key_owner->phone;
+        $phone2= $key_owner->phone2;
+        $email1= $key_owner->email;
+        $email2= $key_owner->email2;
+      }         
+      include('templates/success_account_contact_owners_template.php');
+      wp_die();
+   }   
+   function update_profile_owner(){
+      global $wpdb; 
+      $id= $_POST['id'];
+      $firstname= $_POST['firstname'];
+      $lastname= $_POST['lastname'];
+      $phone1= $_POST['phone1'];
+      $phone2= $_POST['phone2'];
+      $email1= $_POST['email1'];
+      $email2= $_POST['email2'];
+      $customerid= $_POST['customerid'];
+      $description= $_POST['description'];
+      $table_owner= $wpdb->prefix . "owner";
+      $data = array ('firstname'=> $firstname,
+          'lastname'=> $lastname,
+          'phone'=> $phone1,
+          'phone2'=> $phone2,
+          'email'=> $email1,
+          'email2'=> $email2,
+          'customerid'=> $customerid,
+          'description'=> $description);
+      $format = array('%s','%s','%s','%s','%s','%s','%s','%s');
+      $where = array ('id' => $id);
+      $wpdb->update( $table_owner, $data, $where, $format );
+      include('templates/success_profile_owners_template.php');
+      wp_die();
+   }   
    function update_owner(){
       global $wpdb; 
       $id= $_POST['id'];
@@ -1237,9 +1360,27 @@
     global $wpdb;
     $user_id=wp_get_current_user()->ID;
     $filename =  get_user_meta( $user_id, '_image_logo', true );
-    echo "<img src='". plugin_dir_url( __FILE__ ) . "template/assets/uploads/".$filename."' width='324px' height='200px' />" ;
+    echo "<img src='". plugin_dir_url( __FILE__ ) . "templates/assets/uploads/".$filename."' width='324px' height='200px' />" ;
     wp_die();       
   }
+  function update_owner_address(){
+    global $wpdb;
+    $owner_id=$_POST['id'];
+    $street=$_POST['street'];
+    $city=$_POST['city'];
+    $zip=$_POST['zip'];
+    $state=$_POST['state'];
+    $table_owner= $wpdb->prefix . "owner";
+    $data = array ('street'=> $street,
+        'city'=> $city,
+        'zip'=> $zip,
+        'state'=> $state);
+    $format = array('%s','%s','%s','%s');
+    $where = array ('id' => $owner_id);
+    $wpdb->update( $table_owner, $data, $where, $format );
+    include('templates/success_profile_address_owner_template.php');
+    wp_die();       
+  }  
   function update_projects(){
     global $wpdb;
     $owner_id=$_POST['owner_id'];
@@ -1434,5 +1575,12 @@
   add_action( 'wp_ajax_nopriv_update_priorities', 'update_priorities' );
   add_action('wp_ajax_update_projects', 'update_projects');
   add_action( 'wp_ajax_nopriv_update_projects', 'update_projects' );
+  add_action('wp_ajax_update_owner_address', 'update_owner_address');
+  add_action( 'wp_ajax_nopriv_update_owner_address', 'update_owner_address' );  
+  add_action('wp_ajax_update_profile_owner', 'update_profile_owner');
+  add_action( 'wp_ajax_nopriv_update_profile_owner', 'update_profile_owner' ); 
+  add_action('wp_ajax_update_social_account', 'update_social_account');
+  add_action( 'wp_ajax_nopriv_update_social_account', 'update_social_account' ); 
+
   add_action('activate_bidmarket/bidmarket.php','bidmarket_install');
   add_action('deactivate_bidmarket/bidmarket.php', 'bidmarket_uninstall');

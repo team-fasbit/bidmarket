@@ -50,7 +50,7 @@
           <div class="card">
             <div class="card-header"><i class="fa fa-gavel"></i> Completed</div>
               <div class="card-body">
-               List of projects completed...
+               <?php view_completed_bids(); ?>
               </div>
           </div>
         </div>
@@ -154,7 +154,7 @@
         <div class="col">
           <div class="card">
             <div class="card-header"><i class="fa fa-vcard"></i> My Address</div>
-            <div class="card-body"><?php //view_owners_dashboard_form(); ?>
+            <div class="card-body"><?php view_profile_owner_address(); ?>
             </div>
           </div>
         </div>
@@ -173,6 +173,7 @@
           <div class="card">
             <div class="card-header"><i class="fa fa-phone"></i> Contact info</div>
             <div class="card-body">
+              <?php view_account_owner_contact(); ?>
             </div>
           </div>
         </div>
