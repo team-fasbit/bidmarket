@@ -1,30 +1,27 @@
 <div class="container mt-3">
     <ul class="nav nav-tabs" role="tablist">
     <li class="nav-item">
-      <a class="nav-link active" role="tab" data-toggle="tab" href="#dashboard"><i class="fa fa-dashboard"></i> Dashboard</a>
+      <a class="nav-link active" role="tab" data-toggle="tab" href="#contractors_dashboard"><i class="fa fa-dashboard"></i> Dashboard</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" data-toggle="tab" role="tab" href="#leads"><i class="fa fa-users"></i> Leads</a>
+      <a class="nav-link" data-toggle="tab" role="tab" href="#contractors_dashboard_projects"><i class="fa fa-gavel"></i> Projects</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" data-toggle="tab" role="tab" href="#reports"><i class="fa fa-bar-chart"></i> Reports</a>
+      <a class="nav-link" data-toggle="tab" role="tab" href="#contractors_dashboard_reports"><i class="fa fa-bar-chart"></i> Reports</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" data-toggle="tab" role="tab" href="#calendar_content"><i class="fa fa-calendar"></i> Calendar</a>
+      <a class="nav-link" data-toggle="tab" role="tab" href="#contractors_dashboard_calendar_content"><i class="fa fa-calendar"></i> Calendar</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" data-toggle="tab" role="tab" href="#roi"><i class="fa fa-calculator"></i> ROI Calculator</a>
+      <a class="nav-link" data-toggle="tab" role="tab" href="#contractors_dashboard_profile"><i class="fa fa-vcard-o"></i> Profile</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" data-toggle="tab" role="tab" href="#profile"><i class="fa fa-vcard-o"></i> Profile</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" data-toggle="tab" role="tab" href="#account"><i class="fa fa-user-circle-o"></i> My Account</a>
+      <a class="nav-link" data-toggle="tab" role="tab" href="#contractors_dashboard_account"><i class="fa fa-user-circle-o"></i> My Account</a>
     </li>
   </ul>
   <!-- Tab panes -->
   <div class="tab-content">  
-    <div id="dashboard" role="tabpanel" class="container tab-pane active"><br>
+    <div id="contractors_dashboard" role="tabpanel" class="container tab-pane active"><br>
       <h2>Dashboard</h2>
       <h5>
       <div class="row">
@@ -42,7 +39,7 @@
       </div>
       </h5>
       <div class="row">
-        <div class="col-sm-8">
+        <div class="col">
           <div class="row">
             <div class="col">
               <div class="row">              
@@ -91,77 +88,19 @@
             </div>
             <div class="col">
               <div class="card">
-                <div class="card-header">Upcoming Estimates</div>
-                <div class="card-body"><div id="calendar_dashboard"></div></div>
+                <div class="card-header">My Offers</div>
+                <div class="card-body"></div>
               </div>
             </div>
           </div>
         </div>
-        <div class="col-sm-4">
-          <div class="card">
-            <div class="card-header">Third Column</div>
-            <div class="card-body">Third column content...</div>
-          </div>
-        </div>
       </div>
     </div>
-    <div id="leads" role="tabpanel" class="container tab-pane"><br>
-     <h2>Leads content tab here</h2>
-       <h3 class='hndle'>Leads</h3>
-       <div id="table_owner" class="table-responsive">
-       <table id="table_dis2" class="table table-hover" >
-        <thead>
-          <tr>
-              <th>Customer ID</th> 
-              <th>First name</th> 
-              <th>Last name</th> 
-              <th>Street</th> 
-              <th>City</th> 
-              <th>State</th> 
-              <th>Zip</th> 
-              <th>Phone #1</th> 
-              <th>Phone #2</th> 
-              <th>Email #1</th> 
-            </tr>
-        </thead>
-        <tbody>
-        <?php
-        foreach ($results_owner as $key_owner) {
-        ?>  
-          <tr>
-            <td> <?php echo $key_owner->customerid; ?> </td>  
-            <td> <?php echo $key_owner->firstname; ?> </td> 
-            <td> <?php echo $key_owner->lastname; ?> </td> 
-            <td> <?php echo $key_owner->street; ?> </td> 
-            <td> <?php echo $key_owner->city; ?> </td> 
-            <td> <?php echo $key_owner->state; ?> </td> 
-            <td> <?php echo $key_owner->zip; ?> </td> 
-            <td> <?php echo $key_owner->phone; ?> </td> 
-            <td> <?php echo $key_owner->phone2; ?> </td> 
-            <td> <?php echo $key_owner->email; ?> </td> 
-          </tr>
-          <?php
-          }
-          ?>
-          </tbody>
-          <tfoot>
-              <tr>
-                <th>Customer ID</th> 
-                <th>First name</th> 
-                <th>Last name</th> 
-                <th>Street</th> 
-                <th>City</th> 
-                <th>State</th> 
-                <th>Zip</th> 
-                <th>Phone #1</th> 
-                <th>Phone #2</th> 
-                <th>Email #1</th> 
-              </tr>
-          </tfoot>  
-          </table>
-      </div>      
+    <div id="contractors_dashboard_projects" role="tabpanel" class="container tab-pane"><br>
+     <h2>Projects available</h2>
+     <?php view_available_project_info(); ?>
     </div>
-    <div id="reports" role="tabpanel" class="container tab-pane"><br>
+    <div id="contractors_dashboard_reports" role="tabpanel" class="container tab-pane"><br>
       <div class="row">
         <div class="col">
           <div class="card">
@@ -259,16 +198,12 @@
         </div>
       </div>
     </div>
-    <div id="calendar_content" role="tabpanel" class="container tab-pane"><br>
+    <div id="contractors_dashboard_calendar_content" role="tabpanel" class="container tab-pane"><br>
      <h2>Calendar content tab here</h2>
       <h4>Title</h4>
-      <div id="calendar7"></div>
+      <?php view_dashboard_calendar_info(); ?>
     </div>
-    <div id="roi" role="tabpanel" class="container tab-pane"><br>
-     <h2>ROI content tab here</h2>
-      <h4>Title</h4>
-    </div>
-    <div id="profile" role="tabpanel" class="container tab-pane"><br>
+    <div id="contractors_dashboard_profile" role="tabpanel" class="container tab-pane"><br>
       <div class="row">
         <div class="col">
           <div class="card">
@@ -309,7 +244,7 @@
         </div>
       </div>    
     </div>
-    <div id="account" role="tabpanel" class="container tab-pane"><br>
+    <div id="contractors_dashboard_account" role="tabpanel" class="container tab-pane"><br>
       <div class="row">
         <div class="col">
           <div class="card">
@@ -331,6 +266,7 @@
           <div class="card">
             <div class="card-header"><i class="fa fa-phone"></i> Contact info</div>
             <div class="card-body">
+              <?php view_account_contractor_contact(); ?>
             </div>
           </div>
         </div>
@@ -350,13 +286,12 @@ var datedef="<?php echo $date; ?>";
 jQuery(document).ready( function($) {  
   jQuery('.nav-tabs a').on('click', function (event) {
     event.preventDefault();
-    jQuery("#dashboard").hide();
-    jQuery("#leads").hide();
-    jQuery("#reports").hide();
-    jQuery("#calendar_content").hide();
-    jQuery("#roi").hide();
-    jQuery("#profile").hide();
-    jQuery("#account").hide();    
+    jQuery("#contractors_dashboard").hide();
+    jQuery("#contractors_dashboard_projects").hide();
+    jQuery("#contractors_dashboard_reports").hide();
+    jQuery("#contractors_dashboard_calendar_content").hide();
+    jQuery("#contractors_dashboard_profile").hide();
+    jQuery("#contractors_dashboard_account").hide();    
     var this_tab=jQuery(this).attr('href');
 
     jQuery('.active').removeClass('active');
@@ -364,43 +299,6 @@ jQuery(document).ready( function($) {
     //jQuery('.tab-content div').hide();
     jQuery(jQuery(this).attr('href')).show();
   });
-  jQuery("#calendar_dashboard").fullCalendar({
-    header: {
-      left: 'prev,next today',
-      center: 'title',
-      right: 'month,agendaWeek,agendaDay',
-    },
-    views: {
-      listDay: { buttonText: 'list day' },
-      listWeek: { buttonText: 'list week' },
-      listMonth: { buttonText: 'list month' }
-    },    
-    defaultView: 'listWeek',     
-    defaultDate: datedef,
-    //events: 'https://fullcalendar.io/demo-events.json',
-    navLinks: true, 
-    editable: true, 
-
-  });
-  jQuery('#calendar7').fullCalendar({
-    header: {
-      left: 'prev,next today',
-      center: 'title',
-      right: 'month,agendaWeek,agendaDay,listWeek'
-    },   
-    defaultDate: datedef,
-    navLinks: true, 
-    editable: true, 
-  });
-  jQuery("#table_dis2").dataTable({
-    "oPaginate": true,
-    "bLengthChange": true,
-    "bFilter": true,
-    "bSort": true,
-    "bInfo": true,
-    "bAutoWidth": false,
-    "lengthMenu":[[10,25,50,100,200,-1],[10,25,50,100,200,"All"]]    
-  }); 
   jQuery("#fileupload3").uploadFile({
           url: ajaxurl,
           formData: { action: 'uploadlogo' },

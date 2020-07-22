@@ -28,7 +28,7 @@
     <nav id="nav-menu-container" class="navbar navbar-expand-sm">
       <?php
       if ( is_user_logged_in() ) {
-         echo "<span class='top-buttons'><a type='button' class='btn btn-primary top-button' href=".wp_logout_url(get_site_url()).">Log out</a></span>";       
+        echo "<span class='top-buttons'><a type='button' class='btn btn-primary top-button' href=".wp_logout_url(get_site_url()).">Log out</a></span>";       
        } else {
          ?>
          <span class="top-buttons"><a type="button" class="btn btn-primary top-button" href="<?php echo get_site_url(); ?>/index.php/log-in/">Log in</a></span>

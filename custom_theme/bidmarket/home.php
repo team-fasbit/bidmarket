@@ -1,5 +1,18 @@
 <?php
 get_header();
+if ( is_user_logged_in() ) {
+  $verify_id=wp_get_current_user()->ID;
+  if( 'owner' == get_user_meta( $verify_id, '_type_of_user', true ) ) {
+    $url=home_url('/index.php/dashboard-owners/');
+  }
+  elseif ( 'contractors' == get_user_meta( $verify_id, '_type_of_user', true ) ) {
+    $url=home_url('/index.php/dashboard-contractors/');
+  }
+  else{
+    $url=home_url();
+  }
+  echo("<script>location.href = '".$url."'</script>");
+}
 ?>
     <section id="slider_section" class="slider-section">
       <div class="container border">
@@ -41,7 +54,6 @@ get_header();
       </div>
     </div>
     </section>
-
 <script type="text/javascript">
    jQuery(document).ready( function() {  
       $('.s-slider').owlCarousel({ 

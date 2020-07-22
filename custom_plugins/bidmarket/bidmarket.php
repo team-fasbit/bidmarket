@@ -17,6 +17,7 @@
      $tables_access= $wpdb->prefix . "access";
      $table_state= $wpdb->prefix . "state";
      $table_bids= $wpdb->prefix . "bids";
+     $table_offer= $wpdb->prefix . "contractor_offers";     
      $table_view_bids= $wpdb->prefix . "view_bids";
      $sql1 = "CREATE TABLE $table_owner( id int(11) NOT NULL, firstname text NOT NULL, lastname text NOT NULL, street text NOT NULL, city text NOT NULL, state text NOT NULL, zip text NOT NULL, phone text NOT NULL, phone2 text, email text NOT NULL, email2 text, customerid text, project text, description text NOT NULL, priorities text) ENGINE=InnoDB DEFAULT CHARSET=latin1;";
      $sql2= "ALTER TABLE $table_owner ADD PRIMARY KEY(id);";
@@ -41,7 +42,7 @@
      $sql21="insert into $table_priorities (name) values ('Reputation');";
      $sql22="insert into $table_priorities (name) values ('Project Start Date');";
      $sql23="insert into $table_priorities (name) values ('Project Completion Time');";
-     $sql24 = " CREATE TABLE $table_signups ( id int(11) NOT NULL, firstname text NOT NULL, lastname text NOT NULL, username text NOT NULL, password text NOT NULL, email text NOT NULL, signup_type int(1), validated int(1),signup_key int(11)) ENGINE=InnoDB DEFAULT CHARSET=latin1;";
+     $sql24 = " CREATE TABLE $table_signups ( id int(11) NOT NULL, firstname text NOT NULL, lastname text NOT NULL, username text NOT NULL, password text NOT NULL, email text NOT NULL, signup_type int(1), validated int(1),signup_key int(11), twitter text, facebook text, instagram text) ENGINE=InnoDB DEFAULT CHARSET=latin1;";
      $sql25= "ALTER TABLE $table_signups ADD PRIMARY KEY(id);";
      $sql26="ALTER TABLE $table_signups MODIFY id INT(11) NOT NULL AUTO_INCREMENT;";
      $sql27 = "CREATE TABLE $tables_access ( id int(11) NOT NULL, menu_item int(11), signup_type int(11)) ENGINE=InnoDB DEFAULT CHARSET=latin1;";
@@ -101,10 +102,13 @@
      $sql81="insert into $table_state (name, code) values ('Washington','WA');";
      $sql82="insert into $table_state (name, code) values ('Wisconsin','WI');";
      $sql83="insert into $table_state (name, code) values ('Wyoming','WY');";
-     $sql84 = "CREATE TABLE $table_bids ( id int(11) NOT NULL, owner_id int(11), contractor_id int(11), date_of_bid date, bid_number text, mount decimal(11,2), description text, status text, location text, image text, type text, priority text) ENGINE=InnoDB DEFAULT CHARSET=latin1;";
+     $sql84 = "CREATE TABLE $table_bids ( id int(11) NOT NULL, owner_id int(11), contractor_id int(11), date_of_bid date, bid_number text, amount decimal(11,2), description text, status text, location text, image text, type text, priority text) ENGINE=InnoDB DEFAULT CHARSET=latin1;";
      $sql85= "ALTER TABLE $table_bids ADD PRIMARY KEY(id);";
      $sql86="ALTER TABLE $table_bids MODIFY id INT(11) NOT NULL AUTO_INCREMENT;"; 
-     $sql87="CREATE VIEW $table_view_bids AS SELECT $table_bids.id as id, $table_bids.owner_id as owner_id, $table_bids.bid_number as bid_number, $table_bids.mount as mount, $table_bids.description as description,$table_bids.status as status,$table_contractors.company as company,$table_contractors.name as name,$table_contractors.website as website FROM $table_bids, $table_contractors WHERE $table_bids.contractor_id=$table_contractors.id order by $table_bids.id;";
+     $sql87="CREATE OR REPLACE VIEW $table_view_bids AS SELECT $table_bids.id as id, $table_bids.owner_id as owner_id, $table_bids.contractor_id as contractor_id, $table_owner.firstname as firstname, $table_owner.lastname as lastname, $table_bids.bid_number as bid_number, $table_bids.amount as amount, $table_bids.project as project, $table_bids.priority as priority, $table_bids.status as status, $table_bids.image as image, $table_bids.location as location, $table_bids.date_of_bid as date_of_bid, $table_bids.description as description, $table_contractors.name as name, $table_contractors.company as company, $table_contractors.website as website FROM $table_bids, $table_owner, $table_contractors WHERE $table_bids.owner_id=$table_owner.id AND $table_bids.contractor_id=$table_contractors.id ORDER BY $table_bids.id;";
+     $sql88 = " CREATE TABLE $table_offer ( id int(11) NOT NULL, offer_number text, contractor_id int(11), bid_id int(11), description text NOT NULL, amount decimal(11,2), startdate date) ENGINE=InnoDB DEFAULT CHARSET=latin1;";
+     $sql89= "ALTER TABLE $table_offer ADD PRIMARY KEY(id);";
+     $sql90="ALTER TABLE $table_offer MODIFY id INT(11) NOT NULL AUTO_INCREMENT;";
      $wpdb->query($sql1);
      $wpdb->query($sql2);
      $wpdb->query($sql3);
@@ -201,6 +205,9 @@
      $wpdb->query($sql84);
      $wpdb->query($sql85);
      $wpdb->query($sql86);
+     $wpdb->query($sql88);
+     $wpdb->query($sql89);
+     $wpdb->query($sql90);
     }
    function bidmarket_uninstall(){
       global $wpdb; 
@@ -332,7 +339,37 @@
           }          
           include('templates/account_contact_owner_template.php');
       }
-   } 
+   }
+   function view_account_contractor_contact(){
+      global $wpdb;    
+      $table_signups= $wpdb->prefix . "signups"; 
+      $verify_id=wp_get_current_user()->ID;
+      if( 'owner' == get_user_meta( $verify_id, '_type_of_user', true ) ) {
+        $url=home_url('/index.php/dashboard-owners/');
+        echo("<script>location.href = '".$url."'</script>");
+      }
+      else {
+          $id=wp_get_current_user()->ID;
+          $sql="SELECT * FROM $table_signups WHERE user_id = $id;";
+          $results_type = $wpdb->get_results($sql);
+          foreach ($results_type as $key) {
+            $signup_key=$key->signup_key;
+            $type=$key->signup_type;
+            $twitter=$key->twitter;
+            $facebook=$key->facebook;
+            $instagram=$key->instagram;
+          }
+          $table_contractors= $wpdb->prefix . "contractors";
+          $sql_contractors="SELECT * FROM $table_contractors WHERE id=$signup_key;";
+          $results_contractors = $wpdb->get_results($sql_contractors);
+          foreach ($results_contractors as $key_contractors) {
+            $phone1= $key_contractors->phone;
+            $phone2= $key_contractors->phone2;
+            $email1= $key_contractors->email;
+          }          
+          include('templates/account_contact_contractor_template.php');
+      }
+   }    
    function view_profile_owner_address(){
       global $wpdb;    
       $table_signups= $wpdb->prefix . "signups"; 
@@ -631,6 +668,30 @@
       include('templates/success_account_contact_owners_template.php');
       wp_die();
    }   
+   function update_scontractor_account(){
+      global $wpdb; 
+      $id= $_POST['id'];
+      $twitter= $_POST['twitter'];
+      $facebook= $_POST['facebook'];
+      $instagram= $_POST['instagram'];
+      $table_signups= $wpdb->prefix . "signups";
+      $data = array ('twitter'=> $twitter,
+          'facebook'=> $facebook,
+          'instagram'=> $instagram);
+      $format = array('%s','%s','%s');
+      $where = array ('signup_key' => $id, 'signup_type'=> 2);
+      $wpdb->update( $table_signups, $data, $where, $format );
+      $table_contractors= $wpdb->prefix . "contractors";
+      $sql_contractors="SELECT * FROM $table_contractors WHERE id=$id;";
+      $results_contractors = $wpdb->get_results($sql_contractors);
+      foreach ($results_contractors as $key_contractors) {
+        $phone1= $key_contractors->phone;
+        $phone2= $key_contractors->phone2;
+        $email1= $key_contractors->email;
+      }         
+      include('templates/success_account_contact_contractor_template.php');
+      wp_die();
+   }   
    function update_profile_owner(){
       global $wpdb; 
       $id= $_POST['id'];
@@ -756,6 +817,18 @@
       } 
       include('templates/account_info_template.php');
    }
+   function view_dashboard_calendar_info(){
+      global $wpdb;
+      $table_view_bids= $wpdb->prefix . "view_bids"; 
+      $results_bids = $wpdb->get_results("SELECT * FROM $table_view_bids where status='accepted';");
+      include('templates/contractors_dashboard_calendar_template.php');
+   }    
+   function view_available_project_info(){
+      global $wpdb;
+      $table_view_bids= $wpdb->prefix . "view_bids"; 
+      $results_bids = $wpdb->get_results("SELECT * FROM $table_view_bids where status='sent';");
+      include('templates/contractors_dashboard_table_available_projects_template.php');
+   }   
    function modal_bid(){
       global $wpdb; 
       $owner_id=$_POST['id'];
@@ -1581,6 +1654,7 @@
   add_action( 'wp_ajax_nopriv_update_profile_owner', 'update_profile_owner' ); 
   add_action('wp_ajax_update_social_account', 'update_social_account');
   add_action( 'wp_ajax_nopriv_update_social_account', 'update_social_account' ); 
-
+  add_action('wp_ajax_update_scontractor_account', 'update_scontractor_account');
+  add_action( 'wp_ajax_nopriv_update_scontractor_account', 'update_scontractor_account' ); 
   add_action('activate_bidmarket/bidmarket.php','bidmarket_install');
   add_action('deactivate_bidmarket/bidmarket.php', 'bidmarket_uninstall');
