@@ -40,58 +40,19 @@
       </h5>
       <div class="row">
         <div class="col">
-          <div class="row">
-            <div class="col">
-              <div class="row">              
-                <div class="col">
-                  <div class="card">
-                    <div class="card-header">Report Last 30 days</div>
-                    <div class="card-body">
-                      <p>0<br>Received</p><br>
-                      <p>$ 0.00<br>Spent</p>
-                    </div>
-                  </div>
-                </div>                
-              </div>
-              <div class="row">              
-                <div class="col">
-                  <div class="card">
-                    <div class="card-header">Missed Lead</div>
-                    <div class="card-body">0</div>
-                  </div>                
-                </div>
-              </div>
-              <div class="row">              
-              <div class="col">
-                <div class="card">
-                  <div class="card-header">Missed Potential Jobs</div>
-                  <div class="card-body">$ 0.00</div>
-                </div>                
-              </div>
-              </div>
-              <div class="row">              
-                <div class="col">
-                  <div class="card">
-                    <div class="card-header">Average Quote</div>
-                    <div class="card-body">$ 0.00</div>
-                  </div>                
-                </div>
-              </div>
-              <div class="row">              
-                <div class="col">
-                  <div class="card">
-                    <div class="card-header">Jobs won</div>
-                    <div class="card-body">$ 0.00</div>
-                  </div>                
-                </div>
+          <div class="card">
+            <div class="card-header"><i class="fa fa-gavel"></i> My Projects</div>
+              <div class="card-body">
+                <?php view_contractors_project_info(); ?>
               </div>
             </div>
-            <div class="col">
-              <div class="card">
-                <div class="card-header">My Offers</div>
-                <div class="card-body"></div>
+          </div>                
+        <div class="col">
+          <div class="card">
+            <div class="card-header"><i class="fa fa-send"></i> My Offers</div>
+              <div class="card-body">
+                <?php view_contractors_offer_info(); ?>                
               </div>
-            </div>
           </div>
         </div>
       </div>

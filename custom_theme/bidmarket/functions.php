@@ -50,6 +50,7 @@ function bootstrap_styles() {
    wp_enqueue_style('calensartheme', get_template_directory_uri() . '/assets/css/fullcalendar.min.css');
    wp_enqueue_style('upload_file', get_template_directory_uri() . '/assets/css/jquery-file-upload.css');
    wp_enqueue_style('uploadfile', get_template_directory_uri() . '/assets/css/uploadfile.css');
+   wp_enqueue_style('datepicker', get_template_directory_uri() . '/assets/css/bootstrap-datepicker3.min.css');
    wp_enqueue_style( 'style',get_template_directory_uri() .'/assets/css/style.css');        
 }
 add_action( 'wp_enqueue_scripts', 'bootstrap_styles');
@@ -80,6 +81,7 @@ function jquery_load_scripts() {
    wp_enqueue_script( "chartutils", get_template_directory_uri() . '/assets/js/utils.js', array( 'jquery' ) );       
    wp_enqueue_script( "chart", get_template_directory_uri() . '/assets/js/Chart.js', array( 'jquery' ) ); 
    wp_enqueue_script( "jfileupload", get_template_directory_uri() . '/assets/js/jquery-file-upload.min.js', array( 'jquery' ) ); 
+   wp_enqueue_script( "jdatepicker", get_template_directory_uri() . '/assets/js/bootstrap-datepicker.min.js', array( 'jquery' ) ); 
 }
 add_action( 'wp_enqueue_scripts', 'jquery_load_scripts');
 function show_type_logged_user(){

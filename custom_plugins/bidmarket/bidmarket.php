@@ -17,8 +17,9 @@
      $tables_access= $wpdb->prefix . "access";
      $table_state= $wpdb->prefix . "state";
      $table_bids= $wpdb->prefix . "bids";
-     $table_offer= $wpdb->prefix . "contractor_offers";     
+     $table_offer= $wpdb->prefix . "offer";     
      $table_view_bids= $wpdb->prefix . "view_bids";
+     $table_view_offers= $wpdb->prefix . "view_offers";
      $sql1 = "CREATE TABLE $table_owner( id int(11) NOT NULL, firstname text NOT NULL, lastname text NOT NULL, street text NOT NULL, city text NOT NULL, state text NOT NULL, zip text NOT NULL, phone text NOT NULL, phone2 text, email text NOT NULL, email2 text, customerid text, project text, description text NOT NULL, priorities text) ENGINE=InnoDB DEFAULT CHARSET=latin1;";
      $sql2= "ALTER TABLE $table_owner ADD PRIMARY KEY(id);";
      $sql3="ALTER TABLE $table_owner MODIFY id INT(11) NOT NULL AUTO_INCREMENT;";
@@ -109,6 +110,7 @@
      $sql88 = " CREATE TABLE $table_offer ( id int(11) NOT NULL, offer_number text, contractor_id int(11), bid_id int(11), description text NOT NULL, amount decimal(11,2), startdate date) ENGINE=InnoDB DEFAULT CHARSET=latin1;";
      $sql89= "ALTER TABLE $table_offer ADD PRIMARY KEY(id);";
      $sql90="ALTER TABLE $table_offer MODIFY id INT(11) NOT NULL AUTO_INCREMENT;";
+     $sql91="CREATE OR REPLACE VIEW $table_view_offers AS SELECT $table_offer.id as id, $table_offer.amount as amount, $table_offer.contractor_id as contractor_id, $table_offer.description as description, $table_offer.offer_number as offer_number, $table_offer.startdate as startdate, $table_offer.status as status, $table_offer.bid_id bid_id, $table_bids.owner_id as owner_id, $table_bids.bid_number as bid_number, $table_bids.description as bid_description, $table_bids.image as bid_image, $table_bids.location as bid_location, $table_bids.project as bid_project, $table_bids.priority as bid_priority, $table_owner.firstname as owner_firstname, $table_owner.lastname as owner_lastname, $table_contractors.company as contractor_company, $table_contractors.name as contractor_name, $table_contractors.website as contractor_website, $table_contractors.email as contractor_email, $table_contractors.phone as contractor_phone, $table_contractors.city as contractor_city, $table_contractors.street as contractor_street, $table_contractors.state as contractor_state, $table_contractors.zip as contractor_zip FROM $table_offer, $table_bids, $table_owner, $table_contractors WHERE $table_offer.bid_id=$table_bids.id AND $table_offer.contractor_id=$table_contractors.id AND $table_bids.owner_id=$table_owner.id ORDER BY $table_offer.id;";
      $wpdb->query($sql1);
      $wpdb->query($sql2);
      $wpdb->query($sql3);
@@ -208,6 +210,7 @@
      $wpdb->query($sql88);
      $wpdb->query($sql89);
      $wpdb->query($sql90);
+     $wpdb->query($sql91);
     }
    function bidmarket_uninstall(){
       global $wpdb; 
@@ -822,7 +825,33 @@
       $table_view_bids= $wpdb->prefix . "view_bids"; 
       $results_bids = $wpdb->get_results("SELECT * FROM $table_view_bids where status='accepted';");
       include('templates/contractors_dashboard_calendar_template.php');
-   }    
+   }
+   function view_contractors_project_info(){
+      global $wpdb;
+      $table_signups=$wpdb->prefix . "signups";   
+      $id=wp_get_current_user()->ID;
+      $sql="SELECT * FROM $table_signups WHERE user_id = $id;";
+      $results_type = $wpdb->get_results($sql);
+      foreach ($results_type as $key) {
+        $signup_key=$key->signup_key;
+      }
+      $table_view_bids= $wpdb->prefix . "view_bids"; 
+      $results_bids = $wpdb->get_results("SELECT * FROM $table_view_bids where contractor_id=$signup_key;");
+      include('templates/view_contractors_bids_template.php');
+   }
+   function view_contractors_offer_info(){
+      global $wpdb;
+      $table_signups=$wpdb->prefix . "signups";   
+      $id=wp_get_current_user()->ID;
+      $sql="SELECT * FROM $table_signups WHERE user_id = $id;";
+      $results_type = $wpdb->get_results($sql);
+      foreach ($results_type as $key) {
+        $signup_key=$key->signup_key;
+      }
+      $table_view_offers= $wpdb->prefix . "view_offers"; 
+      $results_offers = $wpdb->get_results("SELECT * FROM $table_view_offers where contractor_id=$signup_key;");
+      include('templates/view_contractors_offers_template.php');
+   }            
    function view_available_project_info(){
       global $wpdb;
       $table_view_bids= $wpdb->prefix . "view_bids"; 
@@ -860,6 +889,79 @@
 
       wp_die();    
    }
+   function offer_form(){
+      global $wpdb; 
+      $bid_id=$_POST['id'];
+      include('templates/view_offer_form_template.php');
+      wp_die();    
+   }   
+   function send_offer(){
+      global $wpdb; 
+      $offer_amount=$_POST['offer_amount'];
+      $start_date=$_POST['start_date'];
+      $offer_bid_id=$_POST['offer_bid_id'];
+      $offer_description=$_POST['offer_description'];
+      $table_offer= $wpdb->prefix . "offer"; 
+      $offernumber=random_int(0, 9999999);
+      $user_id=wp_get_current_user()->ID;
+      $table_signup= $wpdb->prefix . "signups";
+      $results_signup = $wpdb->get_results("SELECT * FROM $table_signup where user_id=$user_id;");
+      foreach ($results_signup as $key_su) {
+              $contractor_id=$key_su->signup_key;
+      }
+      $table_bids= $wpdb->prefix . "bids";
+      $results_bids = $wpdb->get_results("SELECT * FROM $table_bids where id=$offer_bid_id;");
+      if (count($results_bids)> 0) {
+        foreach ($results_bids as $key_bid) {
+          $owner_id=$key_bid->owner_id;
+        }
+      }
+      $results_signup_owner = $wpdb->get_results("SELECT * FROM $table_signup where signup_key=$owner_id and signup_type=1;");
+      if (count($results_signup_owner)> 0) {
+        foreach ($results_signup_owner as $key_so) {
+          $email=$key_so->email;
+        }
+      }
+      $data_offer= array('offer_number'=> $offernumber,
+        'contractor_id'=>$contractor_id,
+        'bid_id'=>$offer_bid_id,
+        'description'=>$offer_description,
+        'amount'=>$offer_amount,
+        'startdate'=>$start_date);
+      $format_offer = array('%s','%d','%d','%s','%d','%s');
+      $wpdb->insert($table_offer,$data_offer,$format_offer);
+      $my_id = $wpdb->insert_id;
+      if($my_id>0){
+        $query=$wpdb->last_query;
+        $subject="BidMarket offer";
+        $message="<!DOCTYPE html>";
+        $message.="<html>";
+        $message.="<head>";
+        $message.="<title>Offer message</title>";
+        $message.="</head>";
+        $message.="<body>";
+        $message.="<div class='container'>
+                   <div class='row'>
+                   <div class='col-md-6 col-text-center'>
+                   <img src='".get_template_directory_uri()."/assets/img/logo.png'></img>
+                   </div>
+                   </div>";
+        $message.="<div class='row'>";
+        $message.="<div class='col-md-6 col-text-center'>";
+        $message.="<span>";
+        $message.="<h4>";
+        $message.="<i class='fa fa-check'></i><br>";
+        $message.="<strong>You have a new offer!</strong> <br><br>";
+        $message.="<p>You have a new offer in BidMarket. Please click on the link bellow to view the information</p><br><br>
+                      <a type='button' class='btn btn-primary' href='".get_site_url()."/index.php/view_offer/?offer_id=".$my_id."'>View offer</a>
+                   </h4>
+                   </span></div></div></div>";
+        $message.="</body>";
+        $message.="</html>";
+        wp_mail($email, $subject, $message);
+      }
+      wp_die();
+   }   
    function view_info(){
       global $wpdb; 
       $bid_id=$_POST['id'];
@@ -1654,6 +1756,10 @@
   add_action( 'wp_ajax_nopriv_update_profile_owner', 'update_profile_owner' ); 
   add_action('wp_ajax_update_social_account', 'update_social_account');
   add_action( 'wp_ajax_nopriv_update_social_account', 'update_social_account' ); 
+  add_action('wp_ajax_offer_form', 'offer_form');
+  add_action( 'wp_ajax_nopriv_offer_form', 'offer_form' ); 
+  add_action('wp_ajax_send_offer', 'send_offer');
+  add_action( 'wp_ajax_nopriv_send_offer', 'send_offer' ); 
   add_action('wp_ajax_update_scontractor_account', 'update_scontractor_account');
   add_action( 'wp_ajax_nopriv_update_scontractor_account', 'update_scontractor_account' ); 
   add_action('activate_bidmarket/bidmarket.php','bidmarket_install');

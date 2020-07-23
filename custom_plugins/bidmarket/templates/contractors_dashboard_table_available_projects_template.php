@@ -22,6 +22,7 @@
             <td> <?php echo $key_bid->priority; ?> </td> 
             <td>
                 <a type="button" class="btn btn-primary bidmarket_button" data-toggle="modal" data-target="#myAvailableProjectsModal" onclick="view_info(<?php echo $key_bid->id; ?>)"><i class="fa fa-info-circle"></i></a>
+                <a type="button" class="btn btn-primary bidmarket_button" data-toggle="modal" data-target="#mySendOfferModal" onclick="send_offer(<?php echo $key_bid->id; ?>)"><i class="fa fa-send"></i></a>                
             </td>
           </tr>
           <?php
@@ -65,6 +66,31 @@
     </div>
   </div>
 </div>
+<div class="modal" id="mySendOfferModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title"><i class="fa fa-send"></i></h4>
+
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+        <div id="modal_offer_body">
+        </div>
+      </div>
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+      </div>
+
+    </div>
+  </div>
+</div>
 <script type="text/javascript">
   var ajaxurl = "<?php echo admin_url('admin-ajax.php'); ?>";    
   jQuery("#table_available_projects").dataTable({
@@ -84,5 +110,14 @@
     jQuery.post(ajaxurl, data, function(response) {
       jQuery("#modal_available_body").html((response));
     });
-  }    
+  } 
+  function send_offer(id){
+    var data= {
+        action:'offer_form',
+        id: id
+    };
+    jQuery.post(ajaxurl, data, function(response) {
+      jQuery("#modal_offer_body").html((response));
+    });
+  }       
 </script>      
