@@ -851,7 +851,20 @@
       $table_view_offers= $wpdb->prefix . "view_offers"; 
       $results_offers = $wpdb->get_results("SELECT * FROM $table_view_offers where contractor_id=$signup_key;");
       include('templates/view_contractors_offers_template.php');
-   }            
+   }
+   function view_owners_offer_info(){
+      global $wpdb;
+      $table_signups=$wpdb->prefix . "signups";   
+      $id=wp_get_current_user()->ID;
+      $sql="SELECT * FROM $table_signups WHERE user_id = $id;";
+      $results_type = $wpdb->get_results($sql);
+      foreach ($results_type as $key) {
+        $signup_key=$key->signup_key;
+      }
+      $table_view_offers= $wpdb->prefix . "view_offers"; 
+      $results_offers = $wpdb->get_results("SELECT * FROM $table_view_offers where owner_id=$signup_key;");
+      include('templates/view_owner_offers_template.php');
+   }                
    function view_available_project_info(){
       global $wpdb;
       $table_view_bids= $wpdb->prefix . "view_bids"; 
@@ -895,16 +908,46 @@
       include('templates/view_offer_form_template.php');
       wp_die();    
    }   
+   function view_offer(){
+      global $wpdb; 
+      $bid_id=$_POST['id'];
+      $key=$_POST['key'];
+      $table_signups=$wpdb->prefix . "signups";   
+      $id=wp_get_current_user()->ID;
+      $sql="SELECT * FROM $table_signups WHERE user_id = $id;";
+      $results_type = $wpdb->get_results($sql);
+      foreach ($results_type as $key_type) {
+        $signup_key=$key_type->signup_key;
+      }
+      $table_view_offers= $wpdb->prefix . "view_offers"; 
+      $sql_view_offers="SELECT * FROM $table_view_offers where contractor_id=$signup_key AND bid_id=$bid_id";
+      $results_offers = $wpdb->get_results($sql_view_offers);
+      foreach ($results_offers as $key_offer) {
+        $offer_number=$key_offer->offer_number;
+        $startdate=$key_offer->startdate;
+        $amount=$key_offer->amount;
+        $description=$key_offer->description;
+        $contractor_email=$key_offer->contractor_email;
+        $contractor_phone=$key_offer->contractor_phone;
+        $contractor_street=$key_offer->contractor_street;
+        $contractor_state=$key_offer->contractor_state;
+        $contractor_zip=$key_offer->contractor_zip;
+      }      
+      include('templates/view_offer_template.php');
+      wp_die();    
+   }   
    function send_offer(){
       global $wpdb; 
       $offer_amount=$_POST['offer_amount'];
-      $start_date=$_POST['start_date'];
+      $date=$_POST['start_date'];
       $offer_bid_id=$_POST['offer_bid_id'];
       $offer_description=$_POST['offer_description'];
       $table_offer= $wpdb->prefix . "offer"; 
       $offernumber=random_int(0, 9999999);
       $user_id=wp_get_current_user()->ID;
       $table_signup= $wpdb->prefix . "signups";
+      $date_offer=explode('/', $date);
+      $start_date=$date_offer[2].'-'.$date_offer[0].'-'.$date_offer[1];
       $results_signup = $wpdb->get_results("SELECT * FROM $table_signup where user_id=$user_id;");
       foreach ($results_signup as $key_su) {
               $contractor_id=$key_su->signup_key;
@@ -1579,7 +1622,27 @@
     $wpdb->update( $table_owner, $data, $where, $format );
     echo "Success";
     wp_die();       
-  }              
+  }
+  function set_button($bid_id){
+    global $wpdb;
+    $id=wp_get_current_user()->ID;
+    $table_signups= $wpdb->prefix . "signups";   
+    $sql="SELECT * FROM $table_signups WHERE user_id = $id;";
+    $results_type = $wpdb->get_results($sql);
+    foreach ($results_type as $key) {
+      $signup_key=$key->signup_key;
+    }     
+    $table_view_offers= $wpdb->prefix . "view_offers"; 
+    $results_offers = $wpdb->get_results("SELECT * FROM $table_view_offers where contractor_id=$signup_key and bid_id=$bid_id;");
+    return count($results_offers);
+  }
+  function available_table(){
+    global $wpdb;
+    $table_view_bids= $wpdb->prefix . "view_bids"; 
+    $results_bids = $wpdb->get_results("SELECT * FROM $table_view_bids where status='sent';");
+    include('templates/available_projects.php');
+    wp_die();
+  }                 
    add_shortcode( 'cr_view_all_owners', 'view_all_owners_shortcode' );
    function view_all_owners_shortcode() {
        ob_start();
@@ -1762,5 +1825,9 @@
   add_action( 'wp_ajax_nopriv_send_offer', 'send_offer' ); 
   add_action('wp_ajax_update_scontractor_account', 'update_scontractor_account');
   add_action( 'wp_ajax_nopriv_update_scontractor_account', 'update_scontractor_account' ); 
+  add_action('wp_ajax_available_table', 'available_table');
+  add_action( 'wp_ajax_nopriv_available_table', 'available_table' ); 
+  add_action('wp_ajax_view_offer', 'view_offer');
+  add_action( 'wp_ajax_nopriv_view_offer', 'view_offer' );   
   add_action('activate_bidmarket/bidmarket.php','bidmarket_install');
   add_action('deactivate_bidmarket/bidmarket.php', 'bidmarket_uninstall');

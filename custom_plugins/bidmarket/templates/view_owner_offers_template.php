@@ -3,8 +3,8 @@
 <thead>
 	<tr>
     <th>Offer ID</th> 
-    <th>Project Type</th> 
-    <th>Priority</th> 
+    <th>Company</th> 
+    <th>Name</th> 
     <th>Amount</th> 
     <th>Options</th>
   </tr>
@@ -15,8 +15,8 @@ foreach ($results_offers as $key_offer) {
 ?>	
   <tr>
     <td> <?php echo $key_offer->offer_number; ?> </td>  
-    <td> <?php echo $key_offer->bid_project; ?> </td> 
-    <td> <?php echo $key_offer->bid_priority; ?> </td> 
+    <td> <?php echo $key_offer->contractor_company; ?> </td> 
+    <td> <?php echo $key_offer->contractor_name; ?> </td> 
     <td> <?php echo $key_offer->amount; ?> </td> 
     <td>
       <a type="button" class="btn btn-primary bidmarket_button" data-toggle="modal" data-target="#myContractorOfferModal" onclick="view_this_offer(<?php echo $key_offer->bid_id; ?>)"><i class="fa fa-info-circle"></i></a>
@@ -29,8 +29,8 @@ foreach ($results_offers as $key_offer) {
 <tfoot>
   <tr>
     <th>Offer ID</th> 
-    <th>Project Type</th> 
-    <th>Priority</th> 
+    <th>Company</th> 
+    <th>Name</th> 
     <th>Amount</th> 
     <th>Options</th>
     </tr>
@@ -79,7 +79,7 @@ jQuery(document).ready( function($) {
     var data= {
         action:'view_offer',
         id: id,
-        key:'0'
+        key: '1'
     };
     jQuery.post(ajaxurl, data, function(response) {
       jQuery("#offer_contractor_modal_body").html((response));

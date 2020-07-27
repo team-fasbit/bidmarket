@@ -38,9 +38,9 @@
         </div>
         <div class="col">
           <div class="card">
-            <div class="card-header"><i class="fa fa-wrench"></i> Contractors</div>
+            <div class="card-header"><i class="fa fa-send"></i> Contractors Offers</div>
               <div class="card-body">
-               List of contractors...
+               <?php view_owners_offer_info(); ?>
               </div>
           </div>
         </div>

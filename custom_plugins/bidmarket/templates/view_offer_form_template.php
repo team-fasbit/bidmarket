@@ -92,7 +92,8 @@ jQuery(document).ready( function($) {
             };
             jQuery.post(ajaxurl, data, function(response) {          
                 alert('Success');
-                //jQuery("#container_form_offer").html((response));
+                jQuery("#table_dashboard_contractors_projects").html((response));
+                jQuery("#mySendOfferModal").modal('hide');
             });            
           }
         });       
