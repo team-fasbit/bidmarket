@@ -51,7 +51,9 @@
           <div class="card">
             <div class="card-header"><i class="fa fa-send"></i> My Offers</div>
               <div class="card-body">
-                <?php view_contractors_offer_info(); ?>                
+                <div id="contractors_offer">
+                <?php view_contractors_offer_info(); ?> 
+                </div>               
               </div>
           </div>
         </div>

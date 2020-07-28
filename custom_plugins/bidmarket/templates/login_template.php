@@ -35,12 +35,12 @@
     <div class="row">
       <div class="col">
         <div class="form-group">
-          <a href="<?php echo get_site_url().'/index.php/recover-password'; ?>" class="text-muted"><i class="fa fa-lock"></i> Forgot your password?</a>  
+          <a href="<?php echo get_site_url().'/index.php/recover-password'; ?>" class="text-links"><i class="fa fa-lock"></i> Forgot your password?</a>  
         </div>
       </div>
       <div class="col">
         <div class="form-group">
-          <a href="<?php echo get_site_url().'/index.php/sign-up/'; ?>" class="text-muted"><i class="fa fa-user"></i> Create an account</a>
+          <a href="<?php echo get_site_url().'/index.php/sign-up/'; ?>" class="text-links"><i class="fa fa-user"></i> Create an account</a>
         </div>
       </div>              
     </div>

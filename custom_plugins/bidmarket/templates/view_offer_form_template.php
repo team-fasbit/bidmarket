@@ -4,14 +4,6 @@
     <div class="row">
       <div class="col">
         <div class="form-group">
-            Amount:
-            <input type="text" name="offer_amount" id="offer_amount" class="form-control">
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col">
-        <div class="form-group">
             Start date:
             <input type="text" name="start_date" id="start_date" class="form-control">
         </div>
@@ -29,6 +21,7 @@
       <div class="col">
         <div class="form-group">
             <input type="hidden" name="offer_bid_id" id="offer_bid_id" value="<?php echo $bid_id; ?>">
+            <input type="hidden" name="offer_amount" id="offer_amount" value="<?php echo $amount; ?>">            
             <button type="submit" class="btn btn-primary bidmarket_button"><i class="fa fa-send"></i> Send</button>
         </div>
       </div>
@@ -61,7 +54,6 @@ jQuery(document).ready( function($) {
         jQuery("#offer_form").validate({
           ignore: [],
           rules: {
-                 offer_amount:"required",
                  start_date:"required",
                  offer_description: { required: function(textarea) {
                     CKEDITOR.instances[textarea.id].updateElement();
@@ -70,7 +62,6 @@ jQuery(document).ready( function($) {
                  } },
           },
           messages: {
-             offer_amount: "Please enter first name",
              start_date: "Please enter last name",
              offer_description: "Please enter description",
           },
@@ -93,9 +84,18 @@ jQuery(document).ready( function($) {
             jQuery.post(ajaxurl, data, function(response) {          
                 alert('Success');
                 jQuery("#table_dashboard_contractors_projects").html((response));
+                update_offer_table();
                 jQuery("#mySendOfferModal").modal('hide');
             });            
           }
         });       
-});    
+});
+function update_offer_table(){
+            var data= {
+                action:'contractors_offer',
+            };
+            jQuery.post(ajaxurl, data, function(response) {          
+                jQuery("#contractors_offer").html((response));
+            });   
+}    
 </script>

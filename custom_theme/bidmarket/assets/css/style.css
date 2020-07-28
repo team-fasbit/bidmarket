@@ -668,3 +668,12 @@ a.nav-link{
 .login_control{
   width: 250px;
 }
+.text-links{
+  color:#102e43;
+  text-decoration: none;
+
+}
+a.text-links:hover{
+  color: #2d60e1;
+  text-decoration: none;
+}

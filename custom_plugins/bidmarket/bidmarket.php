@@ -111,6 +111,7 @@
      $sql89= "ALTER TABLE $table_offer ADD PRIMARY KEY(id);";
      $sql90="ALTER TABLE $table_offer MODIFY id INT(11) NOT NULL AUTO_INCREMENT;";
      $sql91="CREATE OR REPLACE VIEW $table_view_offers AS SELECT $table_offer.id as id, $table_offer.amount as amount, $table_offer.contractor_id as contractor_id, $table_offer.description as description, $table_offer.offer_number as offer_number, $table_offer.startdate as startdate, $table_offer.status as status, $table_offer.bid_id bid_id, $table_bids.owner_id as owner_id, $table_bids.bid_number as bid_number, $table_bids.description as bid_description, $table_bids.image as bid_image, $table_bids.location as bid_location, $table_bids.project as bid_project, $table_bids.priority as bid_priority, $table_owner.firstname as owner_firstname, $table_owner.lastname as owner_lastname, $table_contractors.company as contractor_company, $table_contractors.name as contractor_name, $table_contractors.website as contractor_website, $table_contractors.email as contractor_email, $table_contractors.phone as contractor_phone, $table_contractors.city as contractor_city, $table_contractors.street as contractor_street, $table_contractors.state as contractor_state, $table_contractors.zip as contractor_zip FROM $table_offer, $table_bids, $table_owner, $table_contractors WHERE $table_offer.bid_id=$table_bids.id AND $table_offer.contractor_id=$table_contractors.id AND $table_bids.owner_id=$table_owner.id ORDER BY $table_offer.id;";
+     $sql92="INSERT INTO $table_contractors (id, company, street, city, state, zip, phone, email, website, name, phone2, email_v, registration, date_of_registration) VALUES (0, 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 'none', 0, '0', '2020-07-09')";
      $wpdb->query($sql1);
      $wpdb->query($sql2);
      $wpdb->query($sql3);
@@ -204,6 +205,7 @@
      $wpdb->query($sql81);
      $wpdb->query($sql82);
      $wpdb->query($sql83);
+     $wpdb->query($sql92);     
      $wpdb->query($sql84);
      $wpdb->query($sql85);
      $wpdb->query($sql86);
@@ -302,7 +304,7 @@
             $type=$key->signup_type;
           }
           $table_owner= $wpdb->prefix . "owner";
-          $sql_owner="SELECT * FROM $table_owner WHERE id=$signup_key and signup_type=1;";
+          $sql_owner="SELECT * FROM $table_owner WHERE id=$signup_key;";
           $result_owner = $wpdb->get_results($sql_owner);
           foreach ($result_owner as $key_owner) {
             $projects= $key_owner->project;
@@ -905,9 +907,30 @@
    function offer_form(){
       global $wpdb; 
       $bid_id=$_POST['id'];
+      $table_bids= $wpdb->prefix . "bids";
+      $results_bids = $wpdb->get_results("SELECT * FROM $table_bids where id=$bid_id;");
+      if (count($results_bids)> 0) {
+        foreach ($results_bids as $key_bid) {
+          $amount=$key_bid->amount;
+        }
+      }      
       include('templates/view_offer_form_template.php');
       wp_die();    
-   }   
+   }
+   function contractors_offer(){
+      global $wpdb;
+      $table_signups=$wpdb->prefix . "signups";   
+      $id=wp_get_current_user()->ID;
+      $sql="SELECT * FROM $table_signups WHERE user_id = $id;";
+      $results_type = $wpdb->get_results($sql);
+      foreach ($results_type as $key) {
+        $signup_key=$key->signup_key;
+      }
+      $table_view_offers= $wpdb->prefix . "view_offers"; 
+      $results_offers = $wpdb->get_results("SELECT * FROM $table_view_offers where contractor_id=$signup_key;");
+      include('templates/view_contractors_offers_template.php');
+      wp_die(); 
+   }      
    function view_offer(){
       global $wpdb; 
       $bid_id=$_POST['id'];
@@ -953,9 +976,9 @@
               $contractor_id=$key_su->signup_key;
       }
       $table_bids= $wpdb->prefix . "bids";
-      $results_bids = $wpdb->get_results("SELECT * FROM $table_bids where id=$offer_bid_id;");
-      if (count($results_bids)> 0) {
-        foreach ($results_bids as $key_bid) {
+      $result_bids = $wpdb->get_results("SELECT * FROM $table_bids where id=$offer_bid_id;");
+      if (count($result_bids)> 0) {
+        foreach ($result_bids as $key_bid) {
           $owner_id=$key_bid->owner_id;
         }
       }
@@ -1002,6 +1025,9 @@
         $message.="</body>";
         $message.="</html>";
         wp_mail($email, $subject, $message);
+        $table_view_bids= $wpdb->prefix . "view_bids"; 
+        $results_bids = $wpdb->get_results("SELECT * FROM $table_view_bids where status='sent';");
+        include('templates/available_projects.php');
       }
       wp_die();
    }   
@@ -1828,6 +1854,8 @@
   add_action('wp_ajax_available_table', 'available_table');
   add_action( 'wp_ajax_nopriv_available_table', 'available_table' ); 
   add_action('wp_ajax_view_offer', 'view_offer');
-  add_action( 'wp_ajax_nopriv_view_offer', 'view_offer' );   
+  add_action( 'wp_ajax_nopriv_view_offer', 'view_offer' );
+  add_action('wp_ajax_contractors_offer', 'contractors_offer');
+  add_action( 'wp_ajax_nopriv_contractors_offer', 'contractors_offer' );
   add_action('activate_bidmarket/bidmarket.php','bidmarket_install');
   add_action('deactivate_bidmarket/bidmarket.php', 'bidmarket_uninstall');
