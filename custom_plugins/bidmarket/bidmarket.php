@@ -942,8 +942,13 @@
       foreach ($results_type as $key_type) {
         $signup_key=$key_type->signup_key;
       }
-      $table_view_offers= $wpdb->prefix . "view_offers"; 
-      $sql_view_offers="SELECT * FROM $table_view_offers where contractor_id=$signup_key AND bid_id=$bid_id";
+      $table_view_offers= $wpdb->prefix . "view_offers";
+      if($key=='1'){
+        $sql_view_offers="SELECT * FROM $table_view_offers where owner_id=$signup_key AND bid_id=$bid_id";
+      } 
+      else {
+        $sql_view_offers="SELECT * FROM $table_view_offers where contractor_id=$signup_key AND bid_id=$bid_id";
+      }
       $results_offers = $wpdb->get_results($sql_view_offers);
       foreach ($results_offers as $key_offer) {
         $offer_number=$key_offer->offer_number;

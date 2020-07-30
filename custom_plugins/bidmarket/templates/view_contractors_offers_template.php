@@ -79,7 +79,7 @@ jQuery(document).ready( function($) {
     var data= {
         action:'view_offer',
         id: id,
-        key:'0'
+        key:'2'
     };
     jQuery.post(ajaxurl, data, function(response) {
       jQuery("#offer_contractor_modal_body").html((response));

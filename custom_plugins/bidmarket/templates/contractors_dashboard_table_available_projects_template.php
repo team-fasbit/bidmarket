@@ -131,7 +131,7 @@
     var data= {
         action:'view_offer',
         id: id,
-        key:'0'
+        key:'2'
     };
     jQuery.post(ajaxurl, data, function(response) {
       jQuery("#modal_offer_body").html((response));

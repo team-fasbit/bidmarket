@@ -19,28 +19,24 @@
   <!--==========================
   Header
   ============================-->
-  <header id="header">
-    <div class="container-fluid">
-      <div id="logo" class="pull-left">
-        <a href="<?php echo get_site_url(); ?>"><img src="<?php echo get_template_directory_uri(); ?>/assets/img/logo.png" alt="" title="" /></img></a>
-      </div>
-        
-    <nav id="nav-menu-container" class="navbar navbar-expand-sm">
       <?php
       if ( is_user_logged_in() ) {
-        echo "<span class='top-buttons'><a type='button' class='btn btn-primary top-button' href=".wp_logout_url(get_site_url()).">Log out</a></span>";       
-       } else {
-         ?>
-         <span class="top-buttons"><a type="button" class="btn btn-primary top-button" href="<?php echo get_site_url(); ?>/index.php/log-in/">Log in</a></span>
-         <span class="top-buttons"><a type="button" class="btn btn-primary top-button" href="<?php echo get_site_url(); ?>/index.php/sign-up/">Sign up</a>
-         <?php
-       }
+        echo '<header id="header" class="header_logged_in"><div class="container-fluid">';
+        echo '<div id="logo" class="logo_logged_in">';
+        echo '<div class="social-links"><a href="'.get_site_url().'" class="bidmarket_icon"><i class="fa fa-home"></i> </a> <a href="'.get_site_url().'" class="bidmarket_icon_text">BidMarket.net</a></div></div>';
+        echo '</div><div id="welcome" class="welcome_logged_in">WELCOME TO BIDMARKET</div>';
+        echo '<nav id="nav-menu-container" class="navbar navbar-expand-sm nav_logged_in">';
+        echo "<span class='top-buttons'><a class='top-links' href=".wp_logout_url(get_site_url()).">Log out</a></span>";       
+        echo '</nav></div></header>';
+      } else {
+        echo '<header id="header"><div class="container-fluid">';
+        echo '<div id="logo">';
+        echo '<div class="social-links"><a href="'.get_site_url().'" class="bidmarket_icon"><i class="fa fa-home"></i> </a> <a href="'.get_site_url().'" class="bidmarket_icon_text">BidMarket.net</a></div></div>';
+        echo '</div><div id="welcome">WELCOME TO BIDMARKET</div>';
+        echo '<nav id="nav-menu-container" class="navbar navbar-expand-sm">';
+        echo '<span class="top-buttons"><a class="top-links" href="'.get_site_url().'/index.php/log-in/">Log in</a></span>';
+        echo '<span class="top-buttons"><a class="top-links" href="'.get_site_url().'/index.php/sign-up/">Sign up</a>';
+        echo '</nav></div></header>';
+      }
       ?>
-    </nav>
-
-  </header><!-- #header -->
-  <section id="hero">
-    <div class="hero-container"  >
-      <span class="header-color" style="vertical-align: middle; display: table-cell;">WELCOME TO BIDMARKET</span>
-    </div>
-  </section><!-- #hero -->
+ <!--   #hero -->
