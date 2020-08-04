@@ -15,13 +15,13 @@ if ( is_user_logged_in() ) {
 }
 ?>
     <section id="slider_section" class="slider-section">
-      <div class="container border">
+      <div class="container-fluid">
         <div class="row inside-row slider_padding">      
-          <div class="col-md-12 slider_padding">
+          <div class="col slider_padding">
             <div class="s-slider">
-              <div class="item"><img class="img-responsive" src="<?php echo get_template_directory_uri(); ?>/assets/img/slides/Vermont Home - grey over.png" alt="" widht="100%" height="712px"/></div>
-              <div class="item"><img class="img-responsive" src="<?php echo get_template_directory_uri(); ?>/assets/img/slides/Vermont Home Blue.png" alt=""  widht="100%" height="712px"/></div>
-              <div class="item"><img class="img-responsive" src="<?php echo get_template_directory_uri(); ?>/assets/img/slides/Yellow House - grey over.png" alt=""  widht="100%" height="712px"/></div>
+              <div class="item"><img class="img-responsive" src="<?php echo get_template_directory_uri(); ?>/assets/img/slides/Vermont Home - grey over.png" alt="" /></div>
+              <div class="item"><img class="img-responsive" src="<?php echo get_template_directory_uri(); ?>/assets/img/slides/Vermont Home Blue.png" alt=""  /></div>
+              <div class="item"><img class="img-responsive" src="<?php echo get_template_directory_uri(); ?>/assets/img/slides/Yellow House - grey over.png" alt=""  /></div>
             </div>
           </div>
           </div><!--- END COL -->
@@ -54,11 +54,12 @@ if ( is_user_logged_in() ) {
       </div>
     </div>
     </section>
+
 <script type="text/javascript">
    jQuery(document).ready( function() {  
       $('.s-slider').owlCarousel({ 
       items:1,
-      itemsDesktop:[1000,1],
+      itemsDesktop:[1920,1],
       itemsDesktopSmall:[1000,1],
       itemsTablet:[768,1],
       itemsMobile:[479,1],

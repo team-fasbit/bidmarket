@@ -72,7 +72,12 @@ h1, h2, h3, h4, h5, h6 {
   .back-to-top {
     bottom: 15px;
   }
-
+.top-links{
+  color: #ffffff !important;
+}
+a.top-links:hover{
+  color: #ffffff !important;
+} 
 }
 
 .back-to-top:focus {
@@ -136,6 +141,12 @@ h1, h2, h3, h4, h5, h6 {
   #header #logo img {
     max-height: 40px;
   }
+.top-links{
+  color: #ffffff !important;
+}
+a.top-links:hover{
+  color: #ffffff !important;
+}  
 }
 
 #header.header-fixed {
@@ -206,6 +217,13 @@ h1, h2, h3, h4, h5, h6 {
     font-size: 28px;
     line-height: 36px;
   }
+.top-links{
+  color: #ffffff !important;
+}
+a.top-links:hover{
+  color: #ffffff !important;
+} 
+
 }
 
 #hero h2 {
@@ -221,6 +239,12 @@ h1, h2, h3, h4, h5, h6 {
     line-height: 24px;
     margin-bottom: 30px;
   }
+.top-links{
+  color: #ffffff !important;
+}
+a.top-links:hover{
+  color: #ffffff !important;
+}  
 }
 
 #hero .btn-get-started {
@@ -317,6 +341,12 @@ h1, h2, h3, h4, h5, h6 {
   #nav-menu-container {
     display: none;
   }
+.top-links{
+  color: #ffffff !important;
+}
+a.top-links:hover{
+  color: #ffffff !important;
+} 
 }
 
 /* Nav Meu Styling */
@@ -405,13 +435,19 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 #mobile-nav-toggle i {
-  color: #fff;
+  color: #102e43;
 }
 
 @media (max-width: 826px) {
   #mobile-nav-toggle {
     display: inline;
   }
+.top-links{
+  color: #ffffff !important;
+}
+a.top-links:hover{
+  color: #ffffff !important;
+} 
 }
 
 /* Mobile Nav Styling */
@@ -687,6 +723,8 @@ a.nav-link{
 }
 .slider_padding{
   padding-top: 0px !important;
+  padding-left: 0;
+  padding-right: 0;
 }
 .login_control{
   width: 250px;
