@@ -19,9 +19,9 @@ if ( is_user_logged_in() ) {
         <div class="row inside-row slider_padding">      
           <div class="col slider_padding">
             <div class="s-slider">
-              <div class="item"><img class="img-responsive" src="<?php echo get_template_directory_uri(); ?>/assets/img/slides/Vermont Home - grey over.png" alt="" /></div>
-              <div class="item"><img class="img-responsive" src="<?php echo get_template_directory_uri(); ?>/assets/img/slides/Vermont Home Blue.png" alt=""  /></div>
-              <div class="item"><img class="img-responsive" src="<?php echo get_template_directory_uri(); ?>/assets/img/slides/Yellow House - grey over.png" alt=""  /></div>
+              <div class="item"><img class="img-fluid" src="<?php echo get_template_directory_uri(); ?>/assets/img/slides/Vermont Home - grey over.png" alt="" /></div>
+              <div class="item"><img class="img-fluid" src="<?php echo get_template_directory_uri(); ?>/assets/img/slides/Vermont Home Blue.png" alt=""  /></div>
+              <div class="item"><img class="img-fluid" src="<?php echo get_template_directory_uri(); ?>/assets/img/slides/Yellow House - grey over.png" alt=""  /></div>
             </div>
           </div>
           </div><!--- END COL -->
